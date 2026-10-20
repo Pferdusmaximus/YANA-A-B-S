@@ -2,3 +2,4 @@ site_name: YANA-A-B-S Dokumentation
 
 nav:
   - Startseite: index.md
+  - Dokumentation: doku.md
