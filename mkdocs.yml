@@ -1,5 +1,42 @@
-site_name: YANA-A-B-S Dokumentation
+site_name: YANA – Projektdokumentation
+site_description: Technische Dokumentation des YANA-Projekts
+
+theme:
+  name: material
+  language: de
+  features:
+    - navigation.sections
+    - navigation.indexes
+    - content.code.copy
+    - search.suggest
+
+markdown_extensions:
+  - admonition
+  - tables
+  - toc:
+      permalink: true
+  - pymdownx.details
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
 
 nav:
-  - Startseite: index.md
-  - Dokumentation: doku.md
+  - Home: index.md
+  - Installation & Quick Start:
+      - Überblick: installation/index.md
+      - Ubuntu & grafische Oberfläche: installation/ubuntu-gnome.md
+      - IONOS Backup-Agent: installation/backup-agent.md
+      - PostgreSQL & pgAdmin: installation/postgresql-pgadmin.md
+      - FastAPI & systemd: installation/fastapi.md
+      - Nginx, HTTPS & Certbot: installation/nginx-https.md
+  - Technische Dokumentation:
+      - Systemarchitektur: technik/architektur.md
+      - Datenmodell: technik/datenmodell.md
+      - API-Referenz: technik/api-referenz.md
+      - Betrieb & Sicherheit: technik/betrieb-sicherheit.md
+      - Architekturentscheidungen: technik/entscheidungen.md
+      - Fehlerbehebung: technik/troubleshooting.md
+      - Quellen: technik/quellen.md
+  - Nutzungshandbuch: nutzung/index.md
