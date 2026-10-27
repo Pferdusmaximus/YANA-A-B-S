@@ -765,10 +765,32 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#flutter-getrennte-daten-logik-und-darstellungsschicht" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Flutter: getrennte Daten-, Logik- und Darstellungsschicht
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#offene-entscheidungen" class="md-nav__link">
     <span class="md-ellipsis">
       
         Offene Entscheidungen
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#nachvollziehbarkeit-der-anderungen" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Nachvollziehbarkeit der Änderungen
       
     </span>
   </a>
@@ -973,10 +995,32 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#flutter-getrennte-daten-logik-und-darstellungsschicht" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Flutter: getrennte Daten-, Logik- und Darstellungsschicht
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#offene-entscheidungen" class="md-nav__link">
     <span class="md-ellipsis">
       
         Offene Entscheidungen
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#nachvollziehbarkeit-der-anderungen" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Nachvollziehbarkeit der Änderungen
       
     </span>
   </a>
@@ -1055,6 +1099,8 @@
 <li><strong>Let's Encrypt</strong> liefert ein echtes öffentlich vertrauenswürdiges Zertifikat für die IP-Adresse; ein Staging-Zertifikat wurde im Setup erkannt und ersetzt.</li>
 <li><strong>Certbot-Timer + Deploy Hook</strong> automatisieren die Zertifikatserneuerung und den Nginx-Reload.</li>
 </ul>
+<h2 id="flutter-getrennte-daten-logik-und-darstellungsschicht">Flutter: getrennte Daten-, Logik- und Darstellungsschicht<a class="headerlink" href="#flutter-getrennte-daten-logik-und-darstellungsschicht" title="Permanent link">&para;</a></h2>
+<p>Im mobilen Client werden Fachbereiche durch <strong>Model + Repository + <code>ChangeNotifier</code>-Controller</strong> umgesetzt. Dadurch kann ein Teammitglied die Präsentationsschicht unabhängig entwickeln. Die HTTP-Infrastruktur wird in <code>ApiClient</code> und <code>ApiConfig</code> gekapselt. Tests der Controller arbeiten mit Fake-Repositories; echte öffentliche API-Abfragen werden getrennt über <code>tool/</code> mit <code>dart run</code> geprüft. Die Entscheidung wurde durch den HTTP-400-Fehler im Flutter-Test-Runner bestätigt und ist in <a href="../flutter-tests/">Teststrategie</a> beschrieben.</p>
 <h2 id="offene-entscheidungen">Offene Entscheidungen<a class="headerlink" href="#offene-entscheidungen" title="Permanent link">&para;</a></h2>
 <ul>
 <li>Authentifizierungsmodell (einschließlich anonymer Beratung und Admin-Oberfläche).</li>
@@ -1063,8 +1109,10 @@
 <li>Art und Dauer der Chatdatenspeicherung.</li>
 <li>Getrennte Deployment-/Test-/Produktivumgebungen.</li>
 <li>Ressourcenmonitoring und Lasttests auf 2 vCores / 4 GB RAM.</li>
-<li>App-Integration mit Flutter (nächster Projektabschnitt).</li>
+<li>Flutter-UI-Integration der <strong>bereits getesteten</strong> API-/Controller-Schicht (noch ausstehend).</li>
 </ul>
+<h2 id="nachvollziehbarkeit-der-anderungen">Nachvollziehbarkeit der Änderungen<a class="headerlink" href="#nachvollziehbarkeit-der-anderungen" title="Permanent link">&para;</a></h2>
+<p>Eine zeitliche Zusammenfassung von Servereinrichtung, TLS und neu hinzugekommener Flutter-API-Schicht steht im <a href="../entwicklungsstand/">Entwicklungsprotokoll</a>.</p>
 
 
 

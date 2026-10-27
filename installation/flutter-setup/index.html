@@ -1,0 +1,1069 @@
+
+<!doctype html>
+<html lang="de" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Technische Dokumentation des YANA-Projekts">
+      
+      
+      
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>Flutter-/Dart-Entwicklungsumgebung einrichten - YANA – Projektdokumentation</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#flutter-dart-entwicklungsumgebung-einrichten" class="md-skip">
+          Zum Inhalt
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Kopfzeile">
+    <a href="../.." title="YANA – Projektdokumentation" class="md-header__button md-logo" aria-label="YANA – Projektdokumentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            YANA – Projektdokumentation
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Flutter-/Dart-Entwicklungsumgebung einrichten
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Suche" placeholder="Suche" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Suche">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Zurücksetzen" aria-label="Zurücksetzen" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Suche wird initialisiert
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="YANA – Projektdokumentation" class="md-nav__button md-logo" aria-label="YANA – Projektdokumentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    YANA – Projektdokumentation
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Installation & Quick Start
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2" id="__nav_2_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Installation & Quick Start
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ubuntu-gnome/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ubuntu & grafische Oberfläche
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../backup-agent/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    IONOS Backup-Agent
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../postgresql-pgadmin/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    PostgreSQL & pgAdmin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../fastapi/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    FastAPI & systemd
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../nginx-https/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Nginx, HTTPS & Certbot
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Technische Dokumentation
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Technische Dokumentation
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../technik/architektur/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Systemarchitektur
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../technik/datenmodell/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Datenmodell
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../technik/api-referenz/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API-Referenz
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../technik/betrieb-sicherheit/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Betrieb & Sicherheit
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../technik/entscheidungen/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architekturentscheidungen
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../technik/troubleshooting/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Fehlerbehebung
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../technik/quellen/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Quellen
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../nutzung/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Nutzungshandbuch
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Inhaltsverzeichnis">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Inhaltsverzeichnis
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#voraussetzungen" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Voraussetzungen
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1-flutter-sdk-auffinden-und-im-path-verfugbar-machen" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Flutter SDK auffinden und im PATH verfügbar machen
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-repository-auerhalb-von-onedrive-klonen" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Repository außerhalb von OneDrive klonen
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-flutter-app-im-monorepo-initialisieren" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Flutter-App im Monorepo initialisieren
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-android-toolchain-kontrollieren" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Android-Toolchain kontrollieren
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-abhangigkeit-fur-die-rest-schnittstelle-installieren" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Abhängigkeit für die REST-Schnittstelle installieren
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-qualitatssicherung-und-erste-app-ausfuhrung" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Qualitätssicherung und erste App-Ausführung
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-wo-geht-es-weiter" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Wo geht es weiter?
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="flutter-dart-entwicklungsumgebung-einrichten">Flutter-/Dart-Entwicklungsumgebung einrichten<a class="headerlink" href="#flutter-dart-entwicklungsumgebung-einrichten" title="Permanent link">&para;</a></h1>
+<p><strong>Stand: 27. Oktober 2026 · Zielgruppe: Entwicklerinnen und Entwickler · Plattform: Windows</strong></p>
+<p>Diese Anleitung dokumentiert die tatsächliche Einrichtung des mobilen YANA-Projekts auf einem Windows-Rechner. Sie ergänzt den <a href="../">Server-Quick-Start</a>, der Ubuntu, PostgreSQL, FastAPI, Nginx und HTTPS beschreibt. Die mobile Anwendung wird <strong>lokal</strong> entwickelt und greift über HTTPS auf das bereits bestehende Backend zu. Ein direkter PostgreSQL-Zugang vom Mobilgerät ist weder erforderlich noch vorgesehen.</p>
+<blockquote>
+<p><strong>Status:</strong> Flutter-Projekt initialisiert, Android-Debug-APK erfolgreich gebaut, Dart-Abhängigkeiten installiert, API-Kommunikation manuell getestet. Die mobile Benutzeroberfläche wird parallel entwickelt; die fachlichen Seiten sind noch nicht vollständig verbunden.</p>
+</blockquote>
+<h2 id="voraussetzungen">Voraussetzungen<a class="headerlink" href="#voraussetzungen" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Werkzeug</th>
+<th>Im Projekt beobachteter Stand</th>
+<th>Zweck</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Windows</td>
+<td>Windows 11</td>
+<td>Entwicklungsrechner</td>
+</tr>
+<tr>
+<td>VS Code</td>
+<td>Mit aktivierten Erweiterungen <strong>Flutter</strong> und <strong>Dart</strong></td>
+<td>Editor, Debugger</td>
+</tr>
+<tr>
+<td>Flutter SDK</td>
+<td><strong>3.44.4</strong>, Stable (lokal gemessen)</td>
+<td>Mobile Entwicklungsumgebung</td>
+</tr>
+<tr>
+<td>Dart SDK</td>
+<td><strong>3.12.2</strong> (in Flutter enthalten)</td>
+<td>Programmiersprache und CLI</td>
+</tr>
+<tr>
+<td>Android SDK / Build-Tools</td>
+<td><strong>36.0.0</strong></td>
+<td>Android-Build</td>
+</tr>
+<tr>
+<td>Git</td>
+<td>Vorhanden</td>
+<td>Versionsverwaltung</td>
+</tr>
+<tr>
+<td>Android Studio / Android SDK</td>
+<td>SDK-Komponenten vorhanden</td>
+<td>SDK-Manager, Android-Toolchain</td>
+</tr>
+<tr>
+<td>Backend</td>
+<td>Bestehende FastAPI unter <code>https://SERVER_IP</code></td>
+<td>REST-Datenschnittstelle</td>
+</tr>
+</tbody>
+</table>
+<p>Die Versionsangaben dokumentieren <strong>den damaligen Einrichtungsschritt</strong> und sind keine zwingend festzupinnenden Versionsanforderungen. <code>SERVER_IP</code> bezeichnet in öffentlichen Codebeispielen die tatsächliche Serveradresse, nicht ein Passwort.</p>
+<h2 id="1-flutter-sdk-auffinden-und-im-path-verfugbar-machen">1. Flutter SDK auffinden und im PATH verfügbar machen<a class="headerlink" href="#1-flutter-sdk-auffinden-und-im-path-verfugbar-machen" title="Permanent link">&para;</a></h2>
+<p>Die Flutter-Erweiterung in VS Code ersetzt <strong>nicht</strong> das Flutter SDK. Im Projekt lag das SDK lokal in einem Verzeichnis nach folgendem Muster:</p>
+<div class="highlight"><pre><span></span><code>%USERPROFILE%\Documents\Flutter\flutter\bin
+</code></pre></div>
+<p>Dort muss die Datei <code>flutter.bat</code> vorhanden sein. Den <code>bin</code>-Pfad in Windows unter <strong>Umgebungsvariablen → Benutzervariablen → Path → Neu</strong> ergänzen und VS Code vollständig neu starten.</p>
+<p>In PowerShell prüfen:</p>
+<div class="highlight"><pre><span></span><code><span class="nb">Get-Command</span> <span class="n">flutter</span>
+<span class="n">where</span><span class="p">.</span><span class="n">exe</span> <span class="n">flutter</span>
+<span class="n">flutter</span><span class="p">.</span><span class="n">bat</span> <span class="p">-</span><span class="n">-version</span>
+</code></pre></div>
+<p><strong>Warum <code>flutter.bat</code>?</strong> Beim Einrichten wurde <code>flutter --version</code> zeitweise mit <code>Could not find an option with short name "-e"</code> abgebrochen. Die direkte Batch-Datei funktionierte dagegen einwandfrei. Deshalb nutzen die nachfolgenden Windows-Beispiele ausdrücklich <code>flutter.bat</code>.</p>
+<h2 id="2-repository-auerhalb-von-onedrive-klonen">2. Repository außerhalb von OneDrive klonen<a class="headerlink" href="#2-repository-auerhalb-von-onedrive-klonen" title="Permanent link">&para;</a></h2>
+<p>Der erste Entwicklungsordner befand sich in einem OneDrive-Synchronisationsverzeichnis. Dort scheiterte <code>flutter pub get</code> bzw. <code>flutter analyze</code> daran, das generierte iOS-Verzeichnis <code>ios/Flutter/ephemeral/Packages/.packages</code> zu löschen. Die Ursache wurde nicht forensisch bewiesen; ein Dateilock bzw. Synchronisationskonflikt war plausibel.</p>
+<p><strong>Wirksame Maßnahme:</strong> Die generierten Flutter-Dateien wurden erst nach GitHub gepusht und das Repository anschließend <strong>neu in ein lokales, nicht synchronisiertes Verzeichnis</strong> geklont. Im Projekt wurde zuletzt ein Ordner unter <code>Documents/Programmieren/Projektarbeit/</code> verwendet.</p>
+<p>Beispiel für einen reproduzierbaren lokalen Klon:</p>
+<div class="highlight"><pre><span></span><code><span class="nb">cd </span><span class="s2">&quot;$env:USERPROFILE\Documents\Programmieren\Projektarbeit&quot;</span>
+<span class="n">git</span> <span class="n">clone</span> <span class="n">https</span><span class="p">://</span><span class="n">github</span><span class="p">.</span><span class="n">com</span><span class="p">/</span><span class="n">Pferdusmaximus</span><span class="p">/</span><span class="n">YANA-A-B-S</span><span class="p">.</span><span class="n">git</span>
+<span class="nb">cd </span><span class="p">.\</span><span class="n">YANA-A-B-S</span>
+<span class="n">code</span> <span class="p">.</span>
+</code></pre></div>
+<p>Vor dem Entfernen eines alten Arbeitsverzeichnisses unbedingt <code>git status</code> prüfen und <strong>alle zu sichernden Änderungen committen und pushen</strong>. Insbesondere die neu erzeugten Dateien unter <code>apps/mobile/</code> waren anfangs noch <code>untracked</code>.</p>
+<div class="highlight"><pre><span></span><code><span class="n">git</span> <span class="n">status</span>
+<span class="n">git</span> <span class="n">add</span> <span class="n">apps</span><span class="p">/</span><span class="n">mobile</span><span class="p">/</span>
+<span class="n">git</span> <span class="n">status</span>
+<span class="c"># Nur nach Kontrolle der gestagten Dateien:</span>
+<span class="n">git</span> <span class="n">commit</span> <span class="n">-m</span> <span class="s2">&quot;Initialize Flutter project&quot;</span>
+<span class="n">git</span> <span class="n">push</span> <span class="n">origin</span> <span class="n">main</span>
+</code></pre></div>
+<p><strong>Geheimnisschutz:</strong> Vor <code>git add</code> kontrollieren, dass keine <code>.env</code>-Dateien, Zugangsdaten, privaten Schlüssel oder nutzerbezogenen Exporte in den Commit gelangen. Im Team bevorzugt einen eigenen Feature-Branch und einen Pull Request verwenden; direkte Pushes auf <code>main</code> waren nur Teil der anfänglichen Einrichtung.</p>
+<h2 id="3-flutter-app-im-monorepo-initialisieren">3. Flutter-App im Monorepo initialisieren<a class="headerlink" href="#3-flutter-app-im-monorepo-initialisieren" title="Permanent link">&para;</a></h2>
+<p>Das bestehende YANA-Repository verwendet einen Monorepo-Ansatz. Der Ordner für die App liegt unter <code>apps/mobile/</code>.</p>
+<div class="highlight"><pre><span></span><code><span class="nb">cd </span><span class="n">apps</span><span class="p">/</span><span class="n">mobile</span>
+<span class="n">flutter</span><span class="p">.</span><span class="n">bat</span> <span class="n">create</span> <span class="p">-</span><span class="n">-platforms</span><span class="p">=</span><span class="n">android</span><span class="p">,</span><span class="n">ios</span> <span class="p">-</span><span class="n">-project-name</span> <span class="n">yana</span> <span class="p">.</span>
+<span class="n">flutter</span><span class="p">.</span><span class="n">bat</span> <span class="n">pub</span> <span class="n">get</span>
+<span class="n">flutter</span><span class="p">.</span><span class="n">bat</span> <span class="n">analyze</span>
+</code></pre></div>
+<p>Der abschließende Punkt <code>.</code> erstellt die Dateien <strong>im aktuellen Ordner</strong>. Der Paketname <code>yana</code> ist relevant für Dart-Imports der Form <code>package:yana/...</code>. Erzeugte Plattformordner sind unter anderem <code>android/</code> und <code>ios/</code>; außerdem <code>pubspec.yaml</code>, <code>analysis_options.yaml</code> und <code>test/widget_test.dart</code>.</p>
+<blockquote>
+<p><strong>iOS:</strong> Die iOS-Projektdateien können auf Windows erzeugt und versioniert werden. Zum Bauen/Signieren einer iOS-App ist später ein macOS-Rechner mit Xcode erforderlich.</p>
+</blockquote>
+<h2 id="4-android-toolchain-kontrollieren">4. Android-Toolchain kontrollieren<a class="headerlink" href="#4-android-toolchain-kontrollieren" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><span class="n">flutter</span><span class="p">.</span><span class="n">bat</span> <span class="n">doctor</span>
+<span class="n">flutter</span><span class="p">.</span><span class="n">bat</span> <span class="n">devices</span>
+</code></pre></div>
+<p>Während der Einrichtung waren SDK und Build-Tools <strong>36.0.0</strong> installiert, aber <code>flutter doctor</code> meldete <code>Android license status unknown</code>. Die üblichen Befehle</p>
+<div class="highlight"><pre><span></span><code><span class="n">flutter</span><span class="p">.</span><span class="n">bat</span> <span class="n">doctor</span> <span class="p">-</span><span class="n">-android-licenses</span>
+<span class="p">&amp;</span> <span class="s2">&quot;$env:LOCALAPPDATA\Android\Sdk\cmdline-tools\latest\bin\sdkmanager.bat&quot;</span> <span class="p">-</span><span class="n">-licenses</span>
+</code></pre></div>
+<p>führten lediglich zu <code>The --licenses option is no longer needed</code>. Eine in älteren Beispielen angenommene Datei <code>android.bat</code> war an diesem Speicherort <strong>nicht vorhanden</strong>. Statt auf Verdacht Komponenten herunterzustufen, wurde ein <strong>realer Android-Debug-Build</strong> ausgeführt:</p>
+<div class="highlight"><pre><span></span><code><span class="n">flutter</span><span class="p">.</span><span class="n">bat</span> <span class="n">build</span> <span class="n">apk</span> <span class="p">-</span><span class="n">-debug</span>
+</code></pre></div>
+<p><strong>Ergebnis:</strong> Der Build wurde ohne Fehler abgeschlossen. Die weiterhin bestehende <code>doctor</code>-Lizenzwarnung ist zu beobachten; der erfolgreiche Build beweist, dass der verwendete SDK-Stand zumindest die aktuelle Debug-App erzeugen kann. Für Release-Builds müssen die Toolchain und Signierung nochmals kontrolliert werden.</p>
+<p>Eine zusätzliche Warnung zu <strong>Visual Studio Desktop Development with C++</strong> betrifft Windows-Desktop-Apps und blockiert den hier angestrebten Android-Build nicht.</p>
+<h2 id="5-abhangigkeit-fur-die-rest-schnittstelle-installieren">5. Abhängigkeit für die REST-Schnittstelle installieren<a class="headerlink" href="#5-abhangigkeit-fur-die-rest-schnittstelle-installieren" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><span class="nb">cd </span><span class="n">apps</span><span class="p">/</span><span class="n">mobile</span>
+<span class="n">flutter</span><span class="p">.</span><span class="n">bat</span> <span class="n">pub</span> <span class="n">add</span> <span class="n">http</span>
+<span class="n">flutter</span><span class="p">.</span><span class="n">bat</span> <span class="n">pub</span> <span class="n">get</span>
+</code></pre></div>
+<p>Damit wird das Paket <a href="https://pub.dev/packages/http"><code>http</code></a> in <code>pubspec.yaml</code> eingetragen. <code>pubspec.lock</code> sollte bei dieser Flutter-Anwendung mitversioniert werden, um nachvollziehbare Abhängigkeitsstände im Team zu erhalten. Der Hinweis auf neuere, mit aktuellen Versionsgrenzen inkompatible Pakete ist zunächst lediglich ein <strong>Update-Hinweis</strong>, kein Buildfehler.</p>
+<p>In <code>android/app/src/main/AndroidManifest.xml</code> innerhalb von <code>&lt;manifest&gt;</code> und außerhalb von <code>&lt;application&gt;</code> prüfen:</p>
+<div class="highlight"><pre><span></span><code><span class="nt">&lt;uses-permission</span><span class="w"> </span><span class="na">android:name=</span><span class="s">&quot;android.permission.INTERNET&quot;</span><span class="w"> </span><span class="nt">/&gt;</span>
+</code></pre></div>
+<p>Die Verbindung verwendet <strong>HTTPS</strong>. Es ist keine Android-Freigabe für unsicheren HTTP-Cleartext-Traffic erforderlich.</p>
+<h2 id="6-qualitatssicherung-und-erste-app-ausfuhrung">6. Qualitätssicherung und erste App-Ausführung<a class="headerlink" href="#6-qualitatssicherung-und-erste-app-ausfuhrung" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><span class="n">flutter</span><span class="p">.</span><span class="n">bat</span> <span class="n">analyze</span>
+<span class="n">flutter</span><span class="p">.</span><span class="n">bat</span> <span class="n">test</span>
+<span class="n">flutter</span><span class="p">.</span><span class="n">bat</span> <span class="n">build</span> <span class="n">apk</span> <span class="p">-</span><span class="n">-debug</span>
+</code></pre></div>
+<p>Nach Bereinigung der generierten Testdatei und Trennung von Live-Verbindungstests und Unit-Tests liefen <code>flutter analyze</code> und <code>flutter test</code> erfolgreich. Der Debug-Build wurde ebenfalls bestätigt.</p>
+<p>Für ein angeschlossenes Android-Gerät oder den Emulator:</p>
+<div class="highlight"><pre><span></span><code><span class="n">flutter</span><span class="p">.</span><span class="n">bat</span> <span class="n">devices</span>
+<span class="n">flutter</span><span class="p">.</span><span class="n">bat</span> <span class="n">run</span>
+</code></pre></div>
+<p>Die tatsächliche <strong>Darstellung der fertigen YANA-Benutzeroberfläche auf dem Mobilgerät</strong> ist im hier dokumentierten Projektstand <strong>noch kein bestätigter Testschritt</strong>. Die Dart-API-Kommunikation wurde bereits separat erfolgreich geprüft; siehe <a href="../../technik/flutter-api-anbindung/">API-Anbindung</a>.</p>
+<h2 id="7-wo-geht-es-weiter">7. Wo geht es weiter?<a class="headerlink" href="#7-wo-geht-es-weiter" title="Permanent link">&para;</a></h2>
+<ul>
+<li><a href="../../technik/flutter-api-anbindung/">Flutter-Datenzugriff und REST-API-Anbindung</a></li>
+<li><a href="../../technik/flutter-architektur/">Drei-Schichtenmodell und Controller</a></li>
+<li><a href="../../technik/flutter-tests/">Automatisierte Tests und Live-Verbindungstests</a></li>
+<li><a href="../../technik/flutter-troubleshooting/">Flutter-Fehlerprotokoll</a></li>
+<li><a href="../../technik/flutter-teamworkflow/">Zusammenarbeit und Übergabe an die UI-Entwicklung</a></li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.sections", "navigation.indexes", "content.code.copy", "search.suggest"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "In Zwischenablage kopiert", "clipboard.copy": "In Zwischenablage kopieren", "search.result.more.one": "1 weiteres Suchergebnis auf dieser Seite", "search.result.more.other": "# weitere Suchergebnisse auf dieser Seite", "search.result.none": "Keine Suchergebnisse", "search.result.one": "1 Suchergebnis", "search.result.other": "# Suchergebnisse", "search.result.placeholder": "Suchbegriff eingeben", "search.result.term.missing": "Es fehlt", "select.version": "Version ausw\u00e4hlen"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+    
+  </body>
+</html>

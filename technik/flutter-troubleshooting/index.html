@@ -1,0 +1,1038 @@
+
+<!doctype html>
+<html lang="de" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Technische Dokumentation des YANA-Projekts">
+      
+      
+      
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>Flutter/Dart – Fehlerprotokoll und Lösungen - YANA – Projektdokumentation</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#flutterdart-fehlerprotokoll-und-losungen" class="md-skip">
+          Zum Inhalt
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Kopfzeile">
+    <a href="../.." title="YANA – Projektdokumentation" class="md-header__button md-logo" aria-label="YANA – Projektdokumentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            YANA – Projektdokumentation
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Flutter/Dart – Fehlerprotokoll und Lösungen
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Suche" placeholder="Suche" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Suche">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Zurücksetzen" aria-label="Zurücksetzen" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Suche wird initialisiert
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="YANA – Projektdokumentation" class="md-nav__button md-logo" aria-label="YANA – Projektdokumentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    YANA – Projektdokumentation
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../installation/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Installation & Quick Start
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2" id="__nav_2_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Installation & Quick Start
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../installation/ubuntu-gnome/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ubuntu & grafische Oberfläche
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../installation/backup-agent/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    IONOS Backup-Agent
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../installation/postgresql-pgadmin/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    PostgreSQL & pgAdmin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../installation/fastapi/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    FastAPI & systemd
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../installation/nginx-https/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Nginx, HTTPS & Certbot
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Technische Dokumentation
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Technische Dokumentation
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../architektur/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Systemarchitektur
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../datenmodell/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Datenmodell
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api-referenz/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API-Referenz
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../betrieb-sicherheit/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Betrieb & Sicherheit
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../entscheidungen/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architekturentscheidungen
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../troubleshooting/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Fehlerbehebung
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../quellen/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Quellen
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../nutzung/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Nutzungshandbuch
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Inhaltsverzeichnis">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Inhaltsverzeichnis
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#chronologischer-uberblick" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Chronologischer Überblick
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#praktische-diagnose-in-vs-code-powershell" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Praktische Diagnose in VS Code / PowerShell
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#http-400-bei-flutter-test-vs-http-400-vom-echten-server" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        HTTP 400 bei flutter test vs. HTTP 400 vom echten Server
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#kategorie-typen-nach-umbenennung-prufen" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Kategorie-Typen nach Umbenennung prüfen
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#projektverzeichnis-und-geheimnisse" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Projektverzeichnis und Geheimnisse
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="flutterdart-fehlerprotokoll-und-losungen">Flutter/Dart – Fehlerprotokoll und Lösungen<a class="headerlink" href="#flutterdart-fehlerprotokoll-und-losungen" title="Permanent link">&para;</a></h1>
+<p><strong>Stand: 27. Oktober 2026</strong></p>
+<p>Diese Seite enthält die <strong>tatsächlich beobachteten Meldungen</strong> bei der Einrichtung von Flutter, der API-Anbindung und der Testumgebung. Wo die Ursache nicht eindeutig bewiesen wurde, wird dies ausdrücklich gekennzeichnet.</p>
+<h2 id="chronologischer-uberblick">Chronologischer Überblick<a class="headerlink" href="#chronologischer-uberblick" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Situation</th>
+<th>Originalmeldung (Auszug)</th>
+<th>Befund und tatsächlich wirksamer Schritt</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Flutter-CLI zunächst nicht gefunden</td>
+<td><code>flutter ... not recognized</code></td>
+<td>Flutter SDK vorhanden; <code>.../flutter/bin</code> zum Benutzer-<code>PATH</code> ergänzt, VS Code neu gestartet.</td>
+</tr>
+<tr>
+<td><code>flutter --version</code> verhielt sich unerwartet</td>
+<td><code>Could not find an option with short name "-e"</code></td>
+<td><code>flutter.bat --version</code> funktionierte; weitere Befehle als <code>flutter.bat ...</code> ausgeführt. Exakte Ursache der Befehlsauflösung nicht bewiesen.</td>
+</tr>
+<tr>
+<td>Flutter-Extension-Befehl fehlte</td>
+<td><code>Flutter: Change SDK</code> nicht auswählbar</td>
+<td>SDK-Pfad direkt im Dateisystem ermittelt; Erweiterungen waren installiert.</td>
+</tr>
+<tr>
+<td>Projekt unter OneDrive</td>
+<td><code>Flutter failed to delete a directory ... ios/Flutter/ephemeral/Packages/.packages</code></td>
+<td>Generierte Projektdateien zu GitHub gepusht, danach lokaler <strong>neuer Klon außerhalb von OneDrive</strong>; <code>pub get</code> und <code>analyze</code> liefen wieder.</td>
+</tr>
+<tr>
+<td>Generierte Dateien noch nicht versioniert</td>
+<td><code>Untracked files: apps/mobile/...</code></td>
+<td><code>git add apps/mobile/</code>, Commit und Push vor Entfernen des alten lokalen Ordners.</td>
+</tr>
+<tr>
+<td>Android-Lizenzprüfung</td>
+<td><code>Android license status unknown</code></td>
+<td><code>flutter doctor --android-licenses</code> und <code>sdkmanager.bat --licenses</code> meldeten, dass <code>--licenses</code> nicht mehr nötig sei. Lizenzwarnung blieb; <strong>Android-Debug-APK erfolgreich gebaut</strong>.</td>
+</tr>
+<tr>
+<td><code>android.bat</code> nicht vorhanden</td>
+<td>Pfad zu <code>cmdline-tools/latest/bin/android.bat</code> nicht gefunden</td>
+<td>Vorhandene Dateien mit PowerShell aufgelistet; <code>sdkmanager.bat</code> war vorhanden. Keine unbestätigte CLI erzwungen.</td>
+</tr>
+<tr>
+<td>Android/Gradle-Extension</td>
+<td><code>No connection to Gradle server</code></td>
+<td>Editorhinweis; kein kausal nachgewiesener Buildfehler. Relevanter Gegencheck: <code>flutter.bat build apk --debug</code> erfolgreich.</td>
+</tr>
+<tr>
+<td>Ursprünglicher Flutter-Widget-Test</td>
+<td><code>The name 'MyApp' isn't a class</code></td>
+<td>Generierter <code>widget_test.dart</code> verwies auf eine nicht vorhandene Demo-Klasse. Durch einen kleinen, zum aktuellen Projekt passenden Platzhaltertest ersetzt.</td>
+</tr>
+<tr>
+<td>Früher Test lud nicht</td>
+<td><code>Undefined name 'main'</code> bzw. <code>File truncated before or at offset 0x0</code></td>
+<td>Datei bzw. Speichervorgang überprüft; ein eigenständiger <code>tool/</code>-Test mit <code>Future&lt;void&gt; main()</code> lief erfolgreich. Ursache der einmaligen Truncation nicht eindeutig bestätigt.</td>
+</tr>
+<tr>
+<td>Live-HTTP-Anfrage unter <code>flutter test</code></td>
+<td><code>API-Fehler: HTTP 400</code> + Warnung zu <code>TestWidgetsFlutterBinding</code></td>
+<td>Flutter-Tests blockierten echten HTTP-Request; Live-Test in <code>tool/</code> per <code>dart run</code> belassen, fehlerhaften <code>test/help_repository_test.dart</code> entfernt.</td>
+</tr>
+<tr>
+<td>Dart-Analyzer meldete viele Hinweise</td>
+<td><code>info - Don't invoke 'print' in production code</code></td>
+<td>Bei bewusst manuellen <code>tool/</code>-Tests <code>// ignore_for_file: avoid_print</code> ergänzt. Es handelte sich um Lint-Hinweise, nicht um fehlgeschlagene API-Abfragen.</td>
+</tr>
+<tr>
+<td>Modellname <code>Category</code> kollidierte</td>
+<td><code>The name 'Category' is defined in the libraries ...</code></td>
+<td>Eigenes Datenmodell in <strong><code>YanaCategory</code></strong> umbenannt.</td>
+</tr>
+<tr>
+<td>Repository verwendete alten Typ</td>
+<td><code>The name 'Category' isn't a type</code> / <code>Undefined name 'Category'</code></td>
+<td><code>Future&lt;List&lt;YanaCategory&gt;&gt;</code> und <code>YanaCategory.fromJson()</code> eingesetzt.</td>
+</tr>
+<tr>
+<td>Controller blieb auf altem Typ</td>
+<td><code>List&lt;YanaCategory&gt; can't be assigned to List&lt;Category&gt;</code>; <code>Unused import</code></td>
+<td>Liste und Getter des <code>CategoryController</code> zu <code>List&lt;YanaCategory&gt;</code> korrigiert. Danach Analyse erfolgreich.</td>
+</tr>
+<tr>
+<td>Verfügbare Paketupdates</td>
+<td><code>8 packages have newer versions incompatible with dependency constraints</code></td>
+<td>Kein Installationsfehler; Abhängigkeiten wurden trotzdem erfolgreich geladen. Updates später geplant prüfen.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="praktische-diagnose-in-vs-code-powershell">Praktische Diagnose in VS Code / PowerShell<a class="headerlink" href="#praktische-diagnose-in-vs-code-powershell" title="Permanent link">&para;</a></h2>
+<p>Vom Repository-Root in den Flutter-Ordner wechseln:</p>
+<div class="highlight"><pre><span></span><code><span class="nb">cd </span><span class="n">apps</span><span class="p">/</span><span class="n">mobile</span>
+</code></pre></div>
+<p>Aktuelle Flutter- und SDK-Konfiguration:</p>
+<div class="highlight"><pre><span></span><code><span class="n">where</span><span class="p">.</span><span class="n">exe</span> <span class="n">flutter</span>
+<span class="n">flutter</span><span class="p">.</span><span class="n">bat</span> <span class="p">-</span><span class="n">-version</span>
+<span class="n">flutter</span><span class="p">.</span><span class="n">bat</span> <span class="n">doctor</span> <span class="n">-v</span>
+</code></pre></div>
+<p>Projektbezogene Prüfungen:</p>
+<div class="highlight"><pre><span></span><code><span class="n">flutter</span><span class="p">.</span><span class="n">bat</span> <span class="n">pub</span> <span class="n">get</span>
+<span class="n">flutter</span><span class="p">.</span><span class="n">bat</span> <span class="n">analyze</span>
+<span class="n">flutter</span><span class="p">.</span><span class="n">bat</span> <span class="n">test</span>
+<span class="n">flutter</span><span class="p">.</span><span class="n">bat</span> <span class="n">build</span> <span class="n">apk</span> <span class="p">-</span><span class="n">-debug</span>
+</code></pre></div>
+<p><strong>Interpretation:</strong></p>
+<ul>
+<li><code>pub get</code> erfolgreich = Pub-Abhängigkeiten aufgelöst, <strong>nicht</strong> automatisch ein erfolgreicher Android-Build.</li>
+<li><code>analyze</code> erfolgreich = keine erkannten statischen Probleme, <strong>nicht</strong> automatisch eine erreichbare REST-API.</li>
+<li><code>test</code> erfolgreich = automatisierte Tests bestanden; hier verwenden die Controller-Tests Fake-Repositories.</li>
+<li><code>build apk --debug</code> erfolgreich = Android-Debug-APK gebaut; <strong>nicht</strong> gleichbedeutend mit einem signierten Release oder realem Benutzertest.</li>
+<li><code>dart run tool/...</code> erfolgreich = echte Live-Verbindung über HTTPS für genau den getesteten Endpunkt und Datensatzstand.</li>
+</ul>
+<h2 id="http-400-bei-flutter-test-vs-http-400-vom-echten-server">HTTP 400 bei <code>flutter test</code> vs. HTTP 400 vom echten Server<a class="headerlink" href="#http-400-bei-flutter-test-vs-http-400-vom-echten-server" title="Permanent link">&para;</a></h2>
+<p>Wird die Meldung zusammen mit <code>TestWidgetsFlutterBinding</code> und dem Hinweis ausgegeben, dass HTTP-Requests im Test automatisch <code>400</code> zurückgeben, handelt es sich <strong>um die Testumgebung</strong>, nicht um die Backendantwort. Ein echter Backend-HTTP-400 muss gesondert durch eine externe Anfrage oder durch Logs untersucht werden.</p>
+<div class="highlight"><pre><span></span><code><span class="c"># Echten GET-Request manuell prüfen:</span>
+<span class="n">dart</span> <span class="n">run</span> <span class="n">tool</span><span class="p">/</span><span class="n">api_connection_test</span><span class="p">.</span><span class="n">dart</span>
+</code></pre></div>
+<p>Das tatsächliche Backend hat im dokumentierten Live-Test zwei fiktive Hilfestellen zurückgegeben.</p>
+<h2 id="kategorie-typen-nach-umbenennung-prufen">Kategorie-Typen nach Umbenennung prüfen<a class="headerlink" href="#kategorie-typen-nach-umbenennung-prufen" title="Permanent link">&para;</a></h2>
+<p>Alle beteiligten Dateien müssen <strong>denselben</strong> Dart-Typ verwenden:</p>
+<div class="highlight"><pre><span></span><code><span class="c1">// category_model.dart</span>
+<span class="kd">class</span><span class="w"> </span><span class="nc">YanaCategory</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="cm">/* ... */</span><span class="w"> </span><span class="p">}</span>
+
+<span class="c1">// category_repository.dart</span>
+<span class="n">Future</span><span class="o">&lt;</span><span class="n">List</span><span class="o">&lt;</span><span class="n">YanaCategory</span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="n">getCategories</span><span class="p">()</span><span class="w"> </span><span class="kd">async</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="cm">/* ... */</span><span class="w"> </span><span class="p">}</span>
+
+<span class="c1">// category_controller.dart</span>
+<span class="n">List</span><span class="o">&lt;</span><span class="n">YanaCategory</span><span class="o">&gt;</span><span class="w"> </span><span class="n">_categories</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[];</span>
+<span class="n">List</span><span class="o">&lt;</span><span class="n">YanaCategory</span><span class="o">&gt;</span><span class="w"> </span><span class="kd">get</span><span class="w"> </span><span class="n">categories</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">List</span><span class="p">.</span><span class="n">unmodifiable</span><span class="p">(</span><span class="n">_categories</span><span class="p">);</span>
+</code></pre></div>
+<p>Der Spaltenname in PostgreSQL bleibt <strong><code>kategorie</code></strong>, der Endpunkt bleibt <strong><code>/kategorien</code></strong>. Die Umbenennung betrifft nur die Client-seitige Dart-Klasse.</p>
+<h2 id="projektverzeichnis-und-geheimnisse">Projektverzeichnis und Geheimnisse<a class="headerlink" href="#projektverzeichnis-und-geheimnisse" title="Permanent link">&para;</a></h2>
+<p>Der lokale Entwicklungsordner liegt außerhalb von OneDrive; ein beispielhafter Pfad ist:</p>
+<div class="highlight"><pre><span></span><code>%USERPROFILE%\Documents\Programmieren\Projektarbeit\YANA-A-B-S
+</code></pre></div>
+<p>Windows-Benutzernamen und absolute Home-Pfade wurden absichtlich generalisiert. In öffentlichen GitHub-Issues oder Screenshots <strong>keine Passwörter, Tokens, SSH-Schlüssel, Datenbank-Exports oder sensible Standortdaten veröffentlichen</strong>.</p>
+<p>Weitere Fehler zum Server, Nginx, Zertifikaten und Backup-Agent stehen im <a href="../troubleshooting/">Server-Fehlerprotokoll</a>. Eine Übersicht der Testarten befindet sich unter <a href="../flutter-tests/">Flutter-Tests</a>.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.sections", "navigation.indexes", "content.code.copy", "search.suggest"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "In Zwischenablage kopiert", "clipboard.copy": "In Zwischenablage kopieren", "search.result.more.one": "1 weiteres Suchergebnis auf dieser Seite", "search.result.more.other": "# weitere Suchergebnisse auf dieser Seite", "search.result.none": "Keine Suchergebnisse", "search.result.one": "1 Suchergebnis", "search.result.other": "# Suchergebnisse", "search.result.placeholder": "Suchbegriff eingeben", "search.result.term.missing": "Es fehlt", "select.version": "Version ausw\u00e4hlen"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+    
+  </body>
+</html>

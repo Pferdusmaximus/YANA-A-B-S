@@ -269,6 +269,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#nachgewiesener-technischer-stand" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Nachgewiesener technischer Stand
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#download-und-projektvideo" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -847,6 +858,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#nachgewiesener-technischer-stand" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Nachgewiesener technischer Stand
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#download-und-projektvideo" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -877,17 +899,49 @@
 <h1 id="yana-you-are-not-alone">YANA – You Are Not Alone<a class="headerlink" href="#yana-you-are-not-alone" title="Permanent link">&para;</a></h1>
 <p><strong>Hilfe finden. Informationen erhalten. In schwierigen Situationen schneller handeln.</strong></p>
 <p>YANA ist ein Schulprojekt zur Entwicklung einer mobilen Anwendung, die betroffenen Frauen den Zugang zu Notfallkontakten, Hilfsstellen und Informationen zu Gewaltprävention erleichtern soll. Die Anwendung soll standortbezogene Angebote übersichtlich darstellen und künftig weitere unterstützende Funktionen bereitstellen. Das technische Fundament besteht aus Flutter, einer FastAPI-Schnittstelle und PostgreSQL.</p>
-<p><strong>Projektstatus:</strong> Backend und Test-API eingerichtet; die mobile Benutzeroberfläche und sicherheitskritische Funktionen befinden sich noch in Entwicklung.</p>
+<p><strong>Projektstatus (27.10.2026):</strong> Das Backend läuft auf dem IONOS-VPS. In Flutter sind für <strong>Hilfestellen, Kategorien und Notfallnummern</strong> jeweils Model, Repository und Controller implementiert. Alle drei REST-Verbindungen wurden per Dart-Live-Test geprüft; die Controller-Tests mit Fake-Repositories sind erfolgreich. <strong>Die fertige App-Oberfläche und die Einbindung der Controller in sichtbare Screens sind noch in Entwicklung.</strong></p>
 <blockquote>
 <p><strong>Hinweis:</strong> Aktuell angelegte Hilfestellen sind fiktive Testdaten. Die Software stellt noch keinen verlässlichen Notfalldienst dar. Bei akuter Gefahr die offiziellen lokalen Notrufnummern verwenden.</p>
 </blockquote>
 <h2 id="projekt-kennenlernen">Projekt kennenlernen<a class="headerlink" href="#projekt-kennenlernen" title="Permanent link">&para;</a></h2>
 <ul>
-<li><a href="installation/">Installation &amp; Quick Start</a> – Server und Backend nachvollziehbar in Betrieb nehmen.</li>
-<li><a href="technik/architektur/">Technische Architektur</a> – Komponenten und Datenfluss verstehen.</li>
-<li><a href="technik/api-referenz/">API-Referenz</a> – Vorhandene Schnittstellen und Beispiele.</li>
-<li><a href="nutzung/">Nutzungshandbuch</a> – Der derzeitige Implementierungsstatus aus Anwendersicht.</li>
+<li><a href="installation/">Installation &amp; Quick Start</a> – Server, Backend und Flutter-Entwicklungsumgebung reproduzieren.</li>
+<li><a href="installation/flutter-setup/">Flutter einrichten</a> – Windows, Flutter SDK, Git und Android-Build.</li>
+<li><a href="technik/">Technische Dokumentation</a> – Architektur, Implementierung, Tests und Fehlerprotokolle.</li>
+<li><a href="technik/architektur/">Technische Systemarchitektur</a> – Gesamtsystem und Datenfluss.</li>
+<li><a href="technik/flutter-architektur/">Flutter: Drei-Schichtenmodell</a> – Aufbau der mobilen Anwendung.</li>
+<li><a href="technik/flutter-api-anbindung/">Flutter: API-Anbindung</a> – Models, Repositories und HTTPS-Zugriff.</li>
+<li><a href="technik/flutter-tests/">Flutter: Tests</a> – Controller-Tests und manuelle Live-Tests.</li>
+<li><a href="technik/api-referenz/">API-Referenz</a> – Implementierte Server-Endpunkte.</li>
+<li><a href="nutzung/">Nutzungshandbuch</a> – Funktionen und derzeitige Entwicklungsgrenzen.</li>
 </ul>
+<h2 id="nachgewiesener-technischer-stand">Nachgewiesener technischer Stand<a class="headerlink" href="#nachgewiesener-technischer-stand" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Bereich</th>
+<th>Nachweis</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>PostgreSQL / FastAPI / HTTPS</td>
+<td>Laufendes Backend, öffentlich vertrauenswürdiges TLS-Zertifikat</td>
+</tr>
+<tr>
+<td>Flutter-Live-API-Tests</td>
+<td>2 Hilfestellen, 2 Kategorien, 0 Notfallnummern erfolgreich abgerufen</td>
+</tr>
+<tr>
+<td>Flutter-Logikschicht</td>
+<td>3 Controller, jeweils Start-/Erfolgs-/Fehlertest bestanden</td>
+</tr>
+<tr>
+<td>Mobile UI / reale Beratung</td>
+<td>In Entwicklung, <strong>kein</strong> produktiver Notfalldienst</td>
+</tr>
+</tbody>
+</table>
 <h2 id="download-und-projektvideo">Download und Projektvideo<a class="headerlink" href="#download-und-projektvideo" title="Permanent link">&para;</a></h2>
 <p>App-Download und Promovideo werden ergänzt, sobald eine vorzeigbare App-Version zur Verfügung steht. Das Promovideo wird entsprechend den Vorgaben unter einem Titel mit <strong>„RDF Projekt“</strong> oder <strong>„RDF Projektarbeit“</strong> veröffentlicht.</p>
 <!-- Logo und Screenshots nach Freigabe hier einbinden; keine Platzhalter-Bilder mit kaputten Links veröffentlichen. -->

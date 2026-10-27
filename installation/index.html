@@ -821,7 +821,7 @@
 
 
 <h1 id="installation-quick-start">Installation &amp; Quick Start<a class="headerlink" href="#installation-quick-start" title="Permanent link">&para;</a></h1>
-<p>Diese Dokumentation beschreibt die <strong>reproduzierbare Einrichtung des bisher umgesetzten YANA-Backends</strong> auf einem IONOS-VPS. Sie entspricht dem Entwicklungsstand vom <strong>20. Oktober 2026</strong> und umfasst den Serveraufbau bis einschließlich der getesteten automatischen HTTPS-Zertifikatserneuerung (Schritt 22.3).</p>
+<p>Diese Dokumentation beschreibt die <strong>reproduzierbare Einrichtung des bisher umgesetzten YANA-Backends</strong> auf einem IONOS-VPS. Der Serveraufbau bis einschließlich der getesteten automatischen HTTPS-Zertifikatserneuerung (Schritt 22.3) wurde am <strong>20. Oktober 2026</strong> abgeschlossen. Die Dokumentation wurde am <strong>27. Oktober 2026</strong> um die Flutter-Entwicklungsumgebung, API-Anbindung, Controller und Tests erweitert.</p>
 <h2 id="zielsystem-und-voraussetzungen">Zielsystem und Voraussetzungen<a class="headerlink" href="#zielsystem-und-voraussetzungen" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -888,9 +888,9 @@
 <td>Öffentlich vertrauenswürdiges IP-Zertifikat</td>
 </tr>
 <tr>
-<td>Künftiger Client</td>
-<td>Flutter/Dart</td>
-<td>Mobile App; <strong>noch nicht verbunden</strong></td>
+<td>Mobiler Client</td>
+<td>Flutter <strong>3.44.4</strong>, Dart <strong>3.12.2</strong> (beobachteter Stand)</td>
+<td>API-Zugriffe und Controller bereits implementiert; UI in Entwicklung</td>
 </tr>
 </tbody>
 </table>
@@ -905,11 +905,15 @@
 <li><a href="../technik/datenmodell/">Datenbankstruktur des ER-Modells anlegen</a></li>
 <li><a href="fastapi/">FastAPI erstellen, DB anbinden und als Dienst konfigurieren</a></li>
 <li><a href="nginx-https/">Nginx als Reverse Proxy einrichten, HTTPS aktivieren und Erneuerung testen</a></li>
+<li><a href="flutter-setup/">Flutter-/Dart-Entwicklungsumgebung einrichten</a></li>
+<li><a href="../technik/flutter-api-anbindung/">Flutter-API-Zugriff mit Models und Repositories</a></li>
+<li><a href="../technik/flutter-controller/">Controller für die Flutter-Logikschicht</a></li>
+<li><a href="../technik/flutter-tests/">Live-Verbindungen und Unit-Tests prüfen</a></li>
 <li><a href="../technik/betrieb-sicherheit/">Sicherheit, Backups und Betriebskontrollen überprüfen</a></li>
 </ol>
 <h2 id="vor-der-veroffentlichung-beachten">Vor der Veröffentlichung beachten<a class="headerlink" href="#vor-der-veroffentlichung-beachten" title="Permanent link">&para;</a></h2>
 <p>Alle Befehle sind Beispiele für Ubuntu 24.04 und müssen auf den Zielserver angepasst werden. <strong>Nicht veröffentlichen:</strong> <code>.env</code>, Klartextpasswörter, private TLS-Schlüssel, IONOS-Zugangsdaten, Datenbankexports mit echten Nutzerdaten, Token oder geheimhaltungsbedürftige Adressen. Server-IP und Benutzernamen sind in Beispielen abstrahiert; wo <code>SERVER_IP</code> steht, ist die reale öffentliche IPv4 einzusetzen.</p>
-<p>Ein funktionierender HTTPS-Endpunkt ist noch <strong>kein</strong> Nachweis für eine sichere, produktionsbereite Beratungslösung. Die derzeitigen GET-Endpunkte sind Testfunktionalität; Authentifizierung und Datenschutzmaßnahmen stehen teilweise noch aus.</p>
+<p>Ein funktionierender HTTPS-Endpunkt oder ein erfolgreicher Flutter-Live-Test ist noch <strong>kein</strong> Nachweis für eine sichere, produktionsbereite Beratungslösung. Die derzeitigen GET-Endpunkte stellen Testfunktionalität bereit; Authentifizierung und Datenschutzmaßnahmen stehen teilweise noch aus. Für die Flutter-Oberfläche siehe den <a href="../technik/flutter-teamworkflow/">Übergabeplan</a>.</p>
 
 
 

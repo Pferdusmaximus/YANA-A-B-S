@@ -897,7 +897,7 @@
 
 
 <h1 id="nutzungshandbuch-derzeitiger-entwicklungsstand">Nutzungshandbuch – derzeitiger Entwicklungsstand<a class="headerlink" href="#nutzungshandbuch-derzeitiger-entwicklungsstand" title="Permanent link">&para;</a></h1>
-<p>Die mobile YANA-App wird mit <strong>Flutter/Dart</strong> entwickelt. Die technische Anbindung an die bereits eingerichtete FastAPI steht zum dokumentierten Stand vom <strong>20.10.2026</strong> noch aus. Daher werden hier <strong>keine</strong> noch nicht implementierten Nutzerfunktionen als fertig dargestellt.</p>
+<p>Die mobile YANA-App wird mit <strong>Flutter/Dart</strong> entwickelt. <strong>Stand 27.10.2026:</strong> Die technische Anbindung an FastAPI ist für Hilfestellen, Kategorien und Notfallnummern durch Dart-CLI-Live-Tests bestätigt. Die dazugehörigen Controller wurden mit Fake-Repositories erfolgreich getestet. <strong>Die nutzbare, fertig integrierte Benutzeroberfläche befindet sich weiterhin in Entwicklung.</strong> Hier werden daher keine noch nicht vorhandenen Endanwender-Funktionen als fertig dargestellt.</p>
 <h2 id="geplante-funktionen-aus-projektkonzept">Geplante Funktionen (aus Projektkonzept)<a class="headerlink" href="#geplante-funktionen-aus-projektkonzept" title="Permanent link">&para;</a></h2>
 <ul>
 <li>Standortbezogene Anzeige von Hilfestellen.</li>
@@ -907,7 +907,7 @@
 <li>Möglichkeit einer anonymen Erstberatung (für die Umsetzung sind besondere Sicherheits- und Datenschutzanforderungen zu beachten).</li>
 </ul>
 <h2 id="fur-entwickler-bereits-nutzbar">Für Entwickler bereits nutzbar<a class="headerlink" href="#fur-entwickler-bereits-nutzbar" title="Permanent link">&para;</a></h2>
-<p>Die Backend-API kann über <code>/docs</code> interaktiv getestet werden. Unter <code>/hilfestellen</code> und <code>/kategorien</code> sind derzeit <strong>rein fiktive</strong> Datensätze vorhanden. Details siehe <a href="../technik/api-referenz/">API-Referenz</a>.</p>
+<p>Die Backend-API kann über <code>/docs</code> interaktiv getestet werden. Unter <code>/hilfestellen</code> und <code>/kategorien</code> sind derzeit <strong>rein fiktive</strong> Datensätze vorhanden. Entwickler können außerdem die drei manuellen Verbindungstests mit <code>dart run tool/...</code> ausführen und Models/Controller aus Flutter verwenden. Details siehe <a href="../technik/api-referenz/">API-Referenz</a>, <a href="../technik/flutter-api-anbindung/">Flutter-API-Anbindung</a> und <a href="../technik/flutter-tests/">Testkonzept</a>.</p>
 <h2 id="noch-zu-erganzen">Noch zu ergänzen<a class="headerlink" href="#noch-zu-erganzen" title="Permanent link">&para;</a></h2>
 <p>Sobald die Flutter-Integration umgesetzt ist, werden hier die <strong>konkreten Benutzerabläufe</strong>, bereinigte Screenshots und Nutzertests dokumentiert. Download-Link/CTA und Promovideo werden auf der <a href="../">Startseite</a> ergänzt.</p>
 <blockquote>
