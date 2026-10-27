@@ -1,8 +1,9 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
 import 'package:url_launcher/url_launcher.dart';
+
+import 'core/network/api_client.dart';
+import 'features/help/data/help_model.dart';
+import 'features/help/data/help_repository.dart';
 
 const Color kPrimary = Color(0xFF7B1F6A); // Violett aus den Wireframes
 const Color kDark = Color(0xFF454545);
@@ -30,24 +31,8 @@ class HilfeApp extends StatelessWidget {
 }
 
 // ---------------------------------------------------------------------------
-// API-Service (FastAPI -> PostgreSQL)
+// Hilfsfunktionen
 // ---------------------------------------------------------------------------
-class ApiService {
-  /// Erwartet eine JSON-Liste, z. B.
-  /// [{"name": "...", "beschreibung": "...", "telefon": "...", "website": "..."}]
-  static Future<List<Map<String, dynamic>>> fetchList(String endpoint) async {
-    final response = await http
-        .get(Uri.parse('$apiBaseUrl$endpoint'))
-        .timeout(const Duration(seconds: 10));
-
-    if (response.statusCode != 200) {
-      throw Exception('Serverfehler (${response.statusCode})');
-    }
-    final data = jsonDecode(utf8.decode(response.bodyBytes)) as List<dynamic>;
-    return data.cast<Map<String, dynamic>>();
-  }
-}
-
 Future<void> callNumber(String number) async {
   final uri = Uri(scheme: 'tel', path: number);
   if (await canLaunchUrl(uri)) {
@@ -229,7 +214,10 @@ class HomeView extends StatelessWidget {
           const SizedBox(height: 20),
           _WideButton(
             label: 'Hilfestellen',
-            onPressed: () => _openList(context, 'Hilfestellen', '/hilfestellen'),
+            onPressed: () => Navigator.push(
+              context,
+              MaterialPageRoute(builder: (_) => const HelpFacilityScreen()),
+            ),
           ),
         ],
       ),
@@ -370,7 +358,106 @@ class StartMenu extends StatelessWidget {
 }
 
 // ---------------------------------------------------------------------------
-// Generische Listenansicht: lädt Einträge per FastAPI aus PostgreSQL
+// Hilfestellen: lädt Einrichtungen über das HelpRepository (core/network)
+// ---------------------------------------------------------------------------
+class HelpFacilityScreen extends StatefulWidget {
+  const HelpFacilityScreen({super.key});
+
+  @override
+  State<HelpFacilityScreen> createState() => _HelpFacilityScreenState();
+}
+
+class _HelpFacilityScreenState extends State<HelpFacilityScreen> {
+  final HelpRepository _repository = HelpRepository();
+  late Future<List<HelpFacility>> _future;
+
+  @override
+  void initState() {
+    super.initState();
+    _future = _repository.getHelpFacilities();
+  }
+
+  void _reload() {
+    setState(() => _future = _repository.getHelpFacilities());
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('Hilfestellen')),
+      body: FutureBuilder<List<HelpFacility>>(
+        future: _future,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState != ConnectionState.done) {
+            return const Center(child: CircularProgressIndicator());
+          }
+          if (snapshot.hasError) {
+            return _ErrorView(onRetry: _reload);
+          }
+          final facilities = snapshot.data ?? [];
+          if (facilities.isEmpty) {
+            return const Center(child: Text('Keine Einträge vorhanden.'));
+          }
+          return ListView.separated(
+            padding: const EdgeInsets.all(16),
+            itemCount: facilities.length,
+            separatorBuilder: (_, _) => const SizedBox(height: 8),
+            itemBuilder: (context, i) {
+              final facility = facilities[i];
+              final phone = facility.phone;
+              return Card(
+                child: ListTile(
+                  title: Text(facility.name),
+                  subtitle: Text(
+                    [
+                      facility.type,
+                      facility.address,
+                      if (facility.openingHours != null) facility.openingHours!,
+                    ].join('\n'),
+                  ),
+                  isThreeLine: true,
+                  trailing: (phone != null && phone.isNotEmpty)
+                      ? IconButton(
+                          tooltip: 'Anrufen',
+                          icon: const Icon(Icons.call),
+                          onPressed: () => callNumber(phone),
+                        )
+                      : null,
+                ),
+              );
+            },
+          );
+        },
+      ),
+    );
+  }
+}
+
+class _ErrorView extends StatelessWidget {
+  const _ErrorView({required this.onRetry});
+
+  final VoidCallback onRetry;
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          const Text('Daten konnten nicht geladen werden.'),
+          const SizedBox(height: 12),
+          FilledButton(
+            onPressed: onRetry,
+            child: const Text('Erneut versuchen'),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Generische Listenansicht: lädt Einträge über den ApiClient (core/network)
 // ---------------------------------------------------------------------------
 class InfoListScreen extends StatefulWidget {
   const InfoListScreen({
@@ -387,16 +474,27 @@ class InfoListScreen extends StatefulWidget {
 }
 
 class _InfoListScreenState extends State<InfoListScreen> {
+  final ApiClient _apiClient = ApiClient();
   late Future<List<Map<String, dynamic>>> _future;
 
   @override
   void initState() {
     super.initState();
-    _future = ApiService.fetchList(widget.endpoint);
+    _future = _fetchList();
+  }
+
+  Future<List<Map<String, dynamic>>> _fetchList() async {
+    final data = await _apiClient.get(widget.endpoint);
+    if (data is! List) {
+      throw const FormatException('Unerwartetes Antwortformat der API');
+    }
+    return data
+        .map((item) => Map<String, dynamic>.from(item as Map))
+        .toList();
   }
 
   void _reload() {
-    setState(() => _future = ApiService.fetchList(widget.endpoint));
+    setState(() => _future = _fetchList());
   }
 
   @override
@@ -410,19 +508,7 @@ class _InfoListScreenState extends State<InfoListScreen> {
             return const Center(child: CircularProgressIndicator());
           }
           if (snapshot.hasError) {
-            return Center(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  const Text('Daten konnten nicht geladen werden.'),
-                  const SizedBox(height: 12),
-                  FilledButton(
-                    onPressed: _reload,
-                    child: const Text('Erneut versuchen'),
-                  ),
-                ],
-              ),
-            );
+            return _ErrorView(onRetry: _reload);
           }
           final items = snapshot.data ?? [];
           if (items.isEmpty) {
@@ -431,7 +517,7 @@ class _InfoListScreenState extends State<InfoListScreen> {
           return ListView.separated(
             padding: const EdgeInsets.all(16),
             itemCount: items.length,
-            separatorBuilder: (_, __) => const SizedBox(height: 8),
+            separatorBuilder: (_, _) => const SizedBox(height: 8),
             itemBuilder: (context, i) {
               final item = items[i];
               final phone = item['telefon'] as String?;
