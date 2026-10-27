@@ -7,7 +7,7 @@ class CategoryRepository {
   CategoryRepository({ApiClient? apiClient})
       : _apiClient = apiClient ?? ApiClient();
 
-  Future<List<Category>> getCategories() async {
+  Future<List<YanaCategory>> getCategories() async {
     final data = await _apiClient.get('/kategorien');
 
     if (data is! List) {
@@ -17,7 +17,7 @@ class CategoryRepository {
     }
 
     return data.map((item) {
-      return Category.fromJson(
+      return YanaCategory.fromJson(
         Map<String, dynamic>.from(item as Map),
       );
     }).toList();
