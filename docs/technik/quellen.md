@@ -16,6 +16,12 @@ Diese Quellen wurden für die Überprüfung von Installationsverfahren, Schnitts
 | MkDocs | [MkDocs – Documentation](https://www.mkdocs.org/user-guide/) |
 | Material for MkDocs | [Mermaid-Diagramme](https://squidfunk.github.io/mkdocs-material/reference/diagrams/) |
 | GitHub Pages | [GitHub Pages Documentation](https://docs.github.com/en/pages) |
+| Flutter-Installation | [Flutter – Installation mit VS Code](https://docs.flutter.dev/install/with-vs-code) |
+| Flutter-Netzwerkzugriff | [Flutter – Fetch data from the internet](https://docs.flutter.dev/cookbook/networking/fetch-data) |
+| Flutter-Tests | [Flutter – Testing Overview](https://docs.flutter.dev/testing/overview) |
+| Dart-Analyse | [Dart – Customizing static analysis](https://dart.dev/tools/analysis) |
+| Dart-Regel `avoid_print` | [Dart – avoid_print](https://dart.dev/tools/diagnostics/avoid_print) |
+| HTTP-Paket | [pub.dev – http](https://pub.dev/packages/http) |
 
 ## Dokumentationsprinzipien
 
@@ -23,3 +29,5 @@ Diese Quellen wurden für die Überprüfung von Installationsverfahren, Schnitts
 - **Reproduzierbarkeit:** Pfade, Dienste, Ports, SQL und Konfigurationsdateien sind angegeben.
 - **Sicherheit:** Echte Zugangsdaten und nicht öffentliche Schlüssel sind ausgeschlossen.
 - **Änderbarkeit:** Änderungen an Code, Schema, Ressourcen und Laufzeit sollten künftig mit Datum ergänzt werden.
+- **Verifikationsstatus:** Dart-Live-Tests und Fake-Controller-Tests sind bestätigt; eine vollständige Flutter-UI-Integration und ein E2E-Test auf einem Android-Gerät dagegen nicht.
+- **Projektbezug:** [GitHub-Repository YANA-A-B-S](https://github.com/Pferdusmaximus/YANA-A-B-S).

@@ -1,6 +1,6 @@
 # Betrieb, Sicherheit und Datenschutz
 
-## Ist-Zustand zum 20.10.2026
+## Ist-Zustand zum 27.10.2026
 
 | Prüfaspekt | Status | Nachweis / Bemerkung |
 |---|---|---|
@@ -15,7 +15,10 @@
 | Nginx lokal und öffentlich | **Bestätigt** | `127.0.0.1:8080` sowie HTTPS-Port 443 |
 | HTTPS-Zertifikat | **Bestätigt** | Staging-Zertifikat ersetzt, Firefox meldete sichere Verbindung |
 | Erneuerung mit Certbot | **Bestätigt (Test)** | Timer und `renew --dry-run --run-deploy-hooks` erfolgreich |
-| Flutter-App per API verbunden | **Noch nicht** | Nächster Entwicklungsschritt |
+| Flutter/Dart per API verbunden | **Bestätigt (Dart-CLI)** | Drei Live-Tests: 2 Hilfestellen, 2 Kategorien, 0 Notfallnummern |
+| Flutter-Controller getestet | **Bestätigt** | Drei `ChangeNotifier`-Controller, Fake-Repository-Tests erfolgreich |
+| Datenanzeige in fertiger Flutter-Oberfläche | **Nicht bestätigt** | Präsentationsschicht parallel in Entwicklung |
+| Android-Debug-Build | **Bestätigt** | `flutter.bat build apk --debug` erfolgreich; Lizenzwarnung in Doctor verblieben |
 | Authentifizierte API für sensible Daten | **Noch nicht** | Darf vor produktiven Chatdaten nicht fehlen |
 
 ## Sicherheitskonzept des aktuellen Testbetriebs
@@ -73,6 +76,12 @@ sudo -u postgres pg_dump -Fc app_db > app_db.backup
 ```
 
 Backups mit realen Daten gehören **nicht** in GitHub. Eine Sicherungsdatei ersetzt keine getestete Wiederherstellung.
+
+## Flutter-Client und öffentlicher API-Zugriff
+
+Der öffentliche HTTP/JSON-Zugriff über HTTPS wurde von Dart aus erfolgreich getestet. **HTTPS allein ersetzt keine Zugriffskontrolle.** Im Flutter-Repository liegen ausschließlich die **öffentliche API-Basisadresse** und der Code für GET-Anfragen; Datenbankpasswort, `.env`-Datei, private Zertifikatschlüssel und Server-Schlüssel dürfen **nicht** Bestandteil der App werden.
+
+Aktuell liefert `/notfallnummern` eine leere Liste. Vor Auslieferung realer Notfallfunktionen sind fachlich geprüfte Kontakte, Cache-/Offline-Konzept und sichere Fehleranzeigen erforderlich. Eine fehlende Netzwerkverbindung darf nicht zu einer irreführenden Darstellung fiktiver Testdaten als echte Hilfe führen. [Flutter-Tests](flutter-tests.md) und [Flutter-Architektur](flutter-architektur.md) beschreiben den technischen Stand.
 
 ## Notwendige Arbeiten vor der Nutzung mit echten Betroffenen
 

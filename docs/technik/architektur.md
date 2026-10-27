@@ -2,11 +2,11 @@
 
 ## Architekturprinzip
 
-Das YANA-System verwendet eine **Client-Server-Architektur**. Die Flutter-App ist als mobiler Client vorgesehen; das Python-Backend bietet HTTP/JSON-Endpunkte, Nginx terminiert TLS und PostgreSQL verwaltet die persistenten Daten. **Der Flutter-Client wurde bis zum dokumentierten Stand noch nicht angebunden.**
+Das YANA-System verwendet eine **Client-Server-Architektur**. Die Flutter-App ist als mobiler Client vorgesehen; das Python-Backend bietet HTTP/JSON-Endpunkte, Nginx terminiert TLS und PostgreSQL verwaltet die persistenten Daten. **Der Flutter-Client verwendet inzwischen für drei Datenbereiche echte HTTPS-Abfragen. Die Integration dieser Daten in fertige, sichtbare Flutter-Screens ist noch offen.**
 
 ```mermaid
 flowchart TB
-    C["Flutter-App (Android / iOS)\nnoch in Entwicklung"]
+    C["Flutter / Dart\nModels, Repositories, Controller implementiert\nUI in Entwicklung"]
     P["Öffentliches Internet\nHTTPS / TCP 443"]
     subgraph VPS["IONOS VPS – 2 vCores, 4 GB RAM – Ubuntu 24.04 LTS"]
       N["Nginx\nReverse Proxy + TLS"]
@@ -20,18 +20,18 @@ flowchart TB
       S -.->|"verwaltet"| F
       ADM -.->|"lokale Administration"| DB
     end
-    C -.->|"geplante Anbindung"| P
+    C -->|"HTTPS GET: 3 Bereiche live getestet"| P
     P --> N
     B -.->|"Backup-Konsole"| X["IONOS Cloud Backup"]
 ```
 
-**Hinweis:** Ein erfolgreicher Backup-Lauf ist noch gesondert nachzuweisen. Der mobile Zugriff über Flutter ist in der Abbildung als **geplante** Verbindung markiert, nicht als bereits abgeschlossen.
+**Hinweis:** Ein erfolgreicher Backup-Lauf ist gesondert nachzuweisen. Die Flutter-Datenzugriffsschicht hat die öffentliche API erfolgreich kontaktiert (2 Hilfestellen, 2 Kategorien, 0 Notfallnummern). Die produktive Darstellung in fertigen Screens ist **noch nicht bestätigt**.
 
 ## Komponenten und Verantwortlichkeiten
 
 | Komponente | Verantwortlichkeit | Vertrauensgrenze |
 |---|---|---|
-| Flutter/Dart | Oberfläche, Eingaben, Darstellung empfangener JSON-Daten | Öffentliches Endgerät, künftig anzubinden |
+| Flutter/Dart | Model/Repository/Controller implementiert; Oberfläche in Entwicklung | Öffentlicher Client, HTTPS-Zugriff erfolgreich getestet |
 | Nginx | HTTPS-Zugang über Port 443, Weiterleitung an lokales Backend | Öffentlich zugängliche Serverkomponente |
 | FastAPI/Uvicorn | API-Routing, DB-Abfragen, HTTP-Antworten | Lokal `127.0.0.1:8000` |
 | PostgreSQL | Datenintegrität, persistente Speicherung, relationale Verknüpfungen | Lokal `127.0.0.1:5432` |
@@ -44,7 +44,7 @@ flowchart TB
 
 ```mermaid
 sequenceDiagram
-    participant Client as Externer HTTPS-Client (Flutter geplant)
+    participant Client as Dart Live-Smoke-Test (bestätigt)
     participant N as Nginx
     participant API as FastAPI
     participant PG as PostgreSQL
@@ -56,7 +56,7 @@ sequenceDiagram
     N-->>Client: HTTP 200 + JSON über TLS
 ```
 
-Der Ablauf wurde bis zur HTTPS-API mit Browser/Swagger tatsächlich erprobt; nur die spätere Ausführung durch Flutter fehlt.
+Der Ablauf wurde sowohl mit Browser/Swagger **als auch** mit eigenständigen Dart-CLI-Tests über HTTPS erfolgreich erprobt. Die Einbindung in sichtbare Flutter-Widgets ist noch offen. Siehe [Flutter-Schichtenmodell](flutter-architektur.md) und [Live-Testergebnisse](flutter-tests.md).
 
 ## Projektverzeichnis und Konfigurationspfade
 
@@ -74,6 +74,10 @@ Der Ablauf wurde bis zur HTTPS-API mit Browser/Swagger tatsächlich erprobt; nur
 | `/etc/letsencrypt/renewal-hooks/deploy/reload-nginx.sh` | Nginx-Neuladen nach Erneuerung |
 
 Beim Benutzer- und Home-Pfad handelt es sich um den bisherigen VPS-Zustand. Bei anderen Servern müssen die Pfade angepasst werden.
+
+## Flutter im selben Monorepo
+
+Die mobile Anwendung liegt unter `apps/mobile/` im Repository [YANA-A-B-S](https://github.com/Pferdusmaximus/YANA-A-B-S). Die für drei GET-Endpunkte umgesetzten Models, Repositories und `ChangeNotifier`-Controller sind in [Flutter-Architektur](flutter-architektur.md) und [API-Anbindung](flutter-api-anbindung.md) dokumentiert. Automatisierte Controller-Tests und getrennte Dart-Live-Tests werden unter [Tests](flutter-tests.md) beschrieben.
 
 ## Technologiewahl und Einschränkungen
 

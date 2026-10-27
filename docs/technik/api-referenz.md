@@ -20,7 +20,7 @@ Die REST-API wird mit **FastAPI 0.150.0** implementiert und durch **Uvicorn** be
 | `GET` | `/health` | Erreichbarkeit FastAPI | Nein | Getestet |
 | `GET` | `/hilfestellen` | Alle Hilfestellen abrufen | Nein | Getestet |
 | `GET` | `/kategorien` | Alle Kategorien abrufen | Nein | Getestet |
-| `GET` | `/notfallnummern` | Alle Notfallkontakte abrufen | Nein | Endpunkt vorhanden; Tabelle anfangs leer |
+| `GET` | `/notfallnummern` | Alle Notfallkontakte abrufen | Nein | Dart-Live-Test erfolgreich, `[]` bei leerer Tabelle |
 | `GET` | `/docs` | Interaktive Swagger-Dokumentation | Nein | Getestet |
 
 Die eigentlichen Routen sind in [`main.py`](../installation/fastapi.md#4-api-endpunkte-implementieren) definiert.
@@ -127,6 +127,10 @@ curl -i https://SERVER_IP/hilfestellen
 ```
 
 Für HTTPS **nicht** `curl -k` verwenden, weil damit die Zertifikatsprüfung umgangen würde.
+
+## Nutzung in Flutter (Stand 27.10.2026)
+
+Die drei Datenendpunkte werden inzwischen über den gemeinsamen Dart-`ApiClient` angesprochen. Die fachlichen Repositories übersetzen JSON in `HelpFacility`, `YanaCategory` und `EmergencyContact`. **Bestätigter Live-Test:** 2 Hilfestellen, 2 Kategorien, 0 Notfallnummern. Details stehen in [Flutter-API-Anbindung](flutter-api-anbindung.md) und [Teststrategie](flutter-tests.md). Die Verknüpfung mit der fertigen App-Oberfläche ist noch nicht abgeschlossen.
 
 ## Nicht implementierte Endpunkte
 

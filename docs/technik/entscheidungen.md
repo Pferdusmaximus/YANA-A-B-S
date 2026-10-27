@@ -37,6 +37,10 @@ Die IONOS-Konsole wurde als grafische Bedienoberfläche genutzt. Daher erfolgte 
 - **Let's Encrypt** liefert ein echtes öffentlich vertrauenswürdiges Zertifikat für die IP-Adresse; ein Staging-Zertifikat wurde im Setup erkannt und ersetzt.
 - **Certbot-Timer + Deploy Hook** automatisieren die Zertifikatserneuerung und den Nginx-Reload.
 
+## Flutter: getrennte Daten-, Logik- und Darstellungsschicht
+
+Im mobilen Client werden Fachbereiche durch **Model + Repository + `ChangeNotifier`-Controller** umgesetzt. Dadurch kann ein Teammitglied die Präsentationsschicht unabhängig entwickeln. Die HTTP-Infrastruktur wird in `ApiClient` und `ApiConfig` gekapselt. Tests der Controller arbeiten mit Fake-Repositories; echte öffentliche API-Abfragen werden getrennt über `tool/` mit `dart run` geprüft. Die Entscheidung wurde durch den HTTP-400-Fehler im Flutter-Test-Runner bestätigt und ist in [Teststrategie](flutter-tests.md) beschrieben.
+
 ## Offene Entscheidungen
 
 - Authentifizierungsmodell (einschließlich anonymer Beratung und Admin-Oberfläche).
@@ -45,4 +49,8 @@ Die IONOS-Konsole wurde als grafische Bedienoberfläche genutzt. Daher erfolgte 
 - Art und Dauer der Chatdatenspeicherung.
 - Getrennte Deployment-/Test-/Produktivumgebungen.
 - Ressourcenmonitoring und Lasttests auf 2 vCores / 4 GB RAM.
-- App-Integration mit Flutter (nächster Projektabschnitt).
+- Flutter-UI-Integration der **bereits getesteten** API-/Controller-Schicht (noch ausstehend).
+
+## Nachvollziehbarkeit der Änderungen
+
+Eine zeitliche Zusammenfassung von Servereinrichtung, TLS und neu hinzugekommener Flutter-API-Schicht steht im [Entwicklungsprotokoll](entwicklungsstand.md).

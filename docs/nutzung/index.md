@@ -1,6 +1,6 @@
 # Nutzungshandbuch – derzeitiger Entwicklungsstand
 
-Die mobile YANA-App wird mit **Flutter/Dart** entwickelt. Die technische Anbindung an die bereits eingerichtete FastAPI steht zum dokumentierten Stand vom **20.10.2026** noch aus. Daher werden hier **keine** noch nicht implementierten Nutzerfunktionen als fertig dargestellt.
+Die mobile YANA-App wird mit **Flutter/Dart** entwickelt. **Stand 27.10.2026:** Die technische Anbindung an FastAPI ist für Hilfestellen, Kategorien und Notfallnummern durch Dart-CLI-Live-Tests bestätigt. Die dazugehörigen Controller wurden mit Fake-Repositories erfolgreich getestet. **Die nutzbare, fertig integrierte Benutzeroberfläche befindet sich weiterhin in Entwicklung.** Hier werden daher keine noch nicht vorhandenen Endanwender-Funktionen als fertig dargestellt.
 
 ## Geplante Funktionen (aus Projektkonzept)
 
@@ -12,7 +12,7 @@ Die mobile YANA-App wird mit **Flutter/Dart** entwickelt. Die technische Anbindu
 
 ## Für Entwickler bereits nutzbar
 
-Die Backend-API kann über `/docs` interaktiv getestet werden. Unter `/hilfestellen` und `/kategorien` sind derzeit **rein fiktive** Datensätze vorhanden. Details siehe [API-Referenz](../technik/api-referenz.md).
+Die Backend-API kann über `/docs` interaktiv getestet werden. Unter `/hilfestellen` und `/kategorien` sind derzeit **rein fiktive** Datensätze vorhanden. Entwickler können außerdem die drei manuellen Verbindungstests mit `dart run tool/...` ausführen und Models/Controller aus Flutter verwenden. Details siehe [API-Referenz](../technik/api-referenz.md), [Flutter-API-Anbindung](../technik/flutter-api-anbindung.md) und [Testkonzept](../technik/flutter-tests.md).
 
 ## Noch zu ergänzen
 

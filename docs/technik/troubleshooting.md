@@ -16,6 +16,10 @@ Diese Seite protokolliert die wesentlichen Probleme aus dem bisherigen YANA-Serv
 | Zugriff aus Schulnetzwerk | Fortinet-Firewall verhinderte Test | Externen Zugriff über Mobilfunk-Hotspot getestet; Server war darüber erreichbar. Schulnetzrichtlinien nicht umgehen; ggf. mit Schul-IT abstimmen. |
 | API-Test vor Testdaten | `HTTP 200` + `[]` | Kein Fehler: Tabelle war leer. Nach Einfügen fiktiver Datensätze JSON-Antwort mit zwei Hilfestellen. |
 
+## Flutter-spezifische Fehler
+
+Nach den Serverarbeiten wurden zusätzlich Flutter, Android SDK und die Dart-API-Anbindung eingerichtet. Dabei traten unter anderem OneDrive-Dateisperren, ein Gradle-Editorhinweis, eine Android-Lizenzwarnung, `Category`-/`YanaCategory`-Typkonflikte und ein durch `TestWidgetsFlutterBinding` erzeugter HTTP-400-Testfehler auf. Diese Probleme, die jeweils beobachteten Ausgaben und die tatsächlich wirksamen Maßnahmen sind ausführlich unter **[Flutter-Fehlerprotokoll](flutter-troubleshooting.md)** dokumentiert.
+
 ## Diagnosebefehle
 
 ```bash
