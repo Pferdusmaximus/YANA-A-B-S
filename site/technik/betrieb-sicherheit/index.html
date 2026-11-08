@@ -665,10 +665,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#ist-zustand-zum-20102026" class="md-nav__link">
+  <a href="#ist-zustand-zum-27102026" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Ist-Zustand zum 20.10.2026
+        Ist-Zustand zum 27.10.2026
       
     </span>
   </a>
@@ -713,6 +713,17 @@
     <span class="md-ellipsis">
       
         Backups und Wiederherstellung
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#flutter-client-und-offentlicher-api-zugriff" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Flutter-Client und öffentlicher API-Zugriff
       
     </span>
   </a>
@@ -884,10 +895,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#ist-zustand-zum-20102026" class="md-nav__link">
+  <a href="#ist-zustand-zum-27102026" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Ist-Zustand zum 20.10.2026
+        Ist-Zustand zum 27.10.2026
       
     </span>
   </a>
@@ -939,6 +950,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#flutter-client-und-offentlicher-api-zugriff" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Flutter-Client und öffentlicher API-Zugriff
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#notwendige-arbeiten-vor-der-nutzung-mit-echten-betroffenen" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -967,7 +989,7 @@
 
 
 <h1 id="betrieb-sicherheit-und-datenschutz">Betrieb, Sicherheit und Datenschutz<a class="headerlink" href="#betrieb-sicherheit-und-datenschutz" title="Permanent link">&para;</a></h1>
-<h2 id="ist-zustand-zum-20102026">Ist-Zustand zum 20.10.2026<a class="headerlink" href="#ist-zustand-zum-20102026" title="Permanent link">&para;</a></h2>
+<h2 id="ist-zustand-zum-27102026">Ist-Zustand zum 27.10.2026<a class="headerlink" href="#ist-zustand-zum-27102026" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
 <tr>
@@ -1033,9 +1055,24 @@
 <td>Timer und <code>renew --dry-run --run-deploy-hooks</code> erfolgreich</td>
 </tr>
 <tr>
-<td>Flutter-App per API verbunden</td>
-<td><strong>Noch nicht</strong></td>
-<td>Nächster Entwicklungsschritt</td>
+<td>Flutter/Dart per API verbunden</td>
+<td><strong>Bestätigt (Dart-CLI)</strong></td>
+<td>Drei Live-Tests: 2 Hilfestellen, 2 Kategorien, 0 Notfallnummern</td>
+</tr>
+<tr>
+<td>Flutter-Controller getestet</td>
+<td><strong>Bestätigt</strong></td>
+<td>Drei <code>ChangeNotifier</code>-Controller, Fake-Repository-Tests erfolgreich</td>
+</tr>
+<tr>
+<td>Datenanzeige in fertiger Flutter-Oberfläche</td>
+<td><strong>Nicht bestätigt</strong></td>
+<td>Präsentationsschicht parallel in Entwicklung</td>
+</tr>
+<tr>
+<td>Android-Debug-Build</td>
+<td><strong>Bestätigt</strong></td>
+<td><code>flutter.bat build apk --debug</code> erfolgreich; Lizenzwarnung in Doctor verblieben</td>
 </tr>
 <tr>
 <td>Authentifizierte API für sensible Daten</td>
@@ -1121,6 +1158,9 @@
 sudo<span class="w"> </span>-u<span class="w"> </span>postgres<span class="w"> </span>pg_dump<span class="w"> </span>-Fc<span class="w"> </span>app_db<span class="w"> </span>&gt;<span class="w"> </span>app_db.backup
 </code></pre></div>
 <p>Backups mit realen Daten gehören <strong>nicht</strong> in GitHub. Eine Sicherungsdatei ersetzt keine getestete Wiederherstellung.</p>
+<h2 id="flutter-client-und-offentlicher-api-zugriff">Flutter-Client und öffentlicher API-Zugriff<a class="headerlink" href="#flutter-client-und-offentlicher-api-zugriff" title="Permanent link">&para;</a></h2>
+<p>Der öffentliche HTTP/JSON-Zugriff über HTTPS wurde von Dart aus erfolgreich getestet. <strong>HTTPS allein ersetzt keine Zugriffskontrolle.</strong> Im Flutter-Repository liegen ausschließlich die <strong>öffentliche API-Basisadresse</strong> und der Code für GET-Anfragen; Datenbankpasswort, <code>.env</code>-Datei, private Zertifikatschlüssel und Server-Schlüssel dürfen <strong>nicht</strong> Bestandteil der App werden.</p>
+<p>Aktuell liefert <code>/notfallnummern</code> eine leere Liste. Vor Auslieferung realer Notfallfunktionen sind fachlich geprüfte Kontakte, Cache-/Offline-Konzept und sichere Fehleranzeigen erforderlich. Eine fehlende Netzwerkverbindung darf nicht zu einer irreführenden Darstellung fiktiver Testdaten als echte Hilfe führen. <a href="../flutter-tests/">Flutter-Tests</a> und <a href="../flutter-architektur/">Flutter-Architektur</a> beschreiben den technischen Stand.</p>
 <h2 id="notwendige-arbeiten-vor-der-nutzung-mit-echten-betroffenen">Notwendige Arbeiten vor der Nutzung mit echten Betroffenen<a class="headerlink" href="#notwendige-arbeiten-vor-der-nutzung-mit-echten-betroffenen" title="Permanent link">&para;</a></h2>
 <ul>
 <li><strong>Authentifizierung und Autorisierung:</strong> Endpunkte nach Rollen absichern; keine fremden Chats abrufbar machen.</li>

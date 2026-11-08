@@ -736,6 +736,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#nutzung-in-flutter-stand-27102026" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Nutzung in Flutter (Stand 27.10.2026)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#nicht-implementierte-endpunkte" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1027,6 +1038,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#nutzung-in-flutter-stand-27102026" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Nutzung in Flutter (Stand 27.10.2026)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#nicht-implementierte-endpunkte" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1129,7 +1151,7 @@
 <td><code>/notfallnummern</code></td>
 <td>Alle Notfallkontakte abrufen</td>
 <td>Nein</td>
-<td>Endpunkt vorhanden; Tabelle anfangs leer</td>
+<td>Dart-Live-Test erfolgreich, <code>[]</code> bei leerer Tabelle</td>
 </tr>
 <tr>
 <td><code>GET</code></td>
@@ -1207,6 +1229,8 @@ curl<span class="w"> </span>-i<span class="w"> </span>http://127.0.0.1:8080/hilf
 <div class="highlight"><pre><span></span><code>curl<span class="w"> </span>-i<span class="w"> </span>https://SERVER_IP/hilfestellen
 </code></pre></div>
 <p>Für HTTPS <strong>nicht</strong> <code>curl -k</code> verwenden, weil damit die Zertifikatsprüfung umgangen würde.</p>
+<h2 id="nutzung-in-flutter-stand-27102026">Nutzung in Flutter (Stand 27.10.2026)<a class="headerlink" href="#nutzung-in-flutter-stand-27102026" title="Permanent link">&para;</a></h2>
+<p>Die drei Datenendpunkte werden inzwischen über den gemeinsamen Dart-<code>ApiClient</code> angesprochen. Die fachlichen Repositories übersetzen JSON in <code>HelpFacility</code>, <code>YanaCategory</code> und <code>EmergencyContact</code>. <strong>Bestätigter Live-Test:</strong> 2 Hilfestellen, 2 Kategorien, 0 Notfallnummern. Details stehen in <a href="../flutter-api-anbindung/">Flutter-API-Anbindung</a> und <a href="../flutter-tests/">Teststrategie</a>. Die Verknüpfung mit der fertigen App-Oberfläche ist noch nicht abgeschlossen.</p>
 <h2 id="nicht-implementierte-endpunkte">Nicht implementierte Endpunkte<a class="headerlink" href="#nicht-implementierte-endpunkte" title="Permanent link">&para;</a></h2>
 <p>Insbesondere die folgenden Funktionen sind <strong>noch nicht Teil des bestätigten API-Standes</strong>:</p>
 <ul>
