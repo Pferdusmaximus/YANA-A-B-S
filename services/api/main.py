@@ -1,3 +1,8 @@
+import os
+
+from dotenv import load_dotenv
+from starlette.middleware.sessions import SessionMiddleware
+
 from fastapi.middleware.cors import CORSMiddleware
 
 from portal import router as portal_router
@@ -15,6 +20,25 @@ app = FastAPI(
     title="YANA API",
     description="Backend für die YANA Sicherheits-App",
     version="1.0.0"
+)
+
+
+load_dotenv()
+
+session_secret = os.getenv("PORTAL_SESSION_SECRET")
+
+if not session_secret or len(session_secret) < 32:
+    raise RuntimeError(
+        "PORTAL_SESSION_SECRET fehlt oder ist zu kurz."
+    )
+
+app.add_middleware(
+    SessionMiddleware,
+    secret_key=session_secret,
+    session_cookie="yana_portal_session",
+    max_age=1800,
+    same_site="strict",
+    https_only=True
 )
 
 

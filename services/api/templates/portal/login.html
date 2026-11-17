@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}YANA – Teamportal{% endblock %}
+{% block title %}YANA – Teamportal Login{% endblock %}
 
 {% block content %}
 
@@ -8,6 +8,7 @@
 
     <div class="login-container">
 
+        <!-- YANA Logo -->
         <a href="/" class="login-logo">
             YANA
         </a>
@@ -19,12 +20,30 @@
             um auf die YANA-Verwaltung zuzugreifen.
         </p>
 
+        <!-- Fehlermeldung bei ungültigem Login -->
+        {% if error %}
+        <p class="login-error" role="alert">
+            {{ error }}
+        </p>
+        {% endif %}
+
+        <!-- Login-Formular -->
         <div class="login-form">
 
-            <form id="login-form"
-                  method="post"
-                  action="/portal/login">
+            <form
+                id="login-form"
+                method="post"
+                action="/portal/login"
+            >
 
+                <!-- CSRF-Sicherheitstoken -->
+                <input
+                    type="hidden"
+                    name="csrf_token"
+                    value="{{ csrf_token }}"
+                >
+
+                <!-- E-Mail-Adresse -->
                 <label for="email">
                     E-Mail-Adresse
                 </label>
@@ -39,6 +58,7 @@
                     required
                 >
 
+                <!-- Passwort -->
                 <label for="password">
                     Passwort
                 </label>
@@ -52,8 +72,11 @@
                     required
                 >
 
-                <button type="submit"
-                        class="login-button">
+                <!-- Anmelden -->
+                <button
+                    type="submit"
+                    class="login-button"
+                >
                     Anmelden
                 </button>
 
@@ -61,12 +84,14 @@
 
         </div>
 
+        <!-- Sicherheitshinweis -->
         <p class="login-information">
             Dieser Bereich ist ausschließlich für
             autorisierte Mitarbeiter und Partner
             des YANA-Projekts vorgesehen.
         </p>
 
+        <!-- Zurück zur öffentlichen Website -->
         <a href="/" class="back-link">
             Zurück zur Startseite
         </a>
