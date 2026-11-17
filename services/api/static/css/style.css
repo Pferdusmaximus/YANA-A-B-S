@@ -267,3 +267,59 @@ footer {
     font-size: 14px;
     margin-bottom: 20px;
 }
+
+
+/* ---------------------------------------
+   Teamportal - Hilfestellenverwaltung
+--------------------------------------- */
+
+.portal-facilities {
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.facility-overview {
+    margin-top: 35px;
+    background: white;
+    border-radius: 12px;
+    padding: 25px;
+    border: 1px solid #e3e9e6;
+}
+
+.facility-overview h2 {
+    font-size: 22px;
+    margin-bottom: 20px;
+}
+
+.facility-table-wrapper {
+    overflow-x: auto;
+}
+
+.facility-table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+    font-size: 14px;
+}
+
+.facility-table th,
+.facility-table td {
+    padding: 15px;
+    border-bottom: 1px solid #e4ebe8;
+}
+
+.facility-table th {
+    background: #f3f7f6;
+    color: var(--primary-dark);
+    font-weight: 600;
+}
+
+.facility-table tbody tr:hover {
+    background: #f8faf9;
+}
+
+.facility-note {
+    color: var(--muted);
+    font-size: 14px;
+    margin-top: 25px;
+}

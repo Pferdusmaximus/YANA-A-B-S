@@ -1,0 +1,107 @@
+{% extends "base.html" %}
+
+{% block title %}
+YANA – Hilfestellenverwaltung
+{% endblock %}
+
+{% block content %}
+
+<main class="section portal-facilities">
+
+    <a href="/portal/dashboard" class="back-link">
+        Zurück zum Dashboard
+    </a>
+
+    <h1>Hilfestellenverwaltung</h1>
+
+    <p>
+        Hier werden die Hilfestellen angezeigt,
+        die aktuell in der YANA-Datenbank
+        gespeichert sind.
+    </p>
+
+    <div class="facility-overview">
+
+        <h2>
+            Vorhandene Hilfestellen
+            ({{ facilities | length }})
+        </h2>
+
+        {% if facilities %}
+
+        <div class="facility-table-wrapper">
+
+            <table class="facility-table">
+
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Typ</th>
+                        <th>Kategorie</th>
+                        <th>Adresse</th>
+                        <th>Telefon</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    {% for facility in facilities %}
+
+                    <tr>
+                        <td>
+                            {{ facility.facility_id }}
+                        </td>
+
+                        <td>
+                            <strong>
+                                {{ facility.name }}
+                            </strong>
+                        </td>
+
+                        <td>
+                            {{ facility.facility_type }}
+                        </td>
+
+                        <td>
+                            {{ facility.category_name
+                               or "–" }}
+                        </td>
+
+                        <td>
+                            {{ facility.address }}
+                        </td>
+
+                        <td>
+                            {{ facility.phone or "–" }}
+                        </td>
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+        {% else %}
+
+        <p>
+            Es sind noch keine Hilfestellen
+            in der Datenbank vorhanden.
+        </p>
+
+        {% endif %}
+
+    </div>
+
+    <p class="facility-note">
+        Die Bearbeitung und das Anlegen neuer
+        Hilfestellen werden in einem
+        weiteren Entwicklungsschritt ergänzt.
+    </p>
+
+</main>
+
+{% endblock %}

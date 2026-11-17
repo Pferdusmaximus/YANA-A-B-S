@@ -35,14 +35,20 @@ YANA – Dashboard
         </article>
 
         <article class="card">
-            <h3>Kategorien</h3>
+            <h3>Hilfestellen</h3>
 
             <p>
-                Kategorien und Leistungen
-                verwalten.
+                Bestehende Hilfestellen aus
+                PostgreSQL anzeigen.
             </p>
 
-            <p><em>In Vorbereitung</em></p>
+            {% if account.role in ["admin", "team"] %}
+                <a href="/portal/hilfestellen">
+                    Hilfestellen anzeigen
+                </a>
+            {% else %}
+                <p>Keine Berechtigung</p>
+            {% endif %}
         </article>
 
         <article class="card">
