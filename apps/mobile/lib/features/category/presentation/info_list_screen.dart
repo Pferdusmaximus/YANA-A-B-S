@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
-import '../../../app/app_theme.dart';
 import '../../../core/network/api_client.dart';
 import '../../../core/utils/phone_launcher.dart';
 import '../../../shared/widgets/error_view.dart';
+import '../../../shared/widgets/general_info_dropdown.dart';
 
 class InfoListScreen extends StatefulWidget {
   const InfoListScreen({
@@ -49,7 +49,7 @@ class _InfoListScreenState extends State<InfoListScreen> {
       appBar: AppBar(title: Text(widget.title)),
       body: Column(
         children: [
-          if (widget.info != null) _GeneralInfoDropdown(text: widget.info!),
+          if (widget.info != null) GeneralInfoDropdown(text: widget.info!),
           Expanded(child: _buildList()),
         ],
       ),
@@ -93,42 +93,6 @@ class _InfoListScreenState extends State<InfoListScreen> {
           },
         );
       },
-    );
-  }
-}
-
-class _GeneralInfoDropdown extends StatelessWidget {
-  const _GeneralInfoDropdown({required this.text});
-
-  final String text;
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
-      child: Card(
-        clipBehavior: Clip.antiAlias,
-        margin: EdgeInsets.zero,
-        child: ConstrainedBox(
-          constraints: BoxConstraints(
-            maxHeight: MediaQuery.of(context).size.height * 0.45,
-          ),
-          child: SingleChildScrollView(
-            child: ExpansionTile(
-              leading: const Icon(Icons.info_outline, color: kPrimary),
-              title: const Text(
-                'Allgemeine Informationen',
-                style: TextStyle(fontWeight: FontWeight.w600),
-              ),
-              shape: const Border(),
-              collapsedShape: const Border(),
-              childrenPadding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
-              expandedCrossAxisAlignment: CrossAxisAlignment.start,
-              children: [Text(text, style: const TextStyle(height: 1.4))],
-            ),
-          ),
-        ),
-      ),
     );
   }
 }

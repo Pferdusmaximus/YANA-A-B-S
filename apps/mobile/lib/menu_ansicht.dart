@@ -2,36 +2,42 @@ import 'package:flutter/material.dart';
 
 import 'app/profile_settings.dart';
 import 'features/category/presentation/info_list_screen.dart';
+import 'hilfestellen.dart';
 
 class StartMenu extends StatelessWidget {
   const StartMenu({super.key});
 
   // (Titel, Endpoint, Allgemeine Informationen)
+  // Öffentlich, damit die Homeansicht dieselben Einträge öffnen kann.
+  static const hilfenummern = (
+    'Hilfsnummern',
+    '/hilfenummern',
+    'Hilfenummern sind Telefonnummern, unter denen du schnell und meist '
+        'kostenlos mit geschulten Beraterinnen und Beratern sprechen kannst.\n\n'
+        'Wofür kann ich sie nutzen?\n'
+        '• Wenn du akut Hilfe, Rat oder einfach jemanden zum Reden brauchst\n'
+        '• Um dich über deine Möglichkeiten und nächste Schritte zu informieren\n'
+        '• Um an passende Stellen in deiner Nähe weitervermittelt zu werden\n\n'
+        'Viele Nummern sind rund um die Uhr erreichbar. In akuter Gefahr '
+        'wähle bitte immer den Notruf 110 oder 112.',
+  );
+
+  static const anonymeHilfestellen = (
+    'Anonyme Hilfestellen',
+    '/anonyme-hilfestellen',
+    'Anonyme Hilfestellen sind Beratungsangebote, bei denen du deinen Namen '
+        'nicht nennen musst. Was du erzählst, bleibt vertraulich.\n\n'
+        'Wofür kann ich sie nutzen?\n'
+        '• Wenn du Hilfe suchst, aber (noch) nicht erkannt werden möchtest\n'
+        '• Um deine Situation erst einmal unverbindlich zu schildern\n'
+        '• Für Beratung per Telefon, Chat, E-Mail oder persönlich vor Ort\n\n'
+        'Du entscheidest selbst, wie viel du erzählst und ob weitere '
+        'Schritte folgen sollen.',
+  );
+
   static const _entries = <(String, String, String)>[
-    (
-      'Hilfenummern',
-      '/hilfenummern',
-      'Hilfenummern sind Telefonnummern, unter denen du schnell und meist '
-          'kostenlos mit geschulten Beraterinnen und Beratern sprechen kannst.\n\n'
-          'Wofür kann ich sie nutzen?\n'
-          '• Wenn du akut Hilfe, Rat oder einfach jemanden zum Reden brauchst\n'
-          '• Um dich über deine Möglichkeiten und nächste Schritte zu informieren\n'
-          '• Um an passende Stellen in deiner Nähe weitervermittelt zu werden\n\n'
-          'Viele Nummern sind rund um die Uhr erreichbar. In akuter Gefahr '
-          'wähle bitte immer den Notruf 110 oder 112.',
-    ),
-    (
-      'Anonyme Hilfestellen',
-      '/anonyme-hilfestellen',
-      'Anonyme Hilfestellen sind Beratungsangebote, bei denen du deinen Namen '
-          'nicht nennen musst. Was du erzählst, bleibt vertraulich.\n\n'
-          'Wofür kann ich sie nutzen?\n'
-          '• Wenn du Hilfe suchst, aber (noch) nicht erkannt werden möchtest\n'
-          '• Um deine Situation erst einmal unverbindlich zu schildern\n'
-          '• Für Beratung per Telefon, Chat, E-Mail oder persönlich vor Ort\n\n'
-          'Du entscheidest selbst, wie viel du erzählst und ob weitere '
-          'Schritte folgen sollen.',
-    ),
+    hilfenummern,
+    anonymeHilfestellen,
     (
       'Frauenhäuser',
       '/frauenhaeuser',
@@ -99,11 +105,15 @@ class StartMenu extends StatelessWidget {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (_) => InfoListScreen(
-                              title: title,
-                              endpoint: endpoint,
-                              info: info,
-                            ),
+                            // Anonyme Hilfestellen nutzen die Hilfestellen-
+                            // Ansicht mit Suche und Filter.
+                            builder: (_) => endpoint == anonymeHilfestellen.$2
+                                ? HelpFacilityScreen(title: title, info: info)
+                                : InfoListScreen(
+                                    title: title,
+                                    endpoint: endpoint,
+                                    info: info,
+                                  ),
                           ),
                         );
                       },

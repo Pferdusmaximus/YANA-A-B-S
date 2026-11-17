@@ -1,19 +1,23 @@
-
 import 'package:flutter/material.dart';
 
 import 'app/app_theme.dart';
 import 'core/utils/phone_launcher.dart';
 import 'features/category/presentation/info_list_screen.dart';
 import 'hilfestellen.dart';
+import 'menu_ansicht.dart';
 
 class HomeView extends StatelessWidget {
   const HomeView({super.key});
 
-  void _openList(BuildContext context, String title, String endpoint) {
+  /// Öffnet dieselbe Listenansicht wie der passende Eintrag im Startmenü
+  /// (inkl. Dropdown „Allgemeine Informationen“).
+  void _openList(BuildContext context, (String, String, String) entry) {
+    final (title, endpoint, info) = entry;
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (_) => InfoListScreen(title: title, endpoint: endpoint),
+        builder: (_) =>
+            InfoListScreen(title: title, endpoint: endpoint, info: info),
       ),
     );
   }
@@ -42,19 +46,20 @@ class HomeView extends StatelessWidget {
           ),
           const SizedBox(height: 56),
           _WideButton(
-            label: 'Anonyme Hilfsnummern',
-            onPressed: () => _openList(
-              context,
-              'Anonyme Hilfsnummern',
-              '/anonyme-hilfsnummern',
-            ),
+            label: 'Hilfsnummern',
+            onPressed: () => _openList(context, StartMenu.hilfenummern),
           ),
           const SizedBox(height: 20),
           _WideButton(
-            label: 'Hilfestellen',
+            label: 'Anonyme Hilfestellen',
             onPressed: () => Navigator.push(
               context,
-              MaterialPageRoute(builder: (_) => const HelpFacilityScreen()),
+              MaterialPageRoute(
+                builder: (_) => HelpFacilityScreen(
+                  title: StartMenu.anonymeHilfestellen.$1,
+                  info: StartMenu.anonymeHilfestellen.$3,
+                ),
+              ),
             ),
           ),
         ],
