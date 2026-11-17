@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+
+{% block title %}
+YANA – Dashboard
+{% endblock %}
+
+{% block content %}
+
+<main class="section">
+
+    <h1>YANA-Teamportal</h1>
+
+    <p>
+        Willkommen, {{ account.email }}!
+    </p>
+
+    <p>
+        Deine Benutzerrolle:
+        <strong>{{ account.role }}</strong>
+    </p>
+
+    <h2>Verwaltung</h2>
+
+    <div class="cards">
+
+        <article class="card">
+            <h3>Hilfestellen</h3>
+
+            <p>
+                Hilfestellen anzeigen,
+                bearbeiten und verwalten.
+            </p>
+
+            <p><em>In Vorbereitung</em></p>
+        </article>
+
+        <article class="card">
+            <h3>Kategorien</h3>
+
+            <p>
+                Kategorien und Leistungen
+                verwalten.
+            </p>
+
+            <p><em>In Vorbereitung</em></p>
+        </article>
+
+        <article class="card">
+            <h3>Benutzerverwaltung</h3>
+
+            <p>
+                Mitarbeiterkonten und
+                Zugriffsrechte verwalten.
+            </p>
+
+            <p><em>In Vorbereitung</em></p>
+        </article>
+
+    </div>
+
+    <form method="post" action="/portal/logout">
+
+        <input
+            type="hidden"
+            name="csrf_token"
+            value="{{ csrf_token }}"
+        >
+
+        <button
+            type="submit"
+            class="login-button"
+            style="max-width: 200px; margin-top: 30px;"
+        >
+            Abmelden
+        </button>
+
+    </form>
+
+</main>
+
+{% endblock %}

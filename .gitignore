@@ -1,0 +1,38 @@
+
+# ========================================
+# YANA - Git Ignore
+# ========================================
+
+# Python - Cache und generierte Dateien
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Python - Virtuelle Umgebungen
+.venv/
+venv/
+env/
+
+# Zugangsdaten und geheime Schlüssel
+.env
+.env.*
+!.env.example
+
+# Python - Test- und Analyse-Caches
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Betriebssystem
+.DS_Store
+Thumbs.db
+
+# VS Code - lokale Einstellungen
+.vscode/
+
+# Log-Dateien
+*.log
+
+# Temporäre Dateien
+*.tmp
+*.bak

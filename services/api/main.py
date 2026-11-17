@@ -1,3 +1,12 @@
+import os
+
+from dotenv import load_dotenv
+from starlette.middleware.sessions import SessionMiddleware
+
+from fastapi.middleware.cors import CORSMiddleware
+
+from portal import router as portal_router
+
 from pathlib import Path
 from fastapi.staticfiles import StaticFiles
 from website import router as website_router
@@ -12,6 +21,38 @@ app = FastAPI(
     description="Backend für die YANA Sicherheits-App",
     version="1.0.0"
 )
+
+
+load_dotenv()
+
+session_secret = os.getenv("PORTAL_SESSION_SECRET")
+
+if not session_secret or len(session_secret) < 32:
+    raise RuntimeError(
+        "PORTAL_SESSION_SECRET fehlt oder ist zu kurz."
+    )
+
+app.add_middleware(
+    SessionMiddleware,
+    secret_key=session_secret,
+    session_cookie="yana_portal_session",
+    max_age=1800,
+    same_site="strict",
+    https_only=True
+)
+
+
+# CORS für lokale Flutter-Web-Entwicklung
+app.add_middleware(
+    CORSMiddleware,
+    allow_origin_regex=r"^http://(localhost|127\.0\.0\.1)(:\d+)?$",
+    allow_methods=["GET"],
+    allow_headers=["*"],
+    allow_credentials=False,
+)
+
+
+app.include_router(portal_router)
 
 BASE_DIR = Path(__file__).resolve().parent
 
