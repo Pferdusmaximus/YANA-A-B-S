@@ -1,3 +1,4 @@
+
 {% extends "base.html" %}
 
 {% block title %}
@@ -15,9 +16,8 @@ YANA – Hilfestellenverwaltung
     <h1>Hilfestellenverwaltung</h1>
 
     <p>
-        Hier werden die Hilfestellen angezeigt,
-        die aktuell in der YANA-Datenbank
-        gespeichert sind.
+        Hier verwaltest du die Hilfestellen
+        aus der YANA-Datenbank.
     </p>
 
     <div class="facility-overview">
@@ -41,6 +41,7 @@ YANA – Hilfestellenverwaltung
                         <th>Kategorie</th>
                         <th>Adresse</th>
                         <th>Telefon</th>
+                        <th>Aktion</th>
                     </tr>
                 </thead>
 
@@ -49,9 +50,7 @@ YANA – Hilfestellenverwaltung
                     {% for facility in facilities %}
 
                     <tr>
-                        <td>
-                            {{ facility.facility_id }}
-                        </td>
+                        <td>{{ facility.facility_id }}</td>
 
                         <td>
                             <strong>
@@ -59,21 +58,23 @@ YANA – Hilfestellenverwaltung
                             </strong>
                         </td>
 
-                        <td>
-                            {{ facility.facility_type }}
-                        </td>
+                        <td>{{ facility.facility_type }}</td>
 
                         <td>
-                            {{ facility.category_name
-                               or "–" }}
+                            {{ facility.category_name or "–" }}
                         </td>
 
-                        <td>
-                            {{ facility.address }}
-                        </td>
+                        <td>{{ facility.address }}</td>
+
+                        <td>{{ facility.phone or "–" }}</td>
 
                         <td>
-                            {{ facility.phone or "–" }}
+                            <a
+                                href="/portal/hilfestellen/{{ facility.facility_id }}/edit"
+                                class="facility-edit-link"
+                            >
+                                Bearbeiten
+                            </a>
                         </td>
                     </tr>
 
@@ -89,18 +90,12 @@ YANA – Hilfestellenverwaltung
 
         <p>
             Es sind noch keine Hilfestellen
-            in der Datenbank vorhanden.
+            vorhanden.
         </p>
 
         {% endif %}
 
     </div>
-
-    <p class="facility-note">
-        Die Bearbeitung und das Anlegen neuer
-        Hilfestellen werden in einem
-        weiteren Entwicklungsschritt ergänzt.
-    </p>
 
 </main>
 

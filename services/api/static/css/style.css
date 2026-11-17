@@ -323,3 +323,112 @@ footer {
     font-size: 14px;
     margin-top: 25px;
 }
+
+
+/* ---------------------------------------
+   Teamportal - Hilfestellen bearbeiten
+--------------------------------------- */
+
+.facility-edit-link {
+    color: var(--primary);
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.facility-edit-link:hover {
+    text-decoration: underline;
+}
+
+.portal-edit {
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.edit-container {
+    max-width: 700px;
+    background: white;
+    border: 1px solid #e3e9e6;
+    border-radius: 12px;
+    padding: 35px;
+    margin-top: 30px;
+}
+
+.edit-container h2 {
+    margin-top: 0;
+    margin-bottom: 5px;
+    font-size: 24px;
+}
+
+.edit-id {
+    color: var(--muted);
+    font-size: 13px;
+    margin-bottom: 30px;
+}
+
+.edit-form label {
+    display: block;
+    margin-bottom: 7px;
+    font-weight: 600;
+}
+
+.edit-form input,
+.edit-form textarea {
+    display: block;
+    width: 100%;
+    margin-bottom: 22px;
+    padding: 13px;
+    border: 1px solid #ccd8d4;
+    border-radius: 8px;
+    font-family: inherit;
+    font-size: 15px;
+}
+
+.edit-form input:focus,
+.edit-form textarea:focus {
+    outline: 2px solid #d5eae5;
+    border-color: var(--primary);
+}
+
+.edit-actions {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    margin-top: 25px;
+}
+
+.edit-actions .login-button {
+    width: auto;
+    padding: 13px 25px;
+}
+
+.edit-cancel {
+    color: var(--muted);
+    text-decoration: none;
+}
+
+.edit-success {
+    padding: 15px;
+    margin-bottom: 25px;
+    border-radius: 8px;
+    background: #e6f5e9;
+    color: #226b35;
+}
+
+.edit-error {
+    padding: 15px;
+    margin-bottom: 25px;
+    border-radius: 8px;
+    background: #fff1f1;
+    color: #a32626;
+}
+
+@media (max-width: 600px) {
+    .edit-container {
+        padding: 22px;
+    }
+
+    .edit-actions {
+        align-items: stretch;
+        flex-direction: column;
+    }
+}

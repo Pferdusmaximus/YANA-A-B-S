@@ -1,0 +1,127 @@
+{% extends "base.html" %}
+
+{% block title %}
+YANA – Hilfestelle bearbeiten
+{% endblock %}
+
+{% block content %}
+
+<main class="section portal-edit">
+
+    <a href="/portal/hilfestellen" class="back-link">
+        Zurück zur Hilfestellenübersicht
+    </a>
+
+    <h1>Hilfestelle bearbeiten</h1>
+
+    <p>
+        Hier kannst du die Angaben der ausgewählten
+        Hilfestelle aktualisieren.
+    </p>
+
+    <div class="edit-container">
+
+        <h2>{{ facility.name }}</h2>
+
+        <p class="edit-id">
+            Hilfestellen-ID: {{ facility.facility_id }}
+        </p>
+
+        {% if saved %}
+        <div class="edit-success" role="status">
+            Die Änderungen wurden erfolgreich gespeichert.
+        </div>
+        {% endif %}
+
+        {% if error %}
+        <div class="edit-error" role="alert">
+            {{ error }}
+        </div>
+        {% endif %}
+
+        <form
+            method="post"
+            action="/portal/hilfestellen/{{ facility.facility_id }}/edit"
+            class="edit-form"
+        >
+
+            <!-- CSRF-Sicherheit -->
+            <input
+                type="hidden"
+                name="csrf_token"
+                value="{{ csrf_token }}"
+            >
+
+            <label for="name">
+                Name der Hilfestelle
+            </label>
+
+            <input
+                type="text"
+                id="name"
+                name="name"
+                value="{{ facility.name }}"
+                maxlength="100"
+                required
+            >
+
+            <label for="phone">
+                Telefonnummer
+            </label>
+
+            <input
+                type="tel"
+                id="phone"
+                name="phone"
+                value="{{ facility.phone or '' }}"
+                maxlength="30"
+            >
+
+            <label for="email">
+                E-Mail-Adresse
+            </label>
+
+            <input
+                type="email"
+                id="email"
+                name="email"
+                value="{{ facility.email or '' }}"
+                maxlength="150"
+            >
+
+            <label for="opening_hours">
+                Öffnungszeiten
+            </label>
+
+            <textarea
+                id="opening_hours"
+                name="opening_hours"
+                maxlength="200"
+                rows="4"
+            >{{ facility.opening_hours or '' }}</textarea>
+
+            <div class="edit-actions">
+
+                <button
+                    type="submit"
+                    class="login-button"
+                >
+                    Änderungen speichern
+                </button>
+
+                <a
+                    href="/portal/hilfestellen"
+                    class="edit-cancel"
+                >
+                    Abbrechen
+                </a>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</main>
+
+{% endblock %}
