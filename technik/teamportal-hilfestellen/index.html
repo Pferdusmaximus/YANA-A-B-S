@@ -1,0 +1,1136 @@
+
+<!doctype html>
+<html lang="de" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Technische Dokumentation des YANA-Projekts">
+      
+      
+      
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>Teamportal: Hilfestellen anzeigen und bearbeiten - YANA – Projektdokumentation</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#teamportal-hilfestellen-anzeigen-und-bearbeiten" class="md-skip">
+          Zum Inhalt
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Kopfzeile">
+    <a href="../.." title="YANA – Projektdokumentation" class="md-header__button md-logo" aria-label="YANA – Projektdokumentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            YANA – Projektdokumentation
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Teamportal: Hilfestellen anzeigen und bearbeiten
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Suche" placeholder="Suche" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Suche">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Zurücksetzen" aria-label="Zurücksetzen" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Suche wird initialisiert
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="YANA – Projektdokumentation" class="md-nav__button md-logo" aria-label="YANA – Projektdokumentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    YANA – Projektdokumentation
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../installation/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Installation & Quick Start
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2" id="__nav_2_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Installation & Quick Start
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../installation/ubuntu-gnome/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ubuntu & grafische Oberfläche
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../installation/backup-agent/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    IONOS Backup-Agent
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../installation/postgresql-pgadmin/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    PostgreSQL & pgAdmin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../installation/fastapi/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    FastAPI & systemd
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../installation/nginx-https/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Nginx, HTTPS & Certbot
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Technische Dokumentation
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Technische Dokumentation
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../architektur/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Systemarchitektur
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../datenmodell/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Datenmodell
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api-referenz/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API-Referenz
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../betrieb-sicherheit/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Betrieb & Sicherheit
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../entscheidungen/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architekturentscheidungen
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../troubleshooting/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Fehlerbehebung
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../quellen/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Quellen
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../nutzung/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Nutzungshandbuch
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Inhaltsverzeichnis">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Inhaltsverzeichnis
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-aktueller-funktionsumfang" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Aktueller Funktionsumfang
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-aufruf-im-browser" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Aufruf im Browser
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-technische-implementierung" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Technische Implementierung
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-datenabruf-und-berechtigungen" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Datenabruf und Berechtigungen
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-bearbeitbare-felder-und-validierung" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Bearbeitbare Felder und Validierung
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-datenbanktransaktion-und-anderungsnachweis" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Datenbanktransaktion und Änderungsnachweis
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-bestatigter-speichertest" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Bestätigter Speichertest
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-fachliche-risiken-und-grenzen" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. Fachliche Risiken und Grenzen
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="teamportal-hilfestellen-anzeigen-und-bearbeiten">Teamportal: Hilfestellen anzeigen und bearbeiten<a class="headerlink" href="#teamportal-hilfestellen-anzeigen-und-bearbeiten" title="Permanent link">&para;</a></h1>
+<p><strong>Stand: 17. November 2026 · Produktiv im Browser getestet, inkl. Speicherung und Audit-Log</strong></p>
+<h2 id="1-aktueller-funktionsumfang">1. Aktueller Funktionsumfang<a class="headerlink" href="#1-aktueller-funktionsumfang" title="Permanent link">&para;</a></h2>
+<p>Im geschützten Teamportal werden die vorhandenen fiktiven Einträge der PostgreSQL-Tabelle <code>hilfestelle</code> als HTML-Tabelle angezeigt. Die erste Verwaltungsfunktion erlaubt das <strong>Bearbeiten einzelner bestehender Hilfestellen</strong>. Ein neues Anlegen, Deaktivieren oder Löschen von Einträgen ist derzeit noch nicht implementiert.</p>
+<table>
+<thead>
+<tr>
+<th>Funktion</th>
+<th>Status</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Hilfestellenübersicht mit Datenbankinhalt</td>
+<td>Implementiert, produktiv geprüft</td>
+</tr>
+<tr>
+<td>Rollenprüfung <code>admin</code> / <code>team</code></td>
+<td>Implementiert; <code>facility</code> erhält HTTP 403</td>
+</tr>
+<tr>
+<td>Bearbeitungsformular für existierende Einrichtung</td>
+<td>Implementiert</td>
+</tr>
+<tr>
+<td>Name, Telefon, E-Mail, Öffnungszeiten ändern</td>
+<td>Implementiert</td>
+</tr>
+<tr>
+<td>Serverseitige Prüfung und CSRF</td>
+<td>Implementiert, Grundtests erfolgreich</td>
+</tr>
+<tr>
+<td>SQL-Update mit Zeilensperre + Audit</td>
+<td>Implementiert und durch Speichertest bestätigt</td>
+</tr>
+<tr>
+<td>Neue Hilfestelle mit <code>INSERT</code> anlegen</td>
+<td><strong>Noch offen – nächster Schritt</strong></td>
+</tr>
+<tr>
+<td>Adresse/Koordinaten über Portal ändern</td>
+<td>Noch nicht freigegeben</td>
+</tr>
+<tr>
+<td>Externe Organisationszuordnung / Freigabe</td>
+<td>Noch offen</td>
+</tr>
+</tbody>
+</table>
+<h2 id="2-aufruf-im-browser">2. Aufruf im Browser<a class="headerlink" href="#2-aufruf-im-browser" title="Permanent link">&para;</a></h2>
+<ol>
+<li>Unter <code>https://SERVER_IP/portal/login</code> anmelden.</li>
+<li>Im Dashboard den Link <strong>Hilfestellen anzeigen</strong> wählen.</li>
+<li>In <code>/portal/hilfestellen</code> eine Zeile auswählen und auf <strong>Bearbeiten</strong> klicken.</li>
+<li>Bearbeitungsformular ausfüllen und <strong>Änderungen speichern</strong> drücken.</li>
+<li>Nach Weiterleitung zurück auf dieselbe Seite die Erfolgsmeldung prüfen.</li>
+<li>Bei Bedarf den neuen Wert über <code>GET /hilfestellen</code> oder in pgAdmin kontrollieren.</li>
+</ol>
+<p>Nur berechtigte Mitarbeiterkonten dürfen diese Schritte ausführen. Ohne Login folgt eine Weiterleitung zu <code>/portal/login</code>, mit unzureichender Rolle eine Ablehnung.</p>
+<h2 id="3-technische-implementierung">3. Technische Implementierung<a class="headerlink" href="#3-technische-implementierung" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Datei</th>
+<th>Verantwortlichkeit</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>services/api/portal_facilities.py</code></td>
+<td>Übersicht, GET-/POST-Bearbeitungsroute, Validierung, Update, Audit</td>
+</tr>
+<tr>
+<td><code>templates/portal/hilfestellen.html</code></td>
+<td>Datentabelle und Bearbeiten-Links</td>
+</tr>
+<tr>
+<td><code>templates/portal/hilfestellen_bearbeiten.html</code></td>
+<td>Formular (bewusst <strong>Plural</strong> im Dateinamen)</td>
+</tr>
+<tr>
+<td><code>templates/portal/dashboard.html</code></td>
+<td>Link aus der Dashboard-Kachel</td>
+</tr>
+<tr>
+<td><code>static/css/style.css</code></td>
+<td>Tabellen- und Formular-Styling</td>
+</tr>
+<tr>
+<td><code>database.py</code></td>
+<td>Bereitstellung von <code>get_connection()</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Dateinamenskonvention:</strong> Die Route heißt <code>/portal/hilfestellen/{facility_id}/edit</code>, das Template heißt <code>portal/hilfestellen_bearbeiten.html</code>. Während der Entwicklung wurde versehentlich <code>hilfestelle_bearbeiten.html</code> (Singular) referenziert; dies führte zu <code>TemplateNotFound</code> und wurde in der Testumgebung und im Quellcode korrigiert.</p>
+<h2 id="4-datenabruf-und-berechtigungen">4. Datenabruf und Berechtigungen<a class="headerlink" href="#4-datenabruf-und-berechtigungen" title="Permanent link">&para;</a></h2>
+<p>Die Übersicht liest die ersten <strong>100</strong> Hilfestellen alphabetisch und führt einen <code>LEFT JOIN</code> mit <code>kategorie</code> aus, um den Kategorienamen anzuzeigen. Dieser Grenzwert ist ein vorläufiger Entwicklungsstand, <strong>keine</strong> paginierte Gesamtliste. Vor einer größeren Datenbasis braucht es Suchfunktion, Filter, Pagination und eine konsistente Gesamtanzahl.</p>
+<p>Die Bearbeitungsseite liest einen Datensatz anhand seiner <code>facility_id</code>. Beide Routen verwenden <code>session_account()</code> und eine Prüfung auf die Rollen <code>admin</code> oder <code>team</code>. Die POST-Route prüft zusätzlich <code>check_csrf()</code>.</p>
+<h2 id="5-bearbeitbare-felder-und-validierung">5. Bearbeitbare Felder und Validierung<a class="headerlink" href="#5-bearbeitbare-felder-und-validierung" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Spalte in <code>hilfestelle</code></th>
+<th>HTML-Feld</th>
+<th>Eingaberegel im Backend</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>name</code></td>
+<td>Textfeld</td>
+<td>erforderlich, nach Trim nicht leer, max. 100 Zeichen</td>
+</tr>
+<tr>
+<td><code>phone</code></td>
+<td>Telefonnummer</td>
+<td>optional, max. 30 Zeichen</td>
+</tr>
+<tr>
+<td><code>email</code></td>
+<td>E-Mail</td>
+<td>optional, max. 150 Zeichen und einfache E-Mail-Formatprüfung</td>
+</tr>
+<tr>
+<td><code>opening_hours</code></td>
+<td>Mehrzeiliger Text</td>
+<td>optional, max. 200 Zeichen</td>
+</tr>
+</tbody>
+</table>
+<p>Andere DB-Spalten (z. B. <code>facility_type</code>, <code>address</code>, <code>latitude</code>, <code>longitude</code>, <code>capacity</code>, <code>category_id</code>) bleiben beim Speichern unverändert. Das Eingabelimit für <code>name</code> ist aktuell restriktiver als das Datenbankschema (<code>VARCHAR(150)</code>), ebenso für Öffnungszeiten (<code>VARCHAR(255)</code>); es sollte später bewusst fachlich abgestimmt werden.</p>
+<p>Bei ungültigem Namen antwortet der Server mit <strong>HTTP 422</strong> und zeigt den Fehler auf der Formularseite an; mit gefälschtem CSRF-Token mit <strong>HTTP 403</strong>. Beim erfolgreichen Speichern folgt ein <strong>HTTP 303</strong> auf <code>/portal/hilfestellen/{id}/edit?saved=1</code>.</p>
+<h2 id="6-datenbanktransaktion-und-anderungsnachweis">6. Datenbanktransaktion und Änderungsnachweis<a class="headerlink" href="#6-datenbanktransaktion-und-anderungsnachweis" title="Permanent link">&para;</a></h2>
+<p>Die POST-Route sperrt die betroffene Zeile mit <code>SELECT ... FOR UPDATE</code>. Bei tatsächlicher Änderung erfolgen in einer Transaktion:</p>
+<div class="highlight"><pre><span></span><code><span class="c1">-- vereinfachtes Schema des implementierten Ablaufs</span>
+<span class="k">UPDATE</span><span class="w"> </span><span class="k">public</span><span class="p">.</span><span class="n">hilfestelle</span>
+<span class="k">SET</span><span class="w"> </span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">%</span><span class="n">s</span><span class="p">,</span><span class="w"> </span><span class="n">phone</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">%</span><span class="n">s</span><span class="p">,</span><span class="w"> </span><span class="n">email</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">%</span><span class="n">s</span><span class="p">,</span><span class="w"> </span><span class="n">opening_hours</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">%</span><span class="n">s</span>
+<span class="k">WHERE</span><span class="w"> </span><span class="n">facility_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">%</span><span class="n">s</span><span class="p">;</span>
+
+<span class="k">INSERT</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="k">public</span><span class="p">.</span><span class="n">portal_facility_audit</span>
+<span class="w">    </span><span class="p">(</span><span class="n">facility_id</span><span class="p">,</span><span class="w"> </span><span class="n">account_id</span><span class="p">,</span><span class="w"> </span><span class="n">before_data</span><span class="p">,</span><span class="w"> </span><span class="n">after_data</span><span class="p">)</span>
+<span class="k">VALUES</span><span class="w"> </span><span class="p">(</span><span class="o">%</span><span class="n">s</span><span class="p">,</span><span class="w"> </span><span class="o">%</span><span class="n">s</span><span class="p">,</span><span class="w"> </span><span class="o">%</span><span class="n">s</span><span class="p">,</span><span class="w"> </span><span class="o">%</span><span class="n">s</span><span class="p">);</span>
+</code></pre></div>
+<p>Die Parameter werden über Psycopg übergeben, nicht in SQL-Strings hineinkonkatenatiert. Das Audit speichert den vorherigen und neuen Zustand der vier bearbeitbaren Felder als JSONB und verknüpft ihn mit dem eingeloggten Account und dem Zeitpunkt. Bei einem Datenbankfehler soll die Transaktion gemeinsam zurückgerollt werden.</p>
+<p><strong>Achtung:</strong> Die Test- und Produktions-Python-Instanz benutzen dieselbe PostgreSQL-Datenbank. Selbst ein Test im Verzeichnis <code>~/yana-portal-test</code> kann echte Tabelleninhalte verändern. Tests mit Änderungen daher nur an ausdrücklich fiktiven Einträgen und mit Wiederherstellungsprüfung durchführen.</p>
+<h2 id="7-bestatigter-speichertest">7. Bestätigter Speichertest<a class="headerlink" href="#7-bestatigter-speichertest" title="Permanent link">&para;</a></h2>
+<p>Der Projektverlauf bestätigt folgende Prüfkette als bestanden:</p>
+<table>
+<thead>
+<tr>
+<th>Prüfung</th>
+<th>Ergebnis</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Bearbeitungsseite ohne Login</td>
+<td>HTTP 303</td>
+</tr>
+<tr>
+<td>Admin-Login</td>
+<td>HTTP 303</td>
+</tr>
+<tr>
+<td>Bearbeitungsseite als Admin</td>
+<td>HTTP 200</td>
+</tr>
+<tr>
+<td>Ungültiges CSRF-Token</td>
+<td>HTTP 403</td>
+</tr>
+<tr>
+<td>Leerer/ungültiger Name</td>
+<td>HTTP 422</td>
+</tr>
+<tr>
+<td>Fiktive Telefonnummer speichern</td>
+<td>HTTP 303</td>
+</tr>
+<tr>
+<td>Wert erneut aus <code>hilfestelle</code> lesen</td>
+<td>Testwert vorhanden</td>
+</tr>
+<tr>
+<td>Neuesten Audit-Eintrag lesen</td>
+<td>Änderung protokolliert</td>
+</tr>
+<tr>
+<td>Ursprüngliche Nummer wiederherstellen</td>
+<td>HTTP 303; Originalwert bestätigt</td>
+</tr>
+<tr>
+<td>Abmelden</td>
+<td>HTTP 303</td>
+</tr>
+</tbody>
+</table>
+<p>Danach wurden die getesteten Dateien in das produktive Backend übernommen, der Dienst <code>yana-api</code> neu gestartet und die Bearbeitungsfunktion <strong>im Browser erfolgreich getestet</strong>. Die produktive Datenänderung wurde anschließend zurückgesetzt.</p>
+<h2 id="8-fachliche-risiken-und-grenzen">8. Fachliche Risiken und Grenzen<a class="headerlink" href="#8-fachliche-risiken-und-grenzen" title="Permanent link">&para;</a></h2>
+<ul>
+<li><code>GET /hilfestellen</code> ist öffentlich; für echte Schutzunterkünfte dürfen vertrauliche Adressen und Koordinaten nicht ausgegeben werden.</li>
+<li>Berechtigungen für externe Betreiber sind <strong>noch nicht</strong> implementiert; <code>facility</code> darf nicht pauschal alle Einträge bearbeiten.</li>
+<li>Änderungen werden momentan direkt sichtbar, es existiert <strong>keine</strong> Moderation/Freigabe für externe Inhalte.</li>
+<li>Audit-Einträge können personenbezogene Kontaktwerte enthalten; Zugriff und Löschfristen sind zu definieren.</li>
+<li>Noch kein Schutz gegen gleichzeitige fachliche Bearbeitung über längere Zeiträume: <code>FOR UPDATE</code> schützt die Transaktion, aber ein zwischenzeitlich im Browser veraltetes Formular kann weiterhin neuere Werte überschreiben. Optimistic Locking/Versionsfeld ist offen.</li>
+</ul>
+<p>Das konkrete nächste Arbeitspaket steht auf der Seite <a href="../weiterarbeit/">Weiterarbeit</a>. Technische Testabläufe: <a href="../teamportal-tests/">Portal-Tests</a>.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.sections", "navigation.indexes", "content.code.copy", "search.suggest"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "In Zwischenablage kopiert", "clipboard.copy": "In Zwischenablage kopieren", "search.result.more.one": "1 weiteres Suchergebnis auf dieser Seite", "search.result.more.other": "# weitere Suchergebnisse auf dieser Seite", "search.result.none": "Keine Suchergebnisse", "search.result.one": "1 Suchergebnis", "search.result.other": "# Suchergebnisse", "search.result.placeholder": "Suchbegriff eingeben", "search.result.term.missing": "Es fehlt", "select.version": "Version ausw\u00e4hlen"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+    
+  </body>
+</html>

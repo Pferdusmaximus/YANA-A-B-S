@@ -742,6 +742,17 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#erganzung-website-teamportal-und-git-november-2026" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ergänzung: Website, Teamportal und Git (November 2026)
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -861,6 +872,17 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#erganzung-website-teamportal-und-git-november-2026" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ergänzung: Website, Teamportal und Git (November 2026)
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -927,7 +949,7 @@
 <tr>
 <td>ACME-Test via öffentlicher IP</td>
 <td><code>404 Not Found nginx/1.24.0</code></td>
-<td>Root-Pfad liefert beabsichtigt 404; vollständige URL <code>/.well-known/acme-challenge/test.txt</code> verwenden. Danach <code>YANA-ACME-OK</code> sichtbar.</td>
+<td>Im ursprünglichen Setup lieferte der Root-Pfad 404 (seit der Website-Integration im November 2026 liefert <code>/</code> HTML); vollständige URL <code>/.well-known/acme-challenge/test.txt</code> verwenden. Danach <code>YANA-ACME-OK</code> sichtbar.</td>
 </tr>
 <tr>
 <td>HTTPS auf Smartphone als unsicher markiert</td>
@@ -969,6 +991,9 @@ sudo<span class="w"> </span>systemctl<span class="w"> </span>status<span class="
 curl<span class="w"> </span>-Iv<span class="w"> </span>https://SERVER_IP/docs
 </code></pre></div>
 <p>Bitte keine Passwörter, Tokens, <code>privkey.pem</code>-Inhalte oder personenbezogenen Daten aus Logs in öffentliche GitHub-Issues kopieren.</p>
+<h2 id="erganzung-website-teamportal-und-git-november-2026">Ergänzung: Website, Teamportal und Git (November 2026)<a class="headerlink" href="#erganzung-website-teamportal-und-git-november-2026" title="Permanent link">&para;</a></h2>
+<p>Seit der früheren Servereinrichtung wurden zusätzlich Browser-CORS-Probleme bei Flutter Web, mehrfach <code>non-fast-forward</code>-Git-Pushes, versehentlich versionierte Python-Caches, ein <code>EOFError</code> bei interaktiven Python-Heredocs und ein falsch benanntes Jinja2-Template beobachtet. Die tatsächlich angewendeten Korrekturen stehen auf der separaten Seite <strong><a href="../teamportal-troubleshooting/">Website/Teamportal – Fehlerprotokoll</a></strong>.</p>
+<p>Der Befehl <code>sudo journalctl -u yana-api -n 40 --no-pager</code> kann bedenkenlos zur Diagnose ausgeführt werden: Er liest nur Logs und verändert den Backend-Dienst nicht.</p>
 
 
 

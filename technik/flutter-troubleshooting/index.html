@@ -819,6 +819,17 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#flutter-web-in-chrome-cors-november-2026" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Flutter Web in Chrome: CORS (November 2026)
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -979,6 +990,17 @@
 </code></pre></div>
 <p>Windows-Benutzernamen und absolute Home-Pfade wurden absichtlich generalisiert. In öffentlichen GitHub-Issues oder Screenshots <strong>keine Passwörter, Tokens, SSH-Schlüssel, Datenbank-Exports oder sensible Standortdaten veröffentlichen</strong>.</p>
 <p>Weitere Fehler zum Server, Nginx, Zertifikaten und Backup-Agent stehen im <a href="../troubleshooting/">Server-Fehlerprotokoll</a>. Eine Übersicht der Testarten befindet sich unter <a href="../flutter-tests/">Flutter-Tests</a>.</p>
+<h2 id="flutter-web-in-chrome-cors-november-2026">Flutter Web in Chrome: CORS (November 2026)<a class="headerlink" href="#flutter-web-in-chrome-cors-november-2026" title="Permanent link">&para;</a></h2>
+<p>Nach Korrektur der <code>ApiConfig.baseUrl</code> funktionierte <code>dart run tool/api_connection_test.dart</code> erfolgreich und lieferte zwei fiktive Hilfestellen. In <strong>Flutter (Chrome)</strong> erschien dennoch „Fehler beim Laden“, weil Browser die Same-Origin-Policy anwenden und dem Backend zunächst CORS-Header fehlten. Für die lokale Entwicklung wurde in <code>main.py</code> <code>CORSMiddleware</code> ergänzt und der Dienst <code>yana-api</code> neu gestartet:</p>
+<div class="highlight"><pre><span></span><code><span class="n">app</span><span class="o">.</span><span class="n">add_middleware</span><span class="p">(</span>
+    <span class="n">CORSMiddleware</span><span class="p">,</span>
+    <span class="n">allow_origin_regex</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;^http://(localhost|127\.0\.0\.1)(:\d+)?$&quot;</span><span class="p">,</span>
+    <span class="n">allow_methods</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;GET&quot;</span><span class="p">],</span>
+    <span class="n">allow_headers</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;*&quot;</span><span class="p">],</span>
+    <span class="n">allow_credentials</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+<span class="p">)</span>
+</code></pre></div>
+<p>Bei der Eingabe des Codes darauf achten, dass die Markdown-Schreibweise <strong>keine</strong> versehentlichen eckigen Klammern um die URL erzeugt. Die CORS-Freigabe ist auf lokale Entwicklungs-Origins beschränkt und erteilt keine Datenbankberechtigungen. Der Browser-Fehler wurde im Team als behoben gemeldet. Mehr: <a href="../api-referenz/">API-Referenz</a> und <a href="../teamportal-troubleshooting/">Portal-Fehlerprotokoll</a>.</p>
 
 
 

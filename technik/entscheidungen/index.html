@@ -797,6 +797,17 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#erganzung-november-2026-website-und-geschutztes-teamportal" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ergänzung November 2026: Website und geschütztes Teamportal
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -1027,6 +1038,17 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#erganzung-november-2026-website-und-geschutztes-teamportal" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ergänzung November 2026: Website und geschütztes Teamportal
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -1113,6 +1135,10 @@
 </ul>
 <h2 id="nachvollziehbarkeit-der-anderungen">Nachvollziehbarkeit der Änderungen<a class="headerlink" href="#nachvollziehbarkeit-der-anderungen" title="Permanent link">&para;</a></h2>
 <p>Eine zeitliche Zusammenfassung von Servereinrichtung, TLS und neu hinzugekommener Flutter-API-Schicht steht im <a href="../entwicklungsstand/">Entwicklungsprotokoll</a>.</p>
+<h2 id="erganzung-november-2026-website-und-geschutztes-teamportal">Ergänzung November 2026: Website und geschütztes Teamportal<a class="headerlink" href="#erganzung-november-2026-website-und-geschutztes-teamportal" title="Permanent link">&para;</a></h2>
+<p>Für die öffentliche Website und das Portal wurde <strong>FastAPI mit serverseitigen Jinja2-Templates</strong>, HTML und CSS statt eines zusätzlichen JavaScript-SPA-Frameworks gewählt. Gründe: Wiederverwendung des vorhandenen Backends/Servers, geringe Infrastrukturkomplexität, klare Dateistruktur und einfache Integration von Sessions und Rollenprüfungen. Die Zuständigkeiten sind unter <a href="../teamportal-architektur/">Teamportal-Architektur</a> beschrieben.</p>
+<p>Die Anmeldung wurde auf PostgreSQL-eigene Portal-Tabellen aufgebaut und <strong>getrennt vom Chat-Modell <code>nutzerin</code></strong> gehalten. Passwörter werden mit Argon2 gehasht, Sessions haben einen serverseitig prüfbaren Hash. Das Backend prüft die Rollen <code>admin</code>/<code>team</code> für die Hilfestellenbearbeitung und protokolliert Änderungen. Externe <code>facility</code>-Rollen sind <strong>noch nicht</strong> durch Organisationszuordnungen freigeschaltet.</p>
+<p>Der frühere Abschnitt „Offene Entscheidungen“ stammt aus der Flutter-/Serverphase. <strong>Login- und Basis-Rollenmodell für das interne Teamportal sind inzwischen umgesetzt</strong>; offen bleiben organisatorisch eingeschränkte externe Rechte, Freigabe, sichtbare Schutzstandortfilter und die vollständige Chat-/Nutzerinnen-Authentifizierung. Siehe <a href="../weiterarbeit/">Wiedereinstieg</a>.</p>
 
 
 

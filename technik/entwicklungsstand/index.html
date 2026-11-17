@@ -765,10 +765,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#1-meilensteine" class="md-nav__link">
+  <a href="#1-zeitlicher-verlauf" class="md-nav__link">
     <span class="md-ellipsis">
       
-        1. Meilensteine
+        1. Zeitlicher Verlauf
       
     </span>
   </a>
@@ -776,10 +776,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#2-was-wurde-geandert-gegenuber-der-dokumentation-vom-20102026" class="md-nav__link">
+  <a href="#2-fachlicher-funktionsstatus" class="md-nav__link">
     <span class="md-ellipsis">
       
-        2. Was wurde geändert gegenüber der Dokumentation vom 20.10.2026?
+        2. Fachlicher Funktionsstatus
       
     </span>
   </a>
@@ -787,10 +787,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#3-nachste-entwicklungsschritte" class="md-nav__link">
+  <a href="#3-wesentliche-fehler-und-korrekturen" class="md-nav__link">
     <span class="md-ellipsis">
       
-        3. Nächste Entwicklungsschritte
+        3. Wesentliche Fehler und Korrekturen
       
     </span>
   </a>
@@ -798,10 +798,21 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#4-nachweisdokumentation" class="md-nav__link">
+  <a href="#4-nachster-entwicklungsschritt" class="md-nav__link">
     <span class="md-ellipsis">
       
-        4. Nachweisdokumentation
+        4. Nächster Entwicklungsschritt
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-nachweise-fur-kunftige-anderungen" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Nachweise für künftige Änderungen
       
     </span>
   </a>
@@ -826,146 +837,192 @@
 
 
 <h1 id="entwicklungsstand-und-anderungsprotokoll">Entwicklungsstand und Änderungsprotokoll<a class="headerlink" href="#entwicklungsstand-und-anderungsprotokoll" title="Permanent link">&para;</a></h1>
-<p><strong>Dokumentationsstand: 27. Oktober 2026</strong></p>
-<p>Dieses Protokoll hält nachvollziehbar fest, <strong>was im Projekt tatsächlich eingerichtet und erfolgreich überprüft wurde</strong>. Zeitpunkte orientieren sich am dokumentierten Projektverlauf; konkrete Git-Commit-IDs sind noch nachzutragen. Ein erfolgreiches technisches Experiment wird nicht automatisch als produktionsbereite Funktion bewertet.</p>
-<h2 id="1-meilensteine">1. Meilensteine<a class="headerlink" href="#1-meilensteine" title="Permanent link">&para;</a></h2>
+<p><strong>Dokumentationsstand: 17. November 2026</strong></p>
+<p>Dieser Verlauf enthält nur Tätigkeiten, die im Projektgespräch als umgesetzt und erfolgreich getestet bestätigt wurden. Der derzeitige Quellcode wurde für diese Dokumentationsaktualisierung nicht erneut live vom GitHub-Repository abgerufen. Technische Aussagen basieren auf den gemeinsam implementierten Schritten und den vom Team berichteten Testresultaten. Für eine neue Veröffentlichung sind aktuelle Commits und Tests gesondert nachzuweisen.</p>
+<h2 id="1-zeitlicher-verlauf">1. Zeitlicher Verlauf<a class="headerlink" href="#1-zeitlicher-verlauf" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
 <tr>
 <th>Zeitraum</th>
-<th>Umsetzung</th>
-<th>Verifizierter Nachweis</th>
-<th>Noch offen</th>
+<th>Entwicklung</th>
+<th>Verifizierter Stand</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>Oktober 2026 – Servereinrichtung</td>
-<td>IONOS-VPS, Ubuntu 24.04 LTS, GNOME über Browser-Konsole</td>
-<td>GNOME erreichbar</td>
-<td>Ressourcenüberwachung im Dauerbetrieb</td>
+<td>Oktober 2026</td>
+<td>IONOS-VPS mit Ubuntu 24.04 LTS, GNOME, Backup-Agent</td>
+<td>Ubuntu-GUI und Agent eingerichtet</td>
 </tr>
 <tr>
-<td>Oktober 2026 – Backup</td>
-<td>IONOS/Acronis-Agent</td>
-<td>Agent erfolgreich installiert und in Backup-Konsole registriert</td>
-<td>Abgeschlossener Sicherungs- und Restore-Test hier nicht bestätigt</td>
+<td>Oktober 2026</td>
+<td>PostgreSQL 16, pgAdmin 4, ursprüngliches Schema mit acht Tabellen</td>
+<td>SQL-Schema, zwei fiktive Hilfestellen, zwei Kategorien</td>
 </tr>
 <tr>
-<td>Oktober 2026 – Datenbank</td>
-<td>PostgreSQL 16, pgAdmin 4, 8 Tabellen</td>
-<td>Cluster <code>online</code>, pgAdmin verbunden, SQL-Schema angelegt</td>
-<td>Fachliche Datenvalidierung und Schutz sensibler Daten</td>
+<td>20.10.2026</td>
+<td>FastAPI, Uvicorn, systemd <code>yana-api</code>, Nginx/HTTPS, Let's Encrypt</td>
+<td>Öffentliche GET-API, Certbot-Erneuerungstest erfolgreich</td>
 </tr>
 <tr>
-<td>Oktober 2026 – REST-API</td>
-<td>Python / FastAPI / Psycopg</td>
-<td>Swagger und GET-Endpunkte über VPS getestet</td>
-<td>Authentifizierung, Filter, Chat, Admin-Endpunkte</td>
+<td>Bis Ende Oktober / Anfang November</td>
+<td>Flutter SDK, Dart, Android-Debug-Build; Models, Repositories, Controller</td>
+<td>Drei Live-Verbindungstests und automatisierte Controller-Tests erfolgreich</td>
 </tr>
 <tr>
-<td>20.10.2026 – Betrieb</td>
-<td><code>yana-api</code> via systemd, Nginx Reverse Proxy</td>
-<td>Dienst aktiv, lokaler Proxy funktionsfähig</td>
-<td>Monitoring und Deployment-Automatisierung</td>
+<td>November 2026</td>
+<td>Öffentliche HTML-/CSS-Website mit Jinja2 und FastAPI</td>
+<td>Im Browser auf IONOS veröffentlicht und geprüft</td>
 </tr>
 <tr>
-<td>20.10.2026 – Verschlüsselung</td>
-<td>Let's Encrypt IP-Zertifikat via Certbot</td>
-<td>Echtes Zertifikat statt Staging; Firefox sichere Verbindung</td>
-<td>Erneuerungen künftig überwachen</td>
+<td>November 2026</td>
+<td>Gemeinsame GitHub-Versionierung für <code>services/api</code> und lokale VPS-Arbeitskopie</td>
+<td>Manuelles Deployment eingerichtet; <code>main.py</code>, <code>website.py</code>, Templates und Styles versioniert</td>
 </tr>
 <tr>
-<td>20.10.2026 – Certbot-Automation</td>
-<td>Snap-Timer, Nginx Deploy Hook</td>
-<td>Timer aktiv, <code>renew --dry-run --run-deploy-hooks</code> erfolgreich</td>
-<td>Langfristige Erneuerungsüberwachung</td>
+<td>November 2026</td>
+<td>Flutter Web – CORS für lokale Browserentwicklung</td>
+<td><code>CORSMiddleware</code> ergänzt und Backend neu gestartet; Browserproblem behoben gemeldet</td>
 </tr>
 <tr>
-<td>Bis 27.10.2026 – Client-Setup</td>
-<td>Flutter 3.44.4, Dart 3.12.2, Android-Projekt</td>
-<td>Android-Debug-Build erfolgreich</td>
-<td>iOS-Build, Release-Signierung</td>
+<td>November 2026</td>
+<td>Teamportal-Landing, Login-HTML und drei zusätzliche SQL-Tabellen</td>
+<td><code>portal_account</code>, <code>portal_session</code>, <code>portal_facility_audit</code></td>
 </tr>
 <tr>
-<td>Bis 27.10.2026 – Dart-Netzwerk</td>
-<td>HTTP-Client, 3 Models, 3 Repositories</td>
-<td>2 Hilfestellen, 2 Kategorien, 0 Notfallnummern per Live-Dart-Test</td>
-<td>Gefülltes Notfallnummern-JSON, UI-Integration</td>
+<td>November 2026</td>
+<td>Argon2-Authentifizierung, Sessions, CSRF, Logout</td>
+<td>Echter Admin-Login, Dashboard und Logout erfolgreich getestet</td>
 </tr>
 <tr>
-<td>Bis 27.10.2026 – Flutter-Logik</td>
-<td><code>ChangeNotifier</code>-Controller für drei Bereiche</td>
-<td>Start-/Erfolgs-/Fehler-Tests mit Fake-Repositories bestanden</td>
-<td>Screen-Lebenszyklus und echte Geräteinteraktion</td>
+<td>November 2026</td>
+<td>Nginx-Login-Rate-Limit</td>
+<td>Konfiguration/Reload erfolgreich; Website und API weiter HTTP 200</td>
 </tr>
 <tr>
-<td>27.10.2026 – Qualitätssicherung</td>
-<td>Tests von Live-Netzzugriff getrennt</td>
-<td><code>flutter analyze</code> und <code>flutter test</code> erfolgreich</td>
-<td>CI-Automatisierung, MockClient-Parsingtests</td>
+<td>November 2026</td>
+<td>Dashboard und geschützte Hilfestellenübersicht</td>
+<td>TestClient-Tests und Browserprüfung erfolgreich</td>
+</tr>
+<tr>
+<td><strong>17.11.2026</strong></td>
+<td>Bearbeitung bestehender Hilfestellen</td>
+<td>POST-Update, Audit-Eintrag, Wiederherstellung fiktiver Testdaten und produktiver Browser-Test erfolgreich</td>
+</tr>
+<tr>
+<td><strong>17.11.2026 – Pause</strong></td>
+<td>Dokumentation des aktuellen Stands</td>
+<td>Nächstes Feature: <strong>Neue Hilfestelle anlegen</strong></td>
 </tr>
 </tbody>
 </table>
-<h2 id="2-was-wurde-geandert-gegenuber-der-dokumentation-vom-20102026">2. Was wurde geändert gegenüber der Dokumentation vom 20.10.2026?<a class="headerlink" href="#2-was-wurde-geandert-gegenuber-der-dokumentation-vom-20102026" title="Permanent link">&para;</a></h2>
-<p>Die ältere Dokumentation enthielt Server-, Datenbank-, Reverse-Proxy- und TLS-Schritte. Der Flutter-Client war darin lediglich eine geplante Systemkomponente. Die Erweiterung zum 27.10.2026 ergänzt <strong>nicht nur Installationsanleitungen</strong>, sondern auch die tatsächlichen Datenmodelle, Repositories, Controller, Live-Tests, Fake-Tests und ihre Fehlersuche. Die Systemarchitektur und die API-Referenz wurden entsprechend aktualisiert.</p>
+<h2 id="2-fachlicher-funktionsstatus">2. Fachlicher Funktionsstatus<a class="headerlink" href="#2-fachlicher-funktionsstatus" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
 <tr>
-<th>Neu/aktualisiert</th>
-<th>Zweck</th>
+<th>Funktion</th>
+<th>Status</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><a href="../../installation/flutter-setup/">Flutter-Installation</a></td>
-<td>Windows-SDK, lokaler Git-Klon, Android-Debug-Build</td>
+<td>Öffentliche YANA-Website</td>
+<td><strong>Implementiert</strong></td>
 </tr>
 <tr>
-<td><a href="../flutter-architektur/">Client-Architektur</a></td>
-<td>Drei Schichten und Verantwortung der Dateien</td>
+<td>App-Downloadlink</td>
+<td>Noch nicht veröffentlicht</td>
 </tr>
 <tr>
-<td><a href="../flutter-api-anbindung/">API-Datenzugriff</a></td>
-<td>Modelle, JSON, Repositories und gemeinsamer API-Client</td>
+<td>Allgemeine GET-API</td>
+<td><strong>Implementiert</strong> (mit Testdaten)</td>
 </tr>
 <tr>
-<td><a href="../flutter-controller/">Controller</a></td>
-<td><code>ChangeNotifier</code>, Lade-/Fehlerzustand, Lebenszyklus</td>
+<td>Admin-Login, Logout, Session-Schutz, CSRF</td>
+<td><strong>Implementiert, Basis- und Browser-Tests erfolgreich</strong></td>
 </tr>
 <tr>
-<td><a href="../flutter-tests/">Testkonzept</a></td>
-<td>Fake-Controller-Tests vs. Live-Smoke-Tests</td>
+<td>Hilfestellenliste für <code>admin</code>/<code>team</code></td>
+<td><strong>Implementiert</strong></td>
 </tr>
 <tr>
-<td><a href="../flutter-troubleshooting/">Flutter-Fehlerprotokoll</a></td>
-<td>Tatsächliche Fehlermeldungen und Gegenmaßnahmen</td>
+<td>Hilfestellen bearbeiten: Name, Telefon, E-Mail, Öffnungszeiten</td>
+<td><strong>Implementiert</strong></td>
 </tr>
 <tr>
-<td><a href="../flutter-teamworkflow/">Team-Workflow</a></td>
-<td>Übergabe an UI-Entwicklung und Git-Pull-Requests</td>
+<td>Audit-Log der Änderungen</td>
+<td><strong>Implementiert</strong></td>
 </tr>
 <tr>
-<td><a href="../betrieb-sicherheit/">Betrieb und Sicherheit</a></td>
-<td>Status der mobilen Anbindung und weitere Risiken</td>
+<td>Neue Hilfestellen anlegen</td>
+<td><strong>Noch nicht implementiert</strong></td>
+</tr>
+<tr>
+<td>Hilfestellen löschen / deaktivieren / freigeben</td>
+<td>Noch nicht implementiert</td>
+</tr>
+<tr>
+<td>Externe Hilfestellenaccounts mit eigenen Datensätzen</td>
+<td>Noch nicht implementiert</td>
+</tr>
+<tr>
+<td>Vertrauliche Adressen in öffentlicher API schützen</td>
+<td>Sicherheitsaufgabe <strong>offen</strong></td>
+</tr>
+<tr>
+<td>Flutter-UI vollständig verknüpft</td>
+<td>Nicht abschließend bestätigt; Team arbeitet parallel daran</td>
+</tr>
+<tr>
+<td>Verifizierte Notfallkontakte / anonyme Beratung</td>
+<td>Noch nicht bereitgestellt</td>
 </tr>
 </tbody>
 </table>
-<h2 id="3-nachste-entwicklungsschritte">3. Nächste Entwicklungsschritte<a class="headerlink" href="#3-nachste-entwicklungsschritte" title="Permanent link">&para;</a></h2>
-<ul>
-<li>[ ] Controller in die von der Projektgruppe entwickelte Flutter-Oberfläche einbinden.</li>
-<li>[ ] Hilfestellen und Kategorien auf einem Android-Gerät sichtbar darstellen; Lade-, Fehler- und Leerzustand prüfen.</li>
-<li>[ ] Notfallnummern ausschließlich mit verifizierten Daten freigeben; Offline-Verfügbarkeit prüfen.</li>
-<li>[ ] <code>http.MockClient</code>-Tests für nicht-leere API-Antworten und fehlerhafte JSON-Formate ergänzen.</li>
-<li>[ ] Servercode aus dem nur lokal auf dem VPS liegenden <code>yana-backend</code> kontrolliert in <code>services/api/</code> versionieren (ohne <code>.env</code> und Geheimnisse).</li>
-<li>[ ] Authentifizierung, Autorisierung, Logging und Datenschutznachweise erarbeiten, bevor Chat- oder Nutzerdaten über die API verarbeitet werden.</li>
-<li>[ ] GitHub Actions für Analyse und Unit-Tests erstellen.</li>
-<li>[ ] Vollständigen erfolgreichen Sicherungs- und Wiederherstellungstest dokumentieren.</li>
-<li>[ ] Release-/Installationsanleitung, Screenshots, App-Download und Promovideo ergänzen.</li>
-</ul>
-<h2 id="4-nachweisdokumentation">4. Nachweisdokumentation<a class="headerlink" href="#4-nachweisdokumentation" title="Permanent link">&para;</a></h2>
-<p>Um den Projektfortschritt später objektiv beurteilen zu können, sollten für jeden neuen Meilenstein die <strong>betroffenen Commit-IDs, der getestete Branch, der konkrete Befehl, das Ergebnis und gegebenenfalls ein bereinigter Screenshot</strong> ergänzt werden. Bisher wurden Ergebnisse im Entwicklungsdialog mit Terminalausgaben bestätigt, jedoch noch nicht als CI-Artefakte bzw. konkrete Git-Commits referenziert.</p>
-<p><strong>Sicherheitsregel:</strong> Screenshots und Logs vor dem Hochladen auf sensible Daten prüfen; insbesondere keine Zugangsdaten, Privatschlüssel, echten Chat- oder Standortdaten öffentlich dokumentieren.</p>
+<h2 id="3-wesentliche-fehler-und-korrekturen">3. Wesentliche Fehler und Korrekturen<a class="headerlink" href="#3-wesentliche-fehler-und-korrekturen" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Problem</th>
+<th>Korrektur</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>git push</code> mehrfach <code>non-fast-forward</code></td>
+<td><code>git pull --rebase origin main</code> bei sauberem Arbeitsstand, danach Push</td>
+</tr>
+<tr>
+<td>Python-<code>__pycache__/*.pyc</code> im Git-Status</td>
+<td><code>.gitignore</code> ergänzen und getrackte Cache-Dateien entfernen</td>
+</tr>
+<tr>
+<td>Flutter Web blockiert API mangels CORS</td>
+<td>Korrekte lokale Origin-Regex in <code>CORSMiddleware</code>, Backend-Neustart</td>
+</tr>
+<tr>
+<td><code>EOFError</code> bei interaktivem Python-Heredoc</td>
+<td><code>login_test_local.py</code> als separate Datei ausführen</td>
+</tr>
+<tr>
+<td>Beim Skript statt ID <code>TEST</code> eingegeben</td>
+<td>Zuerst numerische <code>facility_id</code>, erst danach Bestätigung <code>TEST</code></td>
+</tr>
+<tr>
+<td><code>TemplateNotFound: portal/hilfestelle_bearbeiten.html</code></td>
+<td>Richtigen Pluralnamen <code>hilfestellen_bearbeiten.html</code> konsistent einsetzen</td>
+</tr>
+<tr>
+<td>Versehentlich <code>journalctl</code> ausgeführt</td>
+<td>Nur Loglesebefehl, keine Veränderung des Systems</td>
+</tr>
+</tbody>
+</table>
+<p>Einzelheiten finden sich unter <a href="../teamportal-troubleshooting/">Portal-Fehlerprotokoll</a> und <a href="../flutter-troubleshooting/">Flutter-Fehlerprotokoll</a>.</p>
+<h2 id="4-nachster-entwicklungsschritt">4. Nächster Entwicklungsschritt<a class="headerlink" href="#4-nachster-entwicklungsschritt" title="Permanent link">&para;</a></h2>
+<p><strong>Bei der nächsten Sitzung direkt bei „Neue Hilfestelle anlegen“ fortfahren.</strong> Vor der Implementierung prüfen: Pflichtfelder von <code>hilfestelle</code>, Stand der Identity-Sequenz, Behandlung öffentlicher Standortdaten, sichere <code>INSERT</code>-Transaktion, Berechtigungen, CSRF, Audit der Erstellung und Tests mit fiktiven Daten. Den genauen Projekt-Checkpoint enthält <a href="../weiterarbeit/">Wiedereinstieg</a>.</p>
+<h2 id="5-nachweise-fur-kunftige-anderungen">5. Nachweise für künftige Änderungen<a class="headerlink" href="#5-nachweise-fur-kunftige-anderungen" title="Permanent link">&para;</a></h2>
+<p>Nach jedem größeren Feature ergänzen: Datum, betroffene Dateien, Git-Commit-ID, geänderte Datenbankstruktur, Testfälle mit Ergebnissen, Produktions-Deployment und offene Sicherheitsrisiken. Ein erfolgreicher manueller Browser-Test ist keine vollständige Sicherheitsprüfung.</p>
 
 
 

@@ -593,6 +593,17 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#nachtrag-website-und-login-rate-limit-17112026" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Nachtrag: Website und Login-Rate-Limit (17.11.2026)
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -1049,6 +1060,17 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#nachtrag-website-und-login-rate-limit-17112026" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Nachtrag: Website und Login-Rate-Limit (17.11.2026)
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -1300,6 +1322,9 @@ curl<span class="w"> </span>-Iv<span class="w"> </span>https://SERVER_IP/docs
 <li>Die Verbindung über eine IP-Adresse ist derzeit bewusst ein <strong>Entwicklungssetup ohne eigene Domain</strong>.</li>
 </ul>
 <p>Weiter zu <a href="../../technik/betrieb-sicherheit/">Betrieb und Sicherheit</a> und <a href="../../technik/api-referenz/">API-Referenz</a>.</p>
+<h2 id="nachtrag-website-und-login-rate-limit-17112026">Nachtrag: Website und Login-Rate-Limit (17.11.2026)<a class="headerlink" href="#nachtrag-website-und-login-rate-limit-17112026" title="Permanent link">&para;</a></h2>
+<p>Die öffentliche Root-URL <code>/</code> liefert inzwischen die YANA-Website, nicht mehr den ursprünglich dokumentierten <code>404</code>- bzw. JSON-Setup-Stand. Die geschützte Website nutzt dieselbe HTTPS-Verbindung unter <code>/portal/</code>. Für <code>POST /portal/login</code> wurde eine zusätzliche Nginx-Regel im <code>http</code>-Kontext eingerichtet und nach <code>nginx -t</code> per <code>systemctl reload nginx</code> geladen. Detaillierte Beschreibung: <a href="../../technik/teamportal-login/">Teamportal-Login</a>.</p>
+<p>Die vorhandenen Certbot-Erneuerungs- und ACME-Abschnitte dieses Kapitels dokumentieren die ursprüngliche Einrichtung; sie sollen durch die Webportal-Erweiterung <strong>nicht</strong> ersetzt werden.</p>
 
 
 

@@ -680,6 +680,34 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#erganzung-november-2026-teamportal-schema" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ergänzung November 2026: Teamportal-Schema
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Ergänzung November 2026: Teamportal-Schema">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#vor-der-ersten-neuen-hilfestelle" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Vor der ersten neuen Hilfestelle
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -961,6 +989,34 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#erganzung-november-2026-teamportal-schema" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ergänzung November 2026: Teamportal-Schema
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Ergänzung November 2026: Teamportal-Schema">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#vor-der-ersten-neuen-hilfestelle" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Vor der ersten neuen Hilfestelle
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -1186,6 +1242,11 @@
 <li>Filterung nach Nähe wird noch nicht implementiert; dafür sind präzise Datenvalidierung und ggf. Geodatenindexierung erforderlich.</li>
 <li>Das Datenmodell allein bildet <strong>keine</strong> Autorisierung ab. Authentifizierung und Berechtigungsregeln müssen im Backend implementiert werden.</li>
 </ul>
+<h2 id="erganzung-november-2026-teamportal-schema">Ergänzung November 2026: Teamportal-Schema<a class="headerlink" href="#erganzung-november-2026-teamportal-schema" title="Permanent link">&para;</a></h2>
+<p>Das oben dokumentierte ER-Modell umfasst weiterhin die <strong>ursprünglichen acht Fach- und Chat-Tabellen</strong>. Zusätzlich wurden für das Website-Teamportal die Tabellen <code>portal_account</code>, <code>portal_session</code> und <code>portal_facility_audit</code> angelegt. <strong>Aktuell sind damit elf Tabellen dokumentiert</strong>, sofern das ursprüngliche Schema vollständig vorhanden ist. Diese Portal-Erweiterung ist <strong>nicht</strong> im oben eingebundenen ursprünglichen ER-Bild eingezeichnet.</p>
+<p>Einzelheiten zu den neuen Feldern, Fremdschlüsseln, Rollen-/DB-Berechtigungen und SQL-Definitionen stehen auf der Seite <a href="../teamportal-datenbank/">Portal-Datenbank</a>. Die ersten Änderungen an bestehenden Hilfestellen wurden einschließlich Audit-Log erfolgreich getestet. Die Neuaufnahme (<code>INSERT</code>) von Hilfestellen ist <strong>noch nicht implementiert</strong>.</p>
+<h3 id="vor-der-ersten-neuen-hilfestelle">Vor der ersten neuen Hilfestelle<a class="headerlink" href="#vor-der-ersten-neuen-hilfestelle" title="Permanent link">&para;</a></h3>
+<p>Die Seed-Datensätze wurden mit expliziten <code>facility_id</code>-Werten eingefügt. Vor einem automatischen <code>INSERT</code> den Identity-Sequenzstand gegen die höchste vergebene ID prüfen (siehe vorstehende <code>setval</code>-Hinweise), Pflichtfelder und öffentliche Sichtbarkeit klären. Besonders wichtig: Die heutige öffentliche JSON-API würde neue Einträge unmittelbar ausliefern; reale Schutzstandorte dürfen nicht unkontrolliert enthalten sein.</p>
 
 
 

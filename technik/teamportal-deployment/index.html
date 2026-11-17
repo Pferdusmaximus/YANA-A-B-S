@@ -1,0 +1,1000 @@
+
+<!doctype html>
+<html lang="de" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Technische Dokumentation des YANA-Projekts">
+      
+      
+      
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>Teamportal: Bereitstellung auf dem IONOS-VPS - YANA – Projektdokumentation</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#teamportal-bereitstellung-auf-dem-ionos-vps" class="md-skip">
+          Zum Inhalt
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Kopfzeile">
+    <a href="../.." title="YANA – Projektdokumentation" class="md-header__button md-logo" aria-label="YANA – Projektdokumentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            YANA – Projektdokumentation
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Teamportal: Bereitstellung auf dem IONOS-VPS
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Suche" placeholder="Suche" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Suche">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Zurücksetzen" aria-label="Zurücksetzen" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Suche wird initialisiert
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="YANA – Projektdokumentation" class="md-nav__button md-logo" aria-label="YANA – Projektdokumentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    YANA – Projektdokumentation
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../installation/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Installation & Quick Start
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2" id="__nav_2_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Installation & Quick Start
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../installation/ubuntu-gnome/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ubuntu & grafische Oberfläche
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../installation/backup-agent/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    IONOS Backup-Agent
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../installation/postgresql-pgadmin/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    PostgreSQL & pgAdmin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../installation/fastapi/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    FastAPI & systemd
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../installation/nginx-https/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Nginx, HTTPS & Certbot
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Technische Dokumentation
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Technische Dokumentation
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../architektur/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Systemarchitektur
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../datenmodell/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Datenmodell
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api-referenz/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API-Referenz
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../betrieb-sicherheit/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Betrieb & Sicherheit
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../entscheidungen/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architekturentscheidungen
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../troubleshooting/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Fehlerbehebung
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../quellen/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Quellen
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../nutzung/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Nutzungshandbuch
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Inhaltsverzeichnis">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Inhaltsverzeichnis
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-ziel-und-sicherheitsprinzip" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Ziel und Sicherheitsprinzip
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-testversion-synchronisieren" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Testversion synchronisieren
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-syntax-und-tests-vor-deployment" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Syntax und Tests vor Deployment
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-sicherung-der-produktiven-version" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Sicherung der produktiven Version
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-getestete-dateien-produktiv-ubernehmen" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Getestete Dateien produktiv übernehmen
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-prufungen-im-produktiven-verzeichnis" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Prüfungen im produktiven Verzeichnis
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-browserprufung-nach-dem-neustart" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Browserprüfung nach dem Neustart
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-ruckfall-und-weitere-verbesserung" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. Rückfall und weitere Verbesserung
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="teamportal-bereitstellung-auf-dem-ionos-vps">Teamportal: Bereitstellung auf dem IONOS-VPS<a class="headerlink" href="#teamportal-bereitstellung-auf-dem-ionos-vps" title="Permanent link">&para;</a></h1>
+<p><strong>Stand: 17.11.2026 · Manuelles Deployment im Projektverlauf mehrfach erfolgreich durchgeführt</strong></p>
+<h2 id="1-ziel-und-sicherheitsprinzip">1. Ziel und Sicherheitsprinzip<a class="headerlink" href="#1-ziel-und-sicherheitsprinzip" title="Permanent link">&para;</a></h2>
+<p>Der produktive Dienst <code>yana-api</code> nutzt <code>~/yana-backend</code>. Eine separate GitHub-Arbeitskopie (<code>~/yana-deploy-source</code>) und ein separater Test-Codeordner (<code>~/yana-portal-test</code>) verhindern, dass Änderungen am Python-Code automatisch die laufende Website ersetzen. Der Betreiber arbeitet bislang <strong>über die grafische IONOS-Ubuntu-Konsole</strong>, nicht über SSH vom Windows-Rechner.</p>
+<p><strong>Einschränkung:</strong> Die Testkopie verwendet bisher denselben PostgreSQL-Datenbestand (<code>app_db</code>) wie die Produktion. Für Schreibtests daher nur klar ausgewiesene fiktive Datensätze verwenden und Ausgangswerte dokumentieren. Das Verzeichnis ist eine <em>Code-Testumgebung</em>, keine echte vollständige Staging-Umgebung.</p>
+<h2 id="2-testversion-synchronisieren">2. Testversion synchronisieren<a class="headerlink" href="#2-testversion-synchronisieren" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>~/yana-deploy-source
+git<span class="w"> </span>status
+git<span class="w"> </span>pull<span class="w"> </span>--ff-only<span class="w"> </span>origin<span class="w"> </span>main
+
+<span class="c1"># Nur nach Prüfung der GitHub-Version:</span>
+cp<span class="w"> </span>~/yana-deploy-source/services/api/portal_facilities.py<span class="w"> </span>~/yana-portal-test/portal_facilities.py
+cp<span class="w"> </span>~/yana-deploy-source/services/api/templates/portal/hilfestellen.html<span class="w"> </span>~/yana-portal-test/templates/portal/hilfestellen.html
+cp<span class="w"> </span>~/yana-deploy-source/services/api/templates/portal/hilfestellen_bearbeiten.html<span class="w"> </span>~/yana-portal-test/templates/portal/hilfestellen_bearbeiten.html
+cp<span class="w"> </span>~/yana-deploy-source/services/api/static/css/style.css<span class="w"> </span>~/yana-portal-test/static/css/style.css
+</code></pre></div>
+<p>Falls auch <code>main.py</code>, <code>portal.py</code> oder <code>website.py</code> geändert wurden, die benötigten Dateien <strong>explizit und bewusst</strong> übertragen. Bei noch nicht implementierten Features niemals pauschal den kompletten Ordner überschreiben. Besonders wichtig ist der konsistente Template-Name <code>hilfestellen_bearbeiten.html</code>.</p>
+<h2 id="3-syntax-und-tests-vor-deployment">3. Syntax und Tests vor Deployment<a class="headerlink" href="#3-syntax-und-tests-vor-deployment" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>~/yana-portal-test
+<span class="nb">source</span><span class="w"> </span>~/yana-backend/.venv/bin/activate
+python<span class="w"> </span>-m<span class="w"> </span>py_compile<span class="w"> </span>main.py<span class="w"> </span>website.py<span class="w"> </span>portal.py<span class="w"> </span>portal_facilities.py<span class="w"> </span>database.py
+python<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;from main import app; print(&#39;FastAPI-Import erfolgreich&#39;)&quot;</span>
+</code></pre></div>
+<p>Danach HTTP/Session-/CSRF- und bei Änderungen am Schreibcode gezielte <a href="../teamportal-tests/">Portalspeichertests</a> durchführen. Ein Schreiben im Testordner verändert die <strong>echte</strong> Datenbank; Rücksetzung und Audit prüfen.</p>
+<h2 id="4-sicherung-der-produktiven-version">4. Sicherung der produktiven Version<a class="headerlink" href="#4-sicherung-der-produktiven-version" title="Permanent link">&para;</a></h2>
+<p>Vor jeder Veröffentlichung:</p>
+<div class="highlight"><pre><span></span><code>mkdir<span class="w"> </span>-p<span class="w"> </span>~/yana-backups
+chmod<span class="w"> </span><span class="m">700</span><span class="w"> </span>~/yana-backups
+<span class="nv">BACKUP</span><span class="o">=</span><span class="s2">&quot;</span><span class="nv">$HOME</span><span class="s2">/yana-backups/pre-deploy-</span><span class="k">$(</span>date<span class="w"> </span>+%Y%m%d-%H%M%S<span class="k">)</span><span class="s2">.tar.gz&quot;</span>
+tar<span class="w"> </span>-czf<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$BACKUP</span><span class="s2">&quot;</span><span class="w"> </span>--exclude<span class="o">=</span><span class="s1">&#39;./.venv&#39;</span><span class="w"> </span>--exclude<span class="o">=</span><span class="s1">&#39;./.env&#39;</span><span class="w"> </span>-C<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$HOME</span><span class="s2">/yana-backend&quot;</span><span class="w"> </span>.
+<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$BACKUP</span><span class="s2">&quot;</span>
+</code></pre></div>
+<p>Das sichert den vorhandenen Code und die Templates, <strong>nicht</strong> die PostgreSQL-Datenbank. Den ausgegebenen Backup-Pfad notieren. Für echte DB-Migrationen und produktive Datensätze sind eigene konsistente DB-Backups und getestete Restores erforderlich.</p>
+<h2 id="5-getestete-dateien-produktiv-ubernehmen">5. Getestete Dateien produktiv übernehmen<a class="headerlink" href="#5-getestete-dateien-produktiv-ubernehmen" title="Permanent link">&para;</a></h2>
+<p>Nur die tatsächlich geänderten, in der Testumgebung geprüften Dateien kopieren. Für die zuletzt umgesetzte Bearbeitungsfunktion:</p>
+<div class="highlight"><pre><span></span><code>cp<span class="w"> </span>~/yana-portal-test/portal_facilities.py<span class="w"> </span>~/yana-backend/portal_facilities.py
+cp<span class="w"> </span>~/yana-portal-test/templates/portal/hilfestellen.html<span class="w"> </span>~/yana-backend/templates/portal/hilfestellen.html
+cp<span class="w"> </span>~/yana-portal-test/templates/portal/hilfestellen_bearbeiten.html<span class="w"> </span>~/yana-backend/templates/portal/hilfestellen_bearbeiten.html
+cp<span class="w"> </span>~/yana-portal-test/static/css/style.css<span class="w"> </span>~/yana-backend/static/css/style.css
+</code></pre></div>
+<p><code>main.py</code>, <code>.env</code>, <code>database.py</code> und <code>.venv</code> sind für <strong>diesen</strong> reinen Formular-/Audit-Release nicht erneut kopiert worden. Bei zukünftigen Änderungen muss jeder betroffene Codepfad separat bewertet werden.</p>
+<h2 id="6-prufungen-im-produktiven-verzeichnis">6. Prüfungen im produktiven Verzeichnis<a class="headerlink" href="#6-prufungen-im-produktiven-verzeichnis" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>~/yana-backend
+<span class="nb">source</span><span class="w"> </span>.venv/bin/activate
+python<span class="w"> </span>-m<span class="w"> </span>py_compile<span class="w"> </span>main.py<span class="w"> </span>portal.py<span class="w"> </span>portal_facilities.py
+python<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;from main import app; print(&#39;FastAPI-Import erfolgreich&#39;)&quot;</span>
+grep<span class="w"> </span>-n<span class="w"> </span><span class="s1">&#39;hilfestellen_bearbeiten.html&#39;</span><span class="w"> </span>portal_facilities.py
+ls<span class="w"> </span>templates/portal/hilfestellen_bearbeiten.html
+</code></pre></div>
+<p>Die lokalen GET-Smoke-Tests können mit <code>TestClient(app, base_url="https://testserver", follow_redirects=False)</code> durchgeführt werden. Ohne Login liefern <code>/portal/hilfestellen</code> und <code>/portal/hilfestellen/1/edit</code> erwartungsgemäß HTTP 303. Öffentlich zugängliche Endpunkte sollten weiterhin HTTP 200 liefern.</p>
+<p><strong>Erst bei erfolgreichen Prüfungen</strong> den Dienst neu starten:</p>
+<div class="highlight"><pre><span></span><code>sudo<span class="w"> </span>systemctl<span class="w"> </span>restart<span class="w"> </span>yana-api
+sudo<span class="w"> </span>systemctl<span class="w"> </span>status<span class="w"> </span>yana-api<span class="w"> </span>--no-pager
+</code></pre></div>
+<p>Bei Fehlern:</p>
+<div class="highlight"><pre><span></span><code>sudo<span class="w"> </span>journalctl<span class="w"> </span>-u<span class="w"> </span>yana-api<span class="w"> </span>-n<span class="w"> </span><span class="m">40</span><span class="w"> </span>--no-pager
+</code></pre></div>
+<p><strong>Dieser <code>journalctl</code>-Befehl liest ausschließlich Logs.</strong> Er verändert keine Dateien, stoppt keinen Dienst und löscht keine Daten.</p>
+<h2 id="7-browserprufung-nach-dem-neustart">7. Browserprüfung nach dem Neustart<a class="headerlink" href="#7-browserprufung-nach-dem-neustart" title="Permanent link">&para;</a></h2>
+<ol>
+<li>HTTPS-Startseite <code>/</code> aufrufen.</li>
+<li><code>/portal/login</code> öffnen und als Administrator anmelden.</li>
+<li><code>/portal/dashboard</code> und <code>/portal/hilfestellen</code> aufrufen.</li>
+<li>Bearbeiten-Formular eines <strong>fiktiven</strong> Eintrags testen.</li>
+<li>Teständerung speichern, Erfolgsmeldung und DB-/Audit-Eintrag kontrollieren; Ursprungswert wiederherstellen.</li>
+<li>Logout und Weiterleitung geschützter Seiten prüfen.</li>
+<li>JSON-Endpunkte für Flutter (<code>/hilfestellen</code>, <code>/kategorien</code>, <code>/notfallnummern</code>) erneut prüfen.</li>
+</ol>
+<p>Diese Schritte wurden im Projektverlauf für das veröffentlichte Bearbeitungsfeature erfolgreich durchgeführt.</p>
+<h2 id="8-ruckfall-und-weitere-verbesserung">8. Rückfall und weitere Verbesserung<a class="headerlink" href="#8-ruckfall-und-weitere-verbesserung" title="Permanent link">&para;</a></h2>
+<p>Bei fehlgeschlagenem Deploy <strong>zuerst</strong> Logs prüfen. Für die Wiederherstellung das konkret notierte Backup in ein separates Verzeichnis entpacken und benötigte Dateien kontrolliert zurückkopieren; anschließend Dienst neu starten und Endpunkte prüfen. Kein pauschales Entpacken über <code>.env</code> oder <code>.venv</code> und keine unangekündigten DB-Rollbacks durchführen. Da eine neue UI-Funktion Tabellen verändern kann, ist ein Code-Rollback nicht automatisch ein Datenbank-Rollback.</p>
+<p>Zukünftige Verbesserung: eigener Staging-Datenbankcluster, versionierte Migrationsskripte, automatisierte Release-Pipeline, Rollback-Anleitung mit geprüftem Restore sowie TLS-/Backup-Monitoring.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.sections", "navigation.indexes", "content.code.copy", "search.suggest"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "In Zwischenablage kopiert", "clipboard.copy": "In Zwischenablage kopieren", "search.result.more.one": "1 weiteres Suchergebnis auf dieser Seite", "search.result.more.other": "# weitere Suchergebnisse auf dieser Seite", "search.result.none": "Keine Suchergebnisse", "search.result.one": "1 Suchergebnis", "search.result.other": "# Suchergebnisse", "search.result.placeholder": "Suchbegriff eingeben", "search.result.term.missing": "Es fehlt", "select.version": "Version ausw\u00e4hlen"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+    
+  </body>
+</html>

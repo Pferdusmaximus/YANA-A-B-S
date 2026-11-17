@@ -487,6 +487,17 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#nachtrag-portal-datenbank-november-2026" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Nachtrag: Portal-Datenbank (November 2026)
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -949,6 +960,17 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#nachtrag-portal-datenbank-november-2026" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Nachtrag: Portal-Datenbank (November 2026)
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -1055,6 +1077,8 @@ sudo<span class="w"> </span>apt<span class="w"> </span>install<span class="w"> <
 <li>Die Datenbankzugangsdaten liegen lokal in einer geschützten <code>.env</code>-Datei, nicht im Quellcode.</li>
 <li>Datenbankrollen für Schreib-/Lesezugriff später differenzieren; derzeit ist <code>app_user</code> Eigentümer der Datenbank.</li>
 </ul>
+<h2 id="nachtrag-portal-datenbank-november-2026">Nachtrag: Portal-Datenbank (November 2026)<a class="headerlink" href="#nachtrag-portal-datenbank-november-2026" title="Permanent link">&para;</a></h2>
+<p>Die ursprüngliche <code>app_db</code> mit acht Tabellen wurde nicht ersetzt, sondern um die Portal-Tabellen <strong><code>portal_account</code></strong>, <strong><code>portal_session</code></strong> und <strong><code>portal_facility_audit</code></strong> ergänzt. Der Administrator wird durch einen Argon2-Hash authentifiziert, nicht über das Chat-/App-Modell <code>nutzerin</code>. Weitere Informationen: <a href="../../technik/teamportal-datenbank/">Portal-Datenbanktabellen</a> und <a href="../../technik/teamportal-login/">Login</a>.</p>
 
 
 

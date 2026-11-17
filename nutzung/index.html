@@ -64,7 +64,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#nutzungshandbuch-derzeitiger-entwicklungsstand" class="md-skip">
+        <a href="#nutzungshandbuch-entwicklungsstand" class="md-skip">
           Zum Inhalt
         </a>
       
@@ -780,10 +780,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#geplante-funktionen-aus-projektkonzept" class="md-nav__link">
+  <a href="#offentliche-website" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Geplante Funktionen (aus Projektkonzept)
+        Öffentliche Website
       
     </span>
   </a>
@@ -791,10 +791,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#fur-entwickler-bereits-nutzbar" class="md-nav__link">
+  <a href="#geschutztes-teamportal" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Für Entwickler bereits nutzbar
+        Geschütztes Teamportal
       
     </span>
   </a>
@@ -802,10 +802,21 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#noch-zu-erganzen" class="md-nav__link">
+  <a href="#geplante-mobile-app-funktionen" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Noch zu ergänzen
+        Geplante mobile App-Funktionen
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#hinweis-zu-echten-notfallen" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Hinweis zu echten Notfällen
       
     </span>
   </a>
@@ -847,10 +858,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#geplante-funktionen-aus-projektkonzept" class="md-nav__link">
+  <a href="#offentliche-website" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Geplante Funktionen (aus Projektkonzept)
+        Öffentliche Website
       
     </span>
   </a>
@@ -858,10 +869,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#fur-entwickler-bereits-nutzbar" class="md-nav__link">
+  <a href="#geschutztes-teamportal" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Für Entwickler bereits nutzbar
+        Geschütztes Teamportal
       
     </span>
   </a>
@@ -869,10 +880,21 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#noch-zu-erganzen" class="md-nav__link">
+  <a href="#geplante-mobile-app-funktionen" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Noch zu ergänzen
+        Geplante mobile App-Funktionen
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#hinweis-zu-echten-notfallen" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Hinweis zu echten Notfällen
       
     </span>
   </a>
@@ -896,23 +918,23 @@
 
 
 
-<h1 id="nutzungshandbuch-derzeitiger-entwicklungsstand">Nutzungshandbuch – derzeitiger Entwicklungsstand<a class="headerlink" href="#nutzungshandbuch-derzeitiger-entwicklungsstand" title="Permanent link">&para;</a></h1>
-<p>Die mobile YANA-App wird mit <strong>Flutter/Dart</strong> entwickelt. <strong>Stand 27.10.2026:</strong> Die technische Anbindung an FastAPI ist für Hilfestellen, Kategorien und Notfallnummern durch Dart-CLI-Live-Tests bestätigt. Die dazugehörigen Controller wurden mit Fake-Repositories erfolgreich getestet. <strong>Die nutzbare, fertig integrierte Benutzeroberfläche befindet sich weiterhin in Entwicklung.</strong> Hier werden daher keine noch nicht vorhandenen Endanwender-Funktionen als fertig dargestellt.</p>
-<h2 id="geplante-funktionen-aus-projektkonzept">Geplante Funktionen (aus Projektkonzept)<a class="headerlink" href="#geplante-funktionen-aus-projektkonzept" title="Permanent link">&para;</a></h2>
+<h1 id="nutzungshandbuch-entwicklungsstand">Nutzungshandbuch – Entwicklungsstand<a class="headerlink" href="#nutzungshandbuch-entwicklungsstand" title="Permanent link">&para;</a></h1>
+<p><strong>Stand: 17. November 2026.</strong> YANA besitzt inzwischen zwei klar getrennte Nutzungsebenen: die öffentliche Informationswebsite mit Download-Hinweis und ein geschütztes Teamportal für die interne Datenpflege. Die Flutter-App selbst befindet sich weiterhin in Entwicklung; eine veröffentlichte Download-Version oder verlässliche echte Notfallberatung ist nicht bestätigt.</p>
+<h2 id="offentliche-website">Öffentliche Website<a class="headerlink" href="#offentliche-website" title="Permanent link">&para;</a></h2>
+<p>Über die HTTPS-Startseite können Besucher Informationen zum YANA-Projekt und zu geplanten App-Funktionen lesen. Der Downloadbereich weist derzeit darauf hin, dass die App noch entwickelt wird. Es gibt keine öffentliche Registrierung für das Teamportal.</p>
+<h2 id="geschutztes-teamportal">Geschütztes Teamportal<a class="headerlink" href="#geschutztes-teamportal" title="Permanent link">&para;</a></h2>
+<p>Berechtigte Mitglieder des YANA-Teams können sich unter <code>/portal/login</code> anmelden, im Dashboard eine Liste vorhandener Hilfestellen ansehen und die vier freigegebenen Kontaktfelder bearbeiten. Die Änderungen werden in PostgreSQL gespeichert und mit Zeitstempel und Benutzerzuordnung protokolliert. Die Funktion „Neue Hilfestelle anlegen“ ist <strong>noch nicht verfügbar</strong>.</p>
+<p>Die vollständige Anleitung steht unter <strong><a href="teamportal/">Teamportal bedienen</a></strong>. Technische Details: <a href="../technik/teamportal-hilfestellen/">Hilfestellenverwaltung</a>.</p>
+<h2 id="geplante-mobile-app-funktionen">Geplante mobile App-Funktionen<a class="headerlink" href="#geplante-mobile-app-funktionen" title="Permanent link">&para;</a></h2>
 <ul>
-<li>Standortbezogene Anzeige von Hilfestellen.</li>
-<li>Übersicht über Notfallnummern mit schneller Kontaktmöglichkeit.</li>
-<li>Kategorisierung von Hilfsangeboten.</li>
-<li>Informationsmaterial zu Gewaltprävention und Handlungsmöglichkeiten.</li>
-<li>Möglichkeit einer anonymen Erstberatung (für die Umsetzung sind besondere Sicherheits- und Datenschutzanforderungen zu beachten).</li>
+<li>Standortbezogene Hilfestellen und Kategorien anzeigen.</li>
+<li>Verifizierte Notfallkontakte schnell verfügbar machen.</li>
+<li>Präventionsinformationen und Wege zur Hilfe aufzeigen.</li>
+<li>Anonyme Erstberatung als späteres, besonders datenschutzsensibles Modul.</li>
 </ul>
-<h2 id="fur-entwickler-bereits-nutzbar">Für Entwickler bereits nutzbar<a class="headerlink" href="#fur-entwickler-bereits-nutzbar" title="Permanent link">&para;</a></h2>
-<p>Die Backend-API kann über <code>/docs</code> interaktiv getestet werden. Unter <code>/hilfestellen</code> und <code>/kategorien</code> sind derzeit <strong>rein fiktive</strong> Datensätze vorhanden. Entwickler können außerdem die drei manuellen Verbindungstests mit <code>dart run tool/...</code> ausführen und Models/Controller aus Flutter verwenden. Details siehe <a href="../technik/api-referenz/">API-Referenz</a>, <a href="../technik/flutter-api-anbindung/">Flutter-API-Anbindung</a> und <a href="../technik/flutter-tests/">Testkonzept</a>.</p>
-<h2 id="noch-zu-erganzen">Noch zu ergänzen<a class="headerlink" href="#noch-zu-erganzen" title="Permanent link">&para;</a></h2>
-<p>Sobald die Flutter-Integration umgesetzt ist, werden hier die <strong>konkreten Benutzerabläufe</strong>, bereinigte Screenshots und Nutzertests dokumentiert. Download-Link/CTA und Promovideo werden auf der <a href="../">Startseite</a> ergänzt.</p>
-<blockquote>
-<p><strong>Sicherheitshinweis:</strong> YANA befindet sich in der Entwicklungsphase. Angezeigte Teststandorte sind keine realen, verifizierten Hilfsangebote; in einer akuten Notlage sind offizielle Notruf- und Beratungsstellen zu kontaktieren.</p>
-</blockquote>
+<p>Die Netzwerk- und Logikschicht ist für drei Datenbereiche implementiert; der Abschluss der sichtbaren Flutter-Screens wird in dieser Dokumentation <strong>nicht</strong> behauptet.</p>
+<h2 id="hinweis-zu-echten-notfallen">Hinweis zu echten Notfällen<a class="headerlink" href="#hinweis-zu-echten-notfallen" title="Permanent link">&para;</a></h2>
+<p>Die bestehenden Hilfestellen, Telefonnummern und Standorte sind fiktive Entwicklungsdaten. YANA ersetzt aktuell <strong>keinen</strong> offiziellen Notruf und keine geprüfte Beratungsstelle. Für akute Hilfe sind die offiziellen zuständigen Dienste zu verwenden.</p>
 
 
 

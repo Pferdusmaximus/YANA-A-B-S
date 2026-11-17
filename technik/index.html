@@ -765,10 +765,21 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#system-und-backend" class="md-nav__link">
+  <a href="#system-server-und-datenbank" class="md-nav__link">
     <span class="md-ellipsis">
       
-        System und Backend
+        System, Server und Datenbank
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#website-teamportal-und-datenpflege" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Website, Teamportal und Datenpflege
       
     </span>
   </a>
@@ -787,10 +798,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#projektnachvollziehbarkeit" class="md-nav__link">
+  <a href="#verlauf-und-grundlagen" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Projektnachvollziehbarkeit
+        Verlauf und Grundlagen
       
     </span>
   </a>
@@ -815,31 +826,44 @@
 
 
 <h1 id="technische-dokumentation">Technische Dokumentation<a class="headerlink" href="#technische-dokumentation" title="Permanent link">&para;</a></h1>
-<p>Diese Seiten dokumentieren die Systemarchitektur sowie die bestätigten Implementierungen des YANA-Projekts. <strong>Stand: 27. Oktober 2026.</strong> Inhalte mit dem Kennzeichen <em>geplant</em> oder <em>noch offen</em> dürfen nicht als implementierte Funktionen verstanden werden.</p>
-<h2 id="system-und-backend">System und Backend<a class="headerlink" href="#system-und-backend" title="Permanent link">&para;</a></h2>
+<p>Diese Seiten dokumentieren den <strong>nachgewiesenen Stand vom 17. November 2026</strong>. Vorhandene Dokumente zur Servereinrichtung und Flutter-Schicht wurden erhalten; die Website, das Teamportal und die Datenpflege sind hinzugekommen. <em>Geplant</em> bedeutet ausdrücklich <strong>nicht implementiert</strong>.</p>
+<h2 id="system-server-und-datenbank">System, Server und Datenbank<a class="headerlink" href="#system-server-und-datenbank" title="Permanent link">&para;</a></h2>
 <ul>
-<li><a href="architektur/">Systemarchitektur</a> – Flutter, FastAPI, Nginx, PostgreSQL und Betriebsdienste.</li>
-<li><a href="api-referenz/">REST-API-Referenz</a> – <code>/hilfestellen</code>, <code>/kategorien</code>, <code>/notfallnummern</code> und Diagnose-Endpunkte.</li>
-<li><a href="datenmodell/">Relationales Datenmodell</a> – ER-Modell, SQL-Schema und fiktive Testdaten.</li>
-<li><a href="betrieb-sicherheit/">Betrieb, Backups und Sicherheit</a> – Vertrauensgrenzen, Secrets und offene Schutzmaßnahmen.</li>
-<li><a href="entscheidungen/">Technische Entscheidungen</a> – Begründete Stack- und Betriebsentscheidungen.</li>
+<li><a href="architektur/">Systemarchitektur</a> – öffentliche Website, Browserportal, Flutter, FastAPI, Nginx und PostgreSQL.</li>
+<li><a href="api-referenz/">REST-API und Portal-Routen</a> – öffentliche JSON- und geschützte HTML-Endpunkte.</li>
+<li><a href="datenmodell/">Relationales Datenmodell</a> – ursprüngliches ER-Modell mit acht Tabellen.</li>
+<li><a href="teamportal-datenbank/">Zusätzliche Portal-Datenbanktabellen</a> – Accounts, Sessions und Audit.</li>
+<li><a href="betrieb-sicherheit/">Betrieb, Backups und Sicherheit</a> – Ist-Stand, Risiken und offene Schutzmaßnahmen.</li>
+<li><a href="entscheidungen/">Technische Entscheidungen</a> – Begründung für die Architektur.</li>
+</ul>
+<h2 id="website-teamportal-und-datenpflege">Website, Teamportal und Datenpflege<a class="headerlink" href="#website-teamportal-und-datenpflege" title="Permanent link">&para;</a></h2>
+<ul>
+<li><a href="website/">Öffentliche Website</a> – Inhalte, Templates und bisherige Bereitstellung.</li>
+<li><a href="teamportal-architektur/">Teamportal-Architektur und Rollen</a> – Struktur, URLs und Verantwortlichkeiten.</li>
+<li><a href="teamportal-login/">Login, Sessions und CSRF</a> – PostgreSQL-Authentifizierung und Cookie-Sicherheit.</li>
+<li><a href="teamportal-hilfestellen/">Hilfestellenübersicht und Bearbeitung</a> – Formular, SQL-Update und Audit-Log.</li>
+<li><a href="teamportal-tests/">Portal-Tests</a> – tatsächliche HTTP-Statuscodes und Speichertest.</li>
+<li><a href="teamportal-troubleshooting/">Portal-Fehlerbehebung</a> – beobachtete Probleme und Korrekturen.</li>
+<li><a href="git-deployment/">GitHub und Deployment</a> – Entwicklung/Server-Dateikopien, Git-Konflikte und <code>.gitignore</code>.</li>
+<li><a href="teamportal-deployment/">Produktive Bereitstellung</a> – Backup, Testumgebung, Neustart und Rollback.</li>
+<li><a href="weiterarbeit/">Wiedereinstieg und nächstes Feature</a> – <strong>„Neue Hilfestelle anlegen“</strong>.</li>
 </ul>
 <h2 id="flutter-dart">Flutter / Dart<a class="headerlink" href="#flutter-dart" title="Permanent link">&para;</a></h2>
 <ul>
-<li><a href="flutter-architektur/">Flutter: Drei-Schichtenmodell</a> – Präsentation, Controller und Datenzugriff.</li>
-<li><a href="flutter-api-anbindung/">Flutter: API-Anbindung</a> – HTTP-Client, Model-Parsing und drei Repositories.</li>
+<li><a href="flutter-architektur/">Drei-Schichtenmodell</a> – Model, Repository, Controller und Präsentation.</li>
+<li><a href="flutter-api-anbindung/">Flutter: API-Anbindung</a> – HTTP-Client, Models und Repositories.</li>
 <li><a href="flutter-controller/">Flutter: Controller</a> – <code>ChangeNotifier</code> und UI-Zustände.</li>
-<li><a href="flutter-tests/">Flutter: Tests</a> – Erfolgreiche Live- und Unit-Tests, verbleibende Testlücken.</li>
-<li><a href="flutter-troubleshooting/">Flutter: Fehlerbehebung</a> – OneDrive, Android SDK, Dart-Typen, HTTP 400 und Lints.</li>
-<li><a href="flutter-teamworkflow/">Flutter: Teamübergabe</a> – Git-Workflow und Schnittstellen für die UI.</li>
+<li><a href="flutter-tests/">Flutter: Tests</a> – Live- und Unit-Tests.</li>
+<li><a href="flutter-troubleshooting/">Flutter: Fehlerbehebung</a> – Android SDK, OneDrive, Dart-Typen, HTTP 400 und CORS.</li>
+<li><a href="flutter-teamworkflow/">Flutter: Teamübergabe</a> – Zusammenarbeit bei der UI.</li>
 </ul>
-<h2 id="projektnachvollziehbarkeit">Projektnachvollziehbarkeit<a class="headerlink" href="#projektnachvollziehbarkeit" title="Permanent link">&para;</a></h2>
+<h2 id="verlauf-und-grundlagen">Verlauf und Grundlagen<a class="headerlink" href="#verlauf-und-grundlagen" title="Permanent link">&para;</a></h2>
 <ul>
-<li><a href="entwicklungsstand/">Entwicklungsstand und Änderungsprotokoll</a> – Meilensteine und offene Punkte.</li>
-<li><a href="troubleshooting/">Server-Fehlerbehebung</a> – Tatsächlich aufgetretene Infrastrukturprobleme.</li>
-<li><a href="quellen/">Quellen und offizielle Referenzen</a> – Weiterführende Dokumentation.</li>
+<li><a href="entwicklungsstand/">Entwicklungsstand und Änderungsprotokoll</a> – Meilensteine bis 17.11.2026.</li>
+<li><a href="troubleshooting/">Server-Fehlerbehebung</a> – Infrastruktur- und Betriebsprobleme.</li>
+<li><a href="quellen/">Quellen</a> – Offizielle technische Referenzen.</li>
 </ul>
-<p>Für die lokale Einrichtung siehe <a href="../installation/">Installation &amp; Quick Start</a>. Für Endanwender gilt der aktuelle Status im <a href="../nutzung/">Nutzungshandbuch</a>.</p>
+<p>Für eine Reproduktion mit Testdaten siehe <a href="../installation/">Installation und Quick Start</a>. Für die Portalbedienung siehe <a href="../nutzung/teamportal/">Benutzung des Teamportals</a>.</p>
 
 
 

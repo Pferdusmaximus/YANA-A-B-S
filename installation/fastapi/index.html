@@ -1001,6 +1001,9 @@
 
 
 <h1 id="fastapi-einrichten-und-als-dienst-betreiben">FastAPI einrichten und als Dienst betreiben<a class="headerlink" href="#fastapi-einrichten-und-als-dienst-betreiben" title="Permanent link">&para;</a></h1>
+<blockquote>
+<p><strong>Historischer Server-Setup-Stand (Oktober 2026):</strong> Die folgenden Codebeispiele zeigen die ursprüngliche JSON-API. Seit November 2026 liefert <code>GET /</code> eine HTML-Startseite. Die aktuelle Website, die Portalanmeldung und die Hilfestellenbearbeitung sind unter <a href="../website-teamportal/">Website/Teamportal</a> dokumentiert; die aktuelle Routenliste steht unter <a href="../../technik/api-referenz/">API-Referenz</a>.</p>
+</blockquote>
 <p>Ziel: Die in PostgreSQL angelegte Datenbank <code>app_db</code> wird über eine lokale FastAPI-REST-Schnittstelle angesprochen. Die API selbst wird dauerhaft von <strong>systemd</strong> betrieben; Nginx und HTTPS sind im <a href="../nginx-https/">nächsten Kapitel</a> beschrieben.</p>
 <h2 id="1-laufzeitumgebung-vorbereiten">1. Laufzeitumgebung vorbereiten<a class="headerlink" href="#1-laufzeitumgebung-vorbereiten" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code>python3<span class="w"> </span>--version

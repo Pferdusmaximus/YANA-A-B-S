@@ -858,6 +858,17 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#erganzung-zusammenarbeit-mit-website-und-teamportal" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ergänzung: Zusammenarbeit mit Website und Teamportal
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -1003,6 +1014,9 @@
 <h2 id="7-dokumentation-und-nachvollziehbarkeit">7. Dokumentation und Nachvollziehbarkeit<a class="headerlink" href="#7-dokumentation-und-nachvollziehbarkeit" title="Permanent link">&para;</a></h2>
 <p>Bei jedem abgeschlossenen Feature mindestens folgende Angaben nachtragen: <strong>Zweck</strong>, betroffene Dateien, Endpunkt/JSON-Schema, Testkommando, tatsächliches Testergebnis, bekannte Einschränkungen und Git-Commit/PR (wenn vorhanden). Derzeit sind keine konkreten Commit-IDs als Nachweise in der Dokumentation eingetragen, da sie im Gespräch nicht genannt wurden. Sie sollten nach dem Merge ergänzt werden.</p>
 <p>Siehe auch <a href="../flutter-architektur/">Architektur</a>, <a href="../flutter-tests/">Tests</a> und <a href="../../installation/flutter-setup/">Installation</a>.</p>
+<h2 id="erganzung-zusammenarbeit-mit-website-und-teamportal">Ergänzung: Zusammenarbeit mit Website und Teamportal<a class="headerlink" href="#erganzung-zusammenarbeit-mit-website-und-teamportal" title="Permanent link">&para;</a></h2>
+<p>Parallel zur mobilen App liegt inzwischen der FastAPI-/Website-/Portal-Code unter <code>services/api/</code> im <strong>selben GitHub-Repository</strong>. Nicht direkt dauerhaft im produktiven Serververzeichnis entwickeln: Änderungen zuerst in VS Code erstellen, committen und nach GitHub pushen, anschließend auf dem VPS kontrolliert testen und deployen. Der Server erhält Updates <strong>nicht automatisch</strong> durch einen Push.</p>
+<p>Mehrfach wurden Pushes wegen eines neueren GitHub-Stands zurückgewiesen. Der bewährte Weg war bei sauberem Arbeitsstand <code>git pull --rebase origin main</code>, anschließend <code>git push origin main</code>; niemals Team-Commits per <code>--force</code> überschreiben. Python-<code>__pycache__</code>-Dateien wurden aus Git entfernt und die <code>.gitignore</code> im Root ergänzt. Details: <a href="../git-deployment/">GitHub und Deployment</a>.</p>
 
 
 
