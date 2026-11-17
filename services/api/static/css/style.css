@@ -150,3 +150,111 @@ footer {
         padding: 60px 8%;
     }
 }
+
+
+
+
+
+/* ---------------------------------------
+   YANA Teamportal - Login
+--------------------------------------- */
+
+.login-page {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 30px 20px;
+    background: #f3f7f6;
+}
+
+.login-container {
+    width: 100%;
+    max-width: 440px;
+    padding: 45px;
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 10px 35px rgba(0, 0, 0, 0.07);
+    text-align: center;
+}
+
+.login-logo {
+    display: inline-block;
+    margin-bottom: 22px;
+    font-size: 32px;
+    font-weight: bold;
+    color: var(--primary);
+    text-decoration: none;
+}
+
+.login-container h1 {
+    margin: 0 0 12px;
+    font-size: 30px;
+}
+
+.login-subtitle {
+    color: var(--muted);
+    font-size: 15px;
+    margin-bottom: 30px;
+}
+
+.login-form {
+    text-align: left;
+}
+
+.login-form label {
+    display: block;
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 7px;
+}
+
+.login-form input {
+    width: 100%;
+    padding: 13px 15px;
+    margin-bottom: 22px;
+    border: 1px solid #ccd8d4;
+    border-radius: 8px;
+    font-size: 15px;
+}
+
+.login-form input:focus {
+    border-color: var(--primary);
+    outline: 2px solid #d5eae5;
+}
+
+.login-button {
+    width: 100%;
+    padding: 14px;
+    border: none;
+    border-radius: 8px;
+    background: var(--primary);
+    color: white;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.login-button:hover {
+    background: var(--primary-dark);
+}
+
+.login-information {
+    margin-top: 25px;
+    color: var(--muted);
+    font-size: 12px;
+}
+
+.back-link {
+    display: inline-block;
+    margin-top: 15px;
+    color: var(--primary);
+    text-decoration: none;
+    font-size: 14px;
+}
+
+@media (max-width: 480px) {
+    .login-container {
+        padding: 30px 22px;
+    }
+}

@@ -1,3 +1,5 @@
+from portal import router as portal_router
+
 from pathlib import Path
 from fastapi.staticfiles import StaticFiles
 from website import router as website_router
@@ -12,6 +14,8 @@ app = FastAPI(
     description="Backend für die YANA Sicherheits-App",
     version="1.0.0"
 )
+
+app.include_router(portal_router)
 
 BASE_DIR = Path(__file__).resolve().parent
 

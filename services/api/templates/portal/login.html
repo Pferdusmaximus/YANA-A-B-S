@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+
+{% block title %}YANA – Teamportal{% endblock %}
+
+{% block content %}
+
+<div class="login-page">
+
+    <div class="login-container">
+
+        <a href="/" class="login-logo">
+            YANA
+        </a>
+
+        <h1>Teamportal</h1>
+
+        <p class="login-subtitle">
+            Melde dich mit deinem Mitarbeiterkonto an,
+            um auf die YANA-Verwaltung zuzugreifen.
+        </p>
+
+        <div class="login-form">
+
+            <form id="login-form"
+                  method="post"
+                  action="/portal/login">
+
+                <label for="email">
+                    E-Mail-Adresse
+                </label>
+
+                <input
+                    type="email"
+                    id="email"
+                    name="email"
+                    placeholder="name@organisation.de"
+                    autocomplete="username"
+                    maxlength="254"
+                    required
+                >
+
+                <label for="password">
+                    Passwort
+                </label>
+
+                <input
+                    type="password"
+                    id="password"
+                    name="password"
+                    placeholder="Passwort eingeben"
+                    autocomplete="current-password"
+                    required
+                >
+
+                <button type="submit"
+                        class="login-button">
+                    Anmelden
+                </button>
+
+            </form>
+
+        </div>
+
+        <p class="login-information">
+            Dieser Bereich ist ausschließlich für
+            autorisierte Mitarbeiter und Partner
+            des YANA-Projekts vorgesehen.
+        </p>
+
+        <a href="/" class="back-link">
+            Zurück zur Startseite
+        </a>
+
+    </div>
+
+</div>
+
+{% endblock %}
