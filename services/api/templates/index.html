@@ -1,0 +1,95 @@
+{% extends "base.html" %}
+
+{% block title %}YANA – You Are Not Alone{% endblock %}
+
+{% block content %}
+
+<header class="navbar">
+    <div class="logo">YANA</div>
+
+    <nav>
+        <a href="#funktionen">Funktionen</a>
+        <a href="#download">Download</a>
+        <span class="portal-link">
+            Teamportal – in Vorbereitung
+        </span>
+    </nav>
+</header>
+
+<main>
+    <section class="hero">
+        <div class="hero-content">
+            <h1>You Are Not Alone.</h1>
+
+            <p>
+                YANA unterstützt Menschen dabei,
+                passende Hilfsangebote, wichtige
+                Informationen und Anlaufstellen
+                schnell und unkompliziert zu finden.
+            </p>
+
+            <a href="#download" class="button">
+                YANA entdecken
+            </a>
+        </div>
+    </section>
+
+    <section id="funktionen" class="section">
+        <h2>Was bietet YANA?</h2>
+
+        <div class="cards">
+            <article class="card">
+                <h3>Hilfestellen finden</h3>
+                <p>
+                    Informationen zu Beratungsstellen,
+                    Hilfsorganisationen und weiteren
+                    Unterstützungsangeboten.
+                </p>
+            </article>
+
+            <article class="card">
+                <h3>Notfallkontakte</h3>
+                <p>
+                    Wichtige Telefonnummern und
+                    Anlaufstellen übersichtlich
+                    an einem Ort.
+                </p>
+            </article>
+
+            <article class="card">
+                <h3>Information und Beratung</h3>
+                <p>
+                    Hilfreiche Informationen und
+                    perspektivisch Möglichkeiten
+                    zur ersten Kontaktaufnahme.
+                </p>
+            </article>
+        </div>
+    </section>
+
+    <section id="download" class="section download">
+        <h2>YANA herunterladen</h2>
+
+        <p>
+            Die mobile Anwendung befindet
+            sich aktuell in Entwicklung.
+        </p>
+
+        <span class="button disabled">
+            Download folgt
+        </span>
+    </section>
+</main>
+
+<footer>
+    <p>YANA – You Are Not Alone</p>
+    <p>
+        Ein Softwareprojekt zur Unterstützung
+        bei der Suche nach Hilfsangeboten.
+    </p>
+    <p>
+        YANA ersetzt keinen offiziellen Notrufdienst.
+    </p>
+</footer>
+
+{% endblock %}

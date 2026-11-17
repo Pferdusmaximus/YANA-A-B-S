@@ -49,14 +49,8 @@ Fachliche Funktionen werden in der App nach Features und im Backend nach
 API-, Datenzugriffs- und Serviceschicht getrennt.
 
 Weitere Einzelheiten stehen in der
-[Entwicklerdokumentation](docs/doku.md).
+Entwicklerdokumentation (folgt)
 
-## Lokale Entwicklung
-
-Die konkreten Befehle werden ergänzt, sobald Flutter- und FastAPI-Projekte
-initialisiert sind. Für lokale Zugangsdaten sollen ausschließlich nicht
-versionierte `.env`-Dateien verwendet werden; Zugangsdaten gehören nicht in
-das Repository.
 
 DEFINITION OF DONE (DoD)
 1. mindestens einem Teammitlgied vorstellen
