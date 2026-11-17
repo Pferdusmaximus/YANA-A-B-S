@@ -61,7 +61,7 @@ def edit_template(
 ):
     return templates.TemplateResponse(
         request=request,
-        name="portal/hilfestelle_bearbeiten.html",
+        name="portal/hilfestellen_bearbeiten.html",
         context={
             "facility": facility,
             "csrf_token": csrf_token(request),
