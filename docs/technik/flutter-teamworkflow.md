@@ -127,3 +127,9 @@ Das Ziel ist ein klarer **API-Vertrag**, sodass Präsentation und Backend unabh�
 Bei jedem abgeschlossenen Feature mindestens folgende Angaben nachtragen: **Zweck**, betroffene Dateien, Endpunkt/JSON-Schema, Testkommando, tatsächliches Testergebnis, bekannte Einschränkungen und Git-Commit/PR (wenn vorhanden). Derzeit sind keine konkreten Commit-IDs als Nachweise in der Dokumentation eingetragen, da sie im Gespräch nicht genannt wurden. Sie sollten nach dem Merge ergänzt werden.
 
 Siehe auch [Architektur](flutter-architektur.md), [Tests](flutter-tests.md) und [Installation](../installation/flutter-setup.md).
+
+## Ergänzung: Zusammenarbeit mit Website und Teamportal
+
+Parallel zur mobilen App liegt inzwischen der FastAPI-/Website-/Portal-Code unter `services/api/` im **selben GitHub-Repository**. Nicht direkt dauerhaft im produktiven Serververzeichnis entwickeln: Änderungen zuerst in VS Code erstellen, committen und nach GitHub pushen, anschließend auf dem VPS kontrolliert testen und deployen. Der Server erhält Updates **nicht automatisch** durch einen Push.
+
+Mehrfach wurden Pushes wegen eines neueren GitHub-Stands zurückgewiesen. Der bewährte Weg war bei sauberem Arbeitsstand `git pull --rebase origin main`, anschließend `git push origin main`; niemals Team-Commits per `--force` überschreiben. Python-`__pycache__`-Dateien wurden aus Git entfernt und die `.gitignore` im Root ergänzt. Details: [GitHub und Deployment](git-deployment.md).

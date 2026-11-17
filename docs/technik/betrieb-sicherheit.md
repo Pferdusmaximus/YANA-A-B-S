@@ -1,97 +1,128 @@
 # Betrieb, Sicherheit und Datenschutz
 
-## Ist-Zustand zum 27.10.2026
+**Dokumentationsstand: 17. November 2026.** YANA ist ein technisch funktionierender **Entwicklungsprototyp** mit öffentlicher Website und internem Verwaltungsportal. Die bislang vorgenommenen Prüfungen reichen **nicht** für die sichere Verarbeitung realer Hilfesuchenden-, Chat- oder geheimer Standortdaten aus.
 
-| Prüfaspekt | Status | Nachweis / Bemerkung |
-|---|---|---|
-| Ubuntu 24.04 + GNOME | **Bestätigt** | Grafische IONOS-Konsole funktionsfähig |
-| IONOS Backup-Agent | **Bestätigt** | Erfolgreich installiert und in Backup-Konsole sichtbar |
-| Vollständiges Backup abgeschlossen | **Nicht bestätigt** | Schutzplan, Abschlussprotokoll und Restore-Test gesondert prüfen |
-| PostgreSQL `app_db` | **Bestätigt** | Cluster online, lokale Verbindung erfolgreich |
-| 8 Tabellen | **Bestätigt** | Schema in pgAdmin angelegt |
-| Beispiel-Hilfestellen | **Bestätigt** | Zwei fiktive Datensätze angelegt |
-| FastAPI-API | **Bestätigt** | GET-Endpunkte getestet, HTTP 200 |
-| systemd-Dienst `yana-api` | **Bestätigt** | `active (running)`, Browserprüfung erfolgreich |
-| Nginx lokal und öffentlich | **Bestätigt** | `127.0.0.1:8080` sowie HTTPS-Port 443 |
-| HTTPS-Zertifikat | **Bestätigt** | Staging-Zertifikat ersetzt, Firefox meldete sichere Verbindung |
-| Erneuerung mit Certbot | **Bestätigt (Test)** | Timer und `renew --dry-run --run-deploy-hooks` erfolgreich |
-| Flutter/Dart per API verbunden | **Bestätigt (Dart-CLI)** | Drei Live-Tests: 2 Hilfestellen, 2 Kategorien, 0 Notfallnummern |
-| Flutter-Controller getestet | **Bestätigt** | Drei `ChangeNotifier`-Controller, Fake-Repository-Tests erfolgreich |
-| Datenanzeige in fertiger Flutter-Oberfläche | **Nicht bestätigt** | Präsentationsschicht parallel in Entwicklung |
-| Android-Debug-Build | **Bestätigt** | `flutter.bat build apk --debug` erfolgreich; Lizenzwarnung in Doctor verblieben |
-| Authentifizierte API für sensible Daten | **Noch nicht** | Darf vor produktiven Chatdaten nicht fehlen |
+## 1. Bestätigter Betriebsstand
 
-## Sicherheitskonzept des aktuellen Testbetriebs
+| Bereich | Ergebnis / offene Grenze |
+|---|---|
+| Ubuntu 24.04 LTS, grafische IONOS-Konsole | Eingerichtet und erreichbar |
+| PostgreSQL 16 `app_db` | Ursprünglich acht Tabellen, jetzt drei zusätzliche Portal-Tabellen |
+| FastAPI/Uvicorn und systemd `yana-api` | Produktiv aktiv; wiederholt neu gestartet und geprüft |
+| Nginx und HTTPS | Öffentliche Website und API erreichbar |
+| Let's Encrypt / Certbot | Produktives Zertifikat und Erneuerungs-Dry-Run bestätigt |
+| Backup-Agent | Installiert/registriert; **vollständig erfolgreicher Restore-Test offen** |
+| Flutter API | Drei GET-Endpunkte über Dart-CLI getestet |
+| Flutter Web / CORS | Lokale Browser-Origin-Freigabe eingerichtet |
+| Öffentliche Website | Produktiv im Browser aufgerufen |
+| Teamportal-Anmeldung | Argon2, Session, Logout, CSRF und Browser-Smoke-Test erfolgreich |
+| Teamportal-Hilfestellen | Übersicht/Bearbeiten/Speichern/Audit produktiv getestet |
+| Nginx-Login-Limit | Konfiguration syntaktisch geprüft, Nginx neu geladen, Website/API weiter verfügbar; **Lasttest des Limits nicht bestätigt** |
+| Echte externe Organisationsaccounts | **Nicht freigeschaltet** |
+| Echte verifizierte Hilfs-/Schutzstandorte | **Nicht sicher freigegeben** |
 
-Die DB ist lokal an FastAPI angebunden. Nginx ist der einzige beabsichtigte öffentliche Web-Zugang.
+## 2. Vertrauensgrenzen
 
 ```text
-Internet → TCP 443 / Nginx → 127.0.0.1:8000 / FastAPI
-                                   → 127.0.0.1:5432 / PostgreSQL
+Internet
+  └── Port 443 / Nginx (HTTPS, Login-Rate-Limit)
+        └── FastAPI / Uvicorn (127.0.0.1:8000)
+              └── PostgreSQL (lokal, nicht öffentlich)
+                   ├── hilfestelle / kategorie / notfallnummer / ...
+                   ├── portal_account
+                   ├── portal_session
+                   └── portal_facility_audit
 ```
 
-**Nicht öffentlich freigeben:** DB-Port `5432`, FastAPI-Port `8000`, interner Nginx-Testport `8080`. Der Port `80` ist nur für die ACME-Validierung erreichbar; die HTTP-Startseite liefert 404.
+Port `5432` (Datenbank), Uvicorn-Port `8000` und ggf. der lokale Nginx-Testport `8080` sollten nicht öffentlich erreichbar sein. Das Teamportal prüft **serverseitig** Session und Rolle; ein ausgeblendeter Browser-Link ersetzt keine Autorisierung.
 
-Die aktuelle Datenbankbenutzerrolle `app_user` ist Eigentümer von `app_db`. Für den späteren Livebetrieb sollte ein Konto mit minimal benötigten Berechtigungen für die API eingeführt werden; Migrationen und Administration sollten von einer separaten Rolle ausgeführt werden.
+## 3. Anmeldung und Sessions
 
-## Umgang mit Geheimnissen
+Für interne Portalaccounts wurde folgendes implementiert:
 
-- Datenbankpasswort **nur** in lokaler Datei `~/yana-backend/.env`, Zugriffsrecht `chmod 600`.
-- `.env`, Zertifikats-Private-Key (`privkey.pem`), Zugangsdaten, Token und Backup-Zugänge **niemals** in GitHub committen.
-- Dokumentationsbeispiele verwenden ausschließlich Dummy-Werte wie `PASSWORT_NUR_LOKAL_EINSETZEN` und `SERVER_IP`.
-- Das Vorhandensein einer öffentlichen Server-IP ist nicht gleichbedeutend mit einer geheimen Zugangsinformation; dennoch wird die konkrete IP hier bewusst nicht in den öffentlichen Text übernommen.
-- Wenn versehentlich ein Passwort ins Repository gelangt: sofort ändern/rotieren und Git-Historie bzw. veröffentlichte Artefakte kontrollieren.
+- Hashing und Prüfung der Passwörter mit **Argon2** (`pwdlib`).
+- Eine zufällige Session-ID, die in `portal_session` nur als SHA-256-Hash gespeichert wird.
+- Signiertes `SessionMiddleware`-Cookie (`HttpOnly`, `Secure`, `SameSite=Strict`) mit 30 Minuten `max_age`.
+- Ein Formular-CSRF-Token mit serverseitiger Prüfung bei Login, Logout und Datenbearbeitung.
+- Vorübergehende Account-Sperre nach mehrfachen falschen Passwörtern und eine getrennte Nginx-Begrenzung für Login-POSTs.
+- Beim Bearbeiten eine Rollenprüfung für `admin`/`team`; die externe Rolle `facility` hat darauf **keinen** pauschalen Zugriff.
 
-## Relevante Betriebsbefehle
+Login, Logout, ungültige CSRF-Tokens und die Bearbeitung wurden in den beschriebenen Basis-Szenarien getestet. Die Beurteilung umfasst **keinen** vollständigen Sicherheits-/Penetrationstest und keine Prüfung der Privilegieneskalation unter realistischen Angriffsszenarien. Die genaue Implementierung steht unter [Login und Sicherheit](teamportal-login.md).
 
-| Aufgabe | Befehl |
-|---|---|
-| Backend-Status | `sudo systemctl status yana-api` |
-| Backend neu starten | `sudo systemctl restart yana-api` |
-| Backend-Logs | `sudo journalctl -u yana-api -n 100 --no-pager` |
-| Nginx prüfen | `sudo nginx -t` |
-| Nginx neu laden | `sudo systemctl reload nginx` |
-| PostgreSQL-Cluster | `pg_lsclusters` |
-| Zertifikate prüfen | `sudo /snap/bin/certbot certificates` |
-| Certbot-Timer | `sudo systemctl status snap.certbot.renew.timer` |
-| Letzte Erneuerungsaktivität | `sudo journalctl -u snap.certbot.renew.service -n 100 --no-pager` |
+## 4. Zugangsdaten und Quellcode
 
-**Datenschutz:** Logs dürfen keine Chat-Inhalte, Klarnamen, Standortverläufe, Zugangstokens oder andere unnötige personenbezogene Informationen enthalten. Standard-Access-Logs können Client-IP-Adressen enthalten und müssen im Projekt datenschutzrechtlich berücksichtigt werden.
+**Nicht veröffentlichen:** `.env`, `PORTAL_SESSION_SECRET`, Datenbankpasswort, TLS-Private-Keys, Backup-Zugangsdaten, Login-Passwörter, Session-Cookies, reale Kontakt-/Standortdaten aus Datenbankexports.
 
-## Backups und Wiederherstellung
+Die produktive `.env` liegt lokal im Backendverzeichnis auf dem VPS, nicht im GitHub-Repository. `chmod 600 .env` wurde als Dateirecht gesetzt. Der GitHub-Root besitzt inzwischen eine `.gitignore` für `__pycache__`, `*.pyc`, `.venv` und `.env`. Schon früher versehentlich versionierte Cache-Dateien wurden entfernt. **Eine `.gitignore` löscht keine Geheimnisse aus früheren Commits.** Wurden Zugangsdaten veröffentlicht, sind sie umgehend zu rotieren.
 
-Die Anmeldung des Servers in der IONOS Backup-Konsole wurde überprüft. Für den produktiven Betrieb sind ergänzend zu dokumentieren:
+## 5. Datenpflege, Audit und Schutzstandorte
 
-1. Schutzziel/Backup-Typ (vollständige Maschine vs. einzelne Daten).
-2. Zeitplan, Aufbewahrungsdauer, Backup-Speicherort und Verantwortliche.
-3. Datum und Ergebnis eines **erfolgreichen** Sicherungslaufs.
-4. Dokumentierter Restore-Test, inklusive Konsistenzprüfung von PostgreSQL.
-5. Optional konsistente, getrennte `pg_dump`-Sicherungen (sicher verwahrt, nicht im öffentlichen Repository).
+Die Hilfestellenverwaltung unterstützt derzeit das Ändern von `name`, `phone`, `email` und `opening_hours`. Die SQL-Änderung und der Audit-Eintrag sind transaktional verbunden; durch das Audit wird dokumentiert, **welcher Portalaccount wann welche Werte geändert hat**. Die Audit-JSON-Felder können personenbezogene Kontaktdaten enthalten und benötigen Zugriffs- und Aufbewahrungsregeln.
 
-Beispiel einer **lokalen** logischen Sicherung (Pfad/Berechtigungen und Speicherstrategie vor der Nutzung festlegen):
+**Zentrales Sicherheitsproblem:** Die öffentliche JSON-API `/hilfestellen` enthält in der bisherigen Struktur **Adresse sowie Breiten- und Längengrad**. Sobald eine echte Schutzunterkunft eingetragen würde, könnten vertrauliche Standorte ungewollt veröffentlicht werden – unabhängig davon, ob das Portal hinter einem Login liegt. Deshalb:
+
+1. Bis zur Lösung weiterhin **nur fiktive Daten** verwenden.
+2. Öffentliche und interne Felder ausdrücklich trennen, z. B. durch sichere API-Projektionen und Veröffentlichungsstatus.
+3. Für vertrauliche Einrichtungen keinen exakten Standort in öffentlichen Antworten ausgeben.
+4. Externe Änderungen zuerst prüfen/freigeben, statt sie sofort in der öffentlichen API erscheinen zu lassen.
+5. Mitarbeiterkonten nur konkreten Einrichtungen zuordnen und sämtliche Lese-/Schreibrechte serverseitig erzwingen.
+
+Noch **nicht umgesetzt**: „Neue Hilfestelle anlegen“, gesonderte Organisationszuordnung, Moderation/Freigabe, differenzierte Schutzstandortveröffentlichung und Bearbeiten von Adressen/Koordinaten.
+
+## 6. Testumgebung und Datensicherheit
+
+Es gibt die voneinander getrennten **Codeverzeichnisse** `~/yana-portal-test` und `~/yana-backend`. Die Testumgebung wurde jedoch mit derselben `.env` und **derselben PostgreSQL-Datenbank** betrieben. Ein Test unter `~/yana-portal-test` ist damit **kein** isolierter Datenbanktest und kann produktive Datensätze verändern.
+
+Die erfolgreichen Speichertests verwendeten ausdrücklich fiktive Einträge, einen temporären Telefonnummernwert und anschließend die Wiederherstellung. Eine automatische Wiederherstellung im Skript ist kein vollwertiger DB-Rollback bei Absturz. Zukünftig sind separate Testdatenbank, Migrationen und transaktionale Testisolation vorzusehen.
+
+## 7. Betriebsdiagnose
 
 ```bash
-# Empfehlung / nicht als bereits ausgeführt bestätigen
+# Status / Protokolle
+sudo systemctl status yana-api --no-pager
+sudo journalctl -u yana-api -n 40 --no-pager
+
+# Reverse Proxy / Rate-Limit
+sudo nginx -t
+sudo systemctl status nginx --no-pager
+
+# PostgreSQL
+pg_lsclusters
+
+# Certbot / TLS
+sudo /snap/bin/certbot certificates
+sudo systemctl status snap.certbot.renew.timer
+
+# Test des öffentlichen REST-Zugangs
+curl -i https://SERVER_IP/health
+```
+
+**`journalctl` ist rein lesend** und verändert nichts am Dienst. Logs können IP-Adressen und andere sensible Informationen enthalten: Vor dem Teilen bereinigen. Das Aktivieren eines gefährlichen `curl -k` zum Umgehen der Zertifikatsprüfung ist nicht empfohlen.
+
+## 8. Backups und Wiederherstellung
+
+Der Acronis-/IONOS-Agent wurde installiert und in der Backup-Konsole registriert; dies ist **kein Nachweis** für erfolgreich abgeschlossene Sicherungen und Restores. Vor realem Betrieb müssen Sicherungsplan, Aufbewahrung, Verantwortlichkeiten und mindestens ein erfolgreicher Wiederherstellungstest nachgewiesen werden.
+
+Für Code-Deployments wurden manuelle Tar-Backups des produktiven Backends ohne `.env` und `.venv` angelegt. Diese Backups schützen **nicht** vor Datenbankverlust und ersetzen keine konsistenten PostgreSQL-Sicherungen.
+
+Eine mögliche zusätzliche **Empfehlung**, nicht als bereits erledigt dokumentiert:
+
+```bash
+# Sicherung muss an einem geschützten Ziel mit korrekten Dateirechten erfolgen
 sudo -u postgres pg_dump -Fc app_db > app_db.backup
 ```
 
-Backups mit realen Daten gehören **nicht** in GitHub. Eine Sicherungsdatei ersetzt keine getestete Wiederherstellung.
+Eine produktive Datenbank-Backup-Datei gehört nicht in GitHub oder öffentlich zugängliche Downloads.
 
-## Flutter-Client und öffentlicher API-Zugriff
+## 9. Vor echtem Einsatz noch erforderlich
 
-Der öffentliche HTTP/JSON-Zugriff über HTTPS wurde von Dart aus erfolgreich getestet. **HTTPS allein ersetzt keine Zugriffskontrolle.** Im Flutter-Repository liegen ausschließlich die **öffentliche API-Basisadresse** und der Code für GET-Anfragen; Datenbankpasswort, `.env`-Datei, private Zertifikatschlüssel und Server-Schlüssel dürfen **nicht** Bestandteil der App werden.
+- Rechtliche und organisatorische Datenschutzprüfung, Lösch- und Aufbewahrungsfristen, potenziell Datenschutz-Folgenabschätzung.
+- Geheimhaltung vertraulicher Schutzstandorte; Review öffentlicher API-Antworten.
+- Belastbare externe Rollen/Organisationstrennung, mindestens ein Freigabe-Workflow für neue/geänderte Einträge.
+- Verifizierte Hilfskontakte statt Testdaten; sichere Offline-/Fehlerbehandlung in der mobilen App.
+- Getrennte Staging-/Produktionsdatenbanken und reproduzierbare SQL-Migrationen.
+- Weitere Sicherheits-/Integrationstests, Rate-Limit-Lasttest, Dependency-Updates, Secrets-Rotation, Monitoring und Alarmierung.
+- Eignung der Swagger-`/docs`-Veröffentlichung überprüfen.
+- Sicherungs- und Restore-Test mit konsistenter PostgreSQL-Wiederherstellung.
 
-Aktuell liefert `/notfallnummern` eine leere Liste. Vor Auslieferung realer Notfallfunktionen sind fachlich geprüfte Kontakte, Cache-/Offline-Konzept und sichere Fehleranzeigen erforderlich. Eine fehlende Netzwerkverbindung darf nicht zu einer irreführenden Darstellung fiktiver Testdaten als echte Hilfe führen. [Flutter-Tests](flutter-tests.md) und [Flutter-Architektur](flutter-architektur.md) beschreiben den technischen Stand.
-
-## Notwendige Arbeiten vor der Nutzung mit echten Betroffenen
-
-- **Authentifizierung und Autorisierung:** Endpunkte nach Rollen absichern; keine fremden Chats abrufbar machen.
-- **Anonyme Beratung:** Datensparsamkeit, Pseudonymisierung, sichere Session-IDs, Aufbewahrungs-/Löschkonzept.
-- **Sicherheitsprüfung:** API-Eingaben validieren, Rate Limiting, Dependency-Updates, Fehler- und Log-Behandlung, regelmäßige Schwachstellenprüfung.
-- **Schutzstandorte:** Vertrauliche Adressen von Schutzunterkünften nicht unkontrolliert als vollständige Standortdaten veröffentlichen.
-- **Echte Notfallkontakte:** Aktualität, Zuständigkeit, Öffnungszeiten und Erreichbarkeit fachlich verifizieren; Offline-/Fehler-Fallback in der App vorsehen.
-- **Datenschutz:** Verzeichnis der Datenverarbeitungen, Rechtsgrundlage, Löschfristen und ggf. Datenschutz-Folgenabschätzung prüfen.
-- **Betrieb:** Monitoring, Kapazitätsmessung, Alerting bei TLS- und Backup-Fehlern.
-- **Dokumentationsoberfläche:** Öffentlichen Zugriff auf Swagger `/docs` vor einem echten Produktivbetrieb gesondert bewerten, ggf. deaktivieren oder absichern.
-
-> **Kritische Abgrenzung:** Das aktuelle System ist ein technischer Prototyp mit simulierten Einträgen; noch keine verlässlich nutzbare Sicherheits- oder Beratungsanwendung.
+**Zusammenfassung:** Das interne Teamportal ist funktional, **nicht** als vollumfänglich sichere Lösung für echte sensible Personendaten freigegeben. Der nächste Implementierungsschritt bleibt [„Neue Hilfestelle anlegen“](weiterarbeit.md).

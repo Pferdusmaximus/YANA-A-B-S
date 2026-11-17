@@ -1,21 +1,26 @@
-# Nutzungshandbuch – derzeitiger Entwicklungsstand
+# Nutzungshandbuch – Entwicklungsstand
 
-Die mobile YANA-App wird mit **Flutter/Dart** entwickelt. **Stand 27.10.2026:** Die technische Anbindung an FastAPI ist für Hilfestellen, Kategorien und Notfallnummern durch Dart-CLI-Live-Tests bestätigt. Die dazugehörigen Controller wurden mit Fake-Repositories erfolgreich getestet. **Die nutzbare, fertig integrierte Benutzeroberfläche befindet sich weiterhin in Entwicklung.** Hier werden daher keine noch nicht vorhandenen Endanwender-Funktionen als fertig dargestellt.
+**Stand: 17. November 2026.** YANA besitzt inzwischen zwei klar getrennte Nutzungsebenen: die öffentliche Informationswebsite mit Download-Hinweis und ein geschütztes Teamportal für die interne Datenpflege. Die Flutter-App selbst befindet sich weiterhin in Entwicklung; eine veröffentlichte Download-Version oder verlässliche echte Notfallberatung ist nicht bestätigt.
 
-## Geplante Funktionen (aus Projektkonzept)
+## Öffentliche Website
 
-- Standortbezogene Anzeige von Hilfestellen.
-- Übersicht über Notfallnummern mit schneller Kontaktmöglichkeit.
-- Kategorisierung von Hilfsangeboten.
-- Informationsmaterial zu Gewaltprävention und Handlungsmöglichkeiten.
-- Möglichkeit einer anonymen Erstberatung (für die Umsetzung sind besondere Sicherheits- und Datenschutzanforderungen zu beachten).
+Über die HTTPS-Startseite können Besucher Informationen zum YANA-Projekt und zu geplanten App-Funktionen lesen. Der Downloadbereich weist derzeit darauf hin, dass die App noch entwickelt wird. Es gibt keine öffentliche Registrierung für das Teamportal.
 
-## Für Entwickler bereits nutzbar
+## Geschütztes Teamportal
 
-Die Backend-API kann über `/docs` interaktiv getestet werden. Unter `/hilfestellen` und `/kategorien` sind derzeit **rein fiktive** Datensätze vorhanden. Entwickler können außerdem die drei manuellen Verbindungstests mit `dart run tool/...` ausführen und Models/Controller aus Flutter verwenden. Details siehe [API-Referenz](../technik/api-referenz.md), [Flutter-API-Anbindung](../technik/flutter-api-anbindung.md) und [Testkonzept](../technik/flutter-tests.md).
+Berechtigte Mitglieder des YANA-Teams können sich unter `/portal/login` anmelden, im Dashboard eine Liste vorhandener Hilfestellen ansehen und die vier freigegebenen Kontaktfelder bearbeiten. Die Änderungen werden in PostgreSQL gespeichert und mit Zeitstempel und Benutzerzuordnung protokolliert. Die Funktion „Neue Hilfestelle anlegen“ ist **noch nicht verfügbar**.
 
-## Noch zu ergänzen
+Die vollständige Anleitung steht unter **[Teamportal bedienen](teamportal.md)**. Technische Details: [Hilfestellenverwaltung](../technik/teamportal-hilfestellen.md).
 
-Sobald die Flutter-Integration umgesetzt ist, werden hier die **konkreten Benutzerabläufe**, bereinigte Screenshots und Nutzertests dokumentiert. Download-Link/CTA und Promovideo werden auf der [Startseite](../index.md) ergänzt.
+## Geplante mobile App-Funktionen
 
-> **Sicherheitshinweis:** YANA befindet sich in der Entwicklungsphase. Angezeigte Teststandorte sind keine realen, verifizierten Hilfsangebote; in einer akuten Notlage sind offizielle Notruf- und Beratungsstellen zu kontaktieren.
+- Standortbezogene Hilfestellen und Kategorien anzeigen.
+- Verifizierte Notfallkontakte schnell verfügbar machen.
+- Präventionsinformationen und Wege zur Hilfe aufzeigen.
+- Anonyme Erstberatung als späteres, besonders datenschutzsensibles Modul.
+
+Die Netzwerk- und Logikschicht ist für drei Datenbereiche implementiert; der Abschluss der sichtbaren Flutter-Screens wird in dieser Dokumentation **nicht** behauptet.
+
+## Hinweis zu echten Notfällen
+
+Die bestehenden Hilfestellen, Telefonnummern und Standorte sind fiktive Entwicklungsdaten. YANA ersetzt aktuell **keinen** offiziellen Notruf und keine geprüfte Beratungsstelle. Für akute Hilfe sind die offiziellen zuständigen Dienste zu verwenden.

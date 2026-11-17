@@ -1,42 +1,39 @@
 # Installation & Quick Start
 
-Diese Dokumentation beschreibt die **reproduzierbare Einrichtung des bisher umgesetzten YANA-Backends** auf einem IONOS-VPS. Der Serveraufbau bis einschließlich der getesteten automatischen HTTPS-Zertifikatserneuerung (Schritt 22.3) wurde am **20. Oktober 2026** abgeschlossen. Die Dokumentation wurde am **27. Oktober 2026** um die Flutter-Entwicklungsumgebung, API-Anbindung, Controller und Tests erweitert.
+Diese Dokumentation beschreibt die schrittweise Einrichtung von Server, Datenbank, API, Website, Teamportal und Flutter-Entwicklungsumgebung für **YANA – You Are Not Alone**. Die ursprüngliche Serverinstallation wurde im Oktober 2026 abgeschlossen; **Stand der ergänzten Website- und Portal-Implementierung ist der 17. November 2026**.
 
-## Zielsystem und Voraussetzungen
+## Zielsystem
 
-| Komponente | Eingesetzte Lösung | Funktion |
+| Komponente | Eingesetzt | Zweck |
 |---|---|---|
-| Hosting | IONOS VPS, 2 vCores / 4 GB RAM | Virtueller Linux-Server |
-| Betriebssystem | Ubuntu 24.04 LTS | Serverplattform |
-| GUI | GNOME (`ubuntu-desktop-minimal`) | Bedienung über IONOS-Konsole |
-| Backup | IONOS Cloud Backup / Acronis-Agent | Inkrementelle/vollständige Sicherung nach Schutzplan |
-| Datenbank | PostgreSQL 16 | Persistente Anwendungsdaten |
-| Datenbankverwaltung | pgAdmin 4 Desktop | SQL-Editor und Administration |
-| Backend | Python 3.12, FastAPI **0.150.0** (bei Einrichtung gemessen), Psycopg 3 | REST-API |
-| ASGI-Server | Uvicorn | Ausführung der FastAPI-Anwendung |
-| Dienstverwaltung | systemd | Autostart und Neustart nach Fehlern |
-| Reverse Proxy | Nginx (Screenshot: 1.24.0) | HTTPS-Terminierung, Weiterleitung an Uvicorn |
-| TLS | Let's Encrypt über Certbot (Snap, für IP-Zertifikate ≥ 5.4) | Öffentlich vertrauenswürdiges IP-Zertifikat |
-| Mobiler Client | Flutter **3.44.4**, Dart **3.12.2** (beobachteter Stand) | API-Zugriffe und Controller bereits implementiert; UI in Entwicklung |
-
-> Die Versionsangaben entsprechen der Einrichtung bzw. den dokumentierten Beobachtungen; zur Wiederholbarkeit vor jedem neuen Deployment die konkret installierten Versionen erneut prüfen. Die Option „Ubuntu 24.04 + Plesk“ bzw. „+ n8n“ wurde **nicht** ausgewählt.
+| VPS | IONOS, 2 vCores / 4 GB RAM | Hosting |
+| Ubuntu | 24.04 LTS, GNOME | Betrieb über grafische IONOS-Konsole |
+| PostgreSQL 16 + pgAdmin 4 | `app_db` | Fach- und Portal-Daten |
+| FastAPI, Uvicorn, Psycopg 3 | Python-Backend | JSON-API und HTML-Portal |
+| Jinja2, HTML/CSS | Website/Portal | Templates und Oberfläche |
+| Nginx, Certbot, Let's Encrypt | Öffentlicher HTTPS-Zugang | Reverse Proxy und TLS |
+| systemd `yana-api` | Produktivdienst | Backend-Lebenszyklus |
+| IONOS/Acronis Backup-Agent | Backupsystem | Sicherungsinfrastruktur; Restore-Test offen |
+| Flutter / Dart | Mobile App | REST-Datenzugriff und Logikschicht |
+| GitHub `YANA-A-B-S` | Versionsverwaltung | Gemeinsame Entwicklung |
 
 ## Reproduktionsreihenfolge
 
-1. [Ubuntu installieren und GNOME konfigurieren](ubuntu-gnome.md)
-2. [IONOS Backup-Agent installieren und Registrierung prüfen](backup-agent.md)
-3. [PostgreSQL und pgAdmin installieren](postgresql-pgadmin.md)
-4. [Datenbankstruktur des ER-Modells anlegen](../technik/datenmodell.md)
-5. [FastAPI erstellen, DB anbinden und als Dienst konfigurieren](fastapi.md)
-6. [Nginx als Reverse Proxy einrichten, HTTPS aktivieren und Erneuerung testen](nginx-https.md)
-7. [Flutter-/Dart-Entwicklungsumgebung einrichten](flutter-setup.md)
-8. [Flutter-API-Zugriff mit Models und Repositories](../technik/flutter-api-anbindung.md)
-9. [Controller für die Flutter-Logikschicht](../technik/flutter-controller.md)
-10. [Live-Verbindungen und Unit-Tests prüfen](../technik/flutter-tests.md)
-11. [Sicherheit, Backups und Betriebskontrollen überprüfen](../technik/betrieb-sicherheit.md)
+1. [Ubuntu und GNOME](ubuntu-gnome.md) einrichten.
+2. [IONOS Backup-Agent](backup-agent.md) installieren.
+3. [PostgreSQL und pgAdmin](postgresql-pgadmin.md) einrichten.
+4. [Ursprüngliches relationales Datenmodell](../technik/datenmodell.md) aufbauen.
+5. [FastAPI und systemd-Dienst](fastapi.md) konfigurieren.
+6. [Nginx, HTTPS, Certbot](nginx-https.md) konfigurieren.
+7. [Öffentliche Website und Teamportal](website-teamportal.md) ergänzen.
+8. [Zusätzliche Portal-Datenbanktabellen](../technik/teamportal-datenbank.md), Account und Secret vorbereiten.
+9. [Login-/Rollenprüfungen](../technik/teamportal-login.md) und [Portal-Tests](../technik/teamportal-tests.md) durchführen.
+10. [GitHub und kontrolliertes Deployment](../technik/teamportal-deployment.md) einrichten.
+11. [Flutter-Entwicklungsumgebung](flutter-setup.md), [API-Anbindung](../technik/flutter-api-anbindung.md), [Controller](../technik/flutter-controller.md), [Flutter-Tests](../technik/flutter-tests.md) vervollständigen.
+12. [Betrieb, Sicherheit und offene Aufgaben](../technik/betrieb-sicherheit.md) prüfen.
 
-## Vor der Veröffentlichung beachten
+## Achtung bei bestehenden Installationen
 
-Alle Befehle sind Beispiele für Ubuntu 24.04 und müssen auf den Zielserver angepasst werden. **Nicht veröffentlichen:** `.env`, Klartextpasswörter, private TLS-Schlüssel, IONOS-Zugangsdaten, Datenbankexports mit echten Nutzerdaten, Token oder geheimhaltungsbedürftige Adressen. Server-IP und Benutzernamen sind in Beispielen abstrahiert; wo `SERVER_IP` steht, ist die reale öffentliche IPv4 einzusetzen.
+**SQL-Tabellen und Portal-Accounts sind bereits angelegt.** Die Befehle in den Kapiteln sind zum Teil historische Reproduktionsbeispiele; vor wiederholter Ausführung Zustand prüfen. Die VPS-Testkopie verwendet dieselbe DB wie der produktive Dienst. `.env`/`.venv` und echte Zugangsdaten niemals aus GitHub überschreiben oder veröffentlichen.
 
-Ein funktionierender HTTPS-Endpunkt oder ein erfolgreicher Flutter-Live-Test ist noch **kein** Nachweis für eine sichere, produktionsbereite Beratungslösung. Die derzeitigen GET-Endpunkte stellen Testfunktionalität bereit; Authentifizierung und Datenschutzmaßnahmen stehen teilweise noch aus. Für die Flutter-Oberfläche siehe den [Übergabeplan](../technik/flutter-teamworkflow.md).
+Der nächste Entwicklungsstand ist als [Wiedereinstieg](../technik/weiterarbeit.md) dokumentiert. Ein funktionsfähiger Prototyp ist noch keine datenschutzrechtlich und sicherheitstechnisch freigegebene Beratungsanwendung.

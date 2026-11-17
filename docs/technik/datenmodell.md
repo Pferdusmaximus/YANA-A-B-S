@@ -179,3 +179,13 @@ Dies ist eine **empfohlene Nacharbeit**, nicht bereits bestätigter Einrichtungs
 - Öffnungszeiten werden aktuell als freier Text gespeichert.
 - Filterung nach Nähe wird noch nicht implementiert; dafür sind präzise Datenvalidierung und ggf. Geodatenindexierung erforderlich.
 - Das Datenmodell allein bildet **keine** Autorisierung ab. Authentifizierung und Berechtigungsregeln müssen im Backend implementiert werden.
+
+## Ergänzung November 2026: Teamportal-Schema
+
+Das oben dokumentierte ER-Modell umfasst weiterhin die **ursprünglichen acht Fach- und Chat-Tabellen**. Zusätzlich wurden für das Website-Teamportal die Tabellen `portal_account`, `portal_session` und `portal_facility_audit` angelegt. **Aktuell sind damit elf Tabellen dokumentiert**, sofern das ursprüngliche Schema vollständig vorhanden ist. Diese Portal-Erweiterung ist **nicht** im oben eingebundenen ursprünglichen ER-Bild eingezeichnet.
+
+Einzelheiten zu den neuen Feldern, Fremdschlüsseln, Rollen-/DB-Berechtigungen und SQL-Definitionen stehen auf der Seite [Portal-Datenbank](teamportal-datenbank.md). Die ersten Änderungen an bestehenden Hilfestellen wurden einschließlich Audit-Log erfolgreich getestet. Die Neuaufnahme (`INSERT`) von Hilfestellen ist **noch nicht implementiert**.
+
+### Vor der ersten neuen Hilfestelle
+
+Die Seed-Datensätze wurden mit expliziten `facility_id`-Werten eingefügt. Vor einem automatischen `INSERT` den Identity-Sequenzstand gegen die höchste vergebene ID prüfen (siehe vorstehende `setval`-Hinweise), Pflichtfelder und öffentliche Sichtbarkeit klären. Besonders wichtig: Die heutige öffentliche JSON-API würde neue Einträge unmittelbar ausliefern; reale Schutzstandorte dürfen nicht unkontrolliert enthalten sein.

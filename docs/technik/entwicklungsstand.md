@@ -1,54 +1,63 @@
 # Entwicklungsstand und Änderungsprotokoll
 
-**Dokumentationsstand: 27. Oktober 2026**
+**Dokumentationsstand: 17. November 2026**
 
-Dieses Protokoll hält nachvollziehbar fest, **was im Projekt tatsächlich eingerichtet und erfolgreich überprüft wurde**. Zeitpunkte orientieren sich am dokumentierten Projektverlauf; konkrete Git-Commit-IDs sind noch nachzutragen. Ein erfolgreiches technisches Experiment wird nicht automatisch als produktionsbereite Funktion bewertet.
+Dieser Verlauf enthält nur Tätigkeiten, die im Projektgespräch als umgesetzt und erfolgreich getestet bestätigt wurden. Der derzeitige Quellcode wurde für diese Dokumentationsaktualisierung nicht erneut live vom GitHub-Repository abgerufen. Technische Aussagen basieren auf den gemeinsam implementierten Schritten und den vom Team berichteten Testresultaten. Für eine neue Veröffentlichung sind aktuelle Commits und Tests gesondert nachzuweisen.
 
-## 1. Meilensteine
+## 1. Zeitlicher Verlauf
 
-| Zeitraum | Umsetzung | Verifizierter Nachweis | Noch offen |
-|---|---|---|---|
-| Oktober 2026 – Servereinrichtung | IONOS-VPS, Ubuntu 24.04 LTS, GNOME über Browser-Konsole | GNOME erreichbar | Ressourcenüberwachung im Dauerbetrieb |
-| Oktober 2026 – Backup | IONOS/Acronis-Agent | Agent erfolgreich installiert und in Backup-Konsole registriert | Abgeschlossener Sicherungs- und Restore-Test hier nicht bestätigt |
-| Oktober 2026 – Datenbank | PostgreSQL 16, pgAdmin 4, 8 Tabellen | Cluster `online`, pgAdmin verbunden, SQL-Schema angelegt | Fachliche Datenvalidierung und Schutz sensibler Daten |
-| Oktober 2026 – REST-API | Python / FastAPI / Psycopg | Swagger und GET-Endpunkte über VPS getestet | Authentifizierung, Filter, Chat, Admin-Endpunkte |
-| 20.10.2026 – Betrieb | `yana-api` via systemd, Nginx Reverse Proxy | Dienst aktiv, lokaler Proxy funktionsfähig | Monitoring und Deployment-Automatisierung |
-| 20.10.2026 – Verschlüsselung | Let's Encrypt IP-Zertifikat via Certbot | Echtes Zertifikat statt Staging; Firefox sichere Verbindung | Erneuerungen künftig überwachen |
-| 20.10.2026 – Certbot-Automation | Snap-Timer, Nginx Deploy Hook | Timer aktiv, `renew --dry-run --run-deploy-hooks` erfolgreich | Langfristige Erneuerungsüberwachung |
-| Bis 27.10.2026 – Client-Setup | Flutter 3.44.4, Dart 3.12.2, Android-Projekt | Android-Debug-Build erfolgreich | iOS-Build, Release-Signierung |
-| Bis 27.10.2026 – Dart-Netzwerk | HTTP-Client, 3 Models, 3 Repositories | 2 Hilfestellen, 2 Kategorien, 0 Notfallnummern per Live-Dart-Test | Gefülltes Notfallnummern-JSON, UI-Integration |
-| Bis 27.10.2026 – Flutter-Logik | `ChangeNotifier`-Controller für drei Bereiche | Start-/Erfolgs-/Fehler-Tests mit Fake-Repositories bestanden | Screen-Lebenszyklus und echte Geräteinteraktion |
-| 27.10.2026 – Qualitätssicherung | Tests von Live-Netzzugriff getrennt | `flutter analyze` und `flutter test` erfolgreich | CI-Automatisierung, MockClient-Parsingtests |
+| Zeitraum | Entwicklung | Verifizierter Stand |
+|---|---|---|
+| Oktober 2026 | IONOS-VPS mit Ubuntu 24.04 LTS, GNOME, Backup-Agent | Ubuntu-GUI und Agent eingerichtet |
+| Oktober 2026 | PostgreSQL 16, pgAdmin 4, ursprüngliches Schema mit acht Tabellen | SQL-Schema, zwei fiktive Hilfestellen, zwei Kategorien |
+| 20.10.2026 | FastAPI, Uvicorn, systemd `yana-api`, Nginx/HTTPS, Let's Encrypt | Öffentliche GET-API, Certbot-Erneuerungstest erfolgreich |
+| Bis Ende Oktober / Anfang November | Flutter SDK, Dart, Android-Debug-Build; Models, Repositories, Controller | Drei Live-Verbindungstests und automatisierte Controller-Tests erfolgreich |
+| November 2026 | Öffentliche HTML-/CSS-Website mit Jinja2 und FastAPI | Im Browser auf IONOS veröffentlicht und geprüft |
+| November 2026 | Gemeinsame GitHub-Versionierung für `services/api` und lokale VPS-Arbeitskopie | Manuelles Deployment eingerichtet; `main.py`, `website.py`, Templates und Styles versioniert |
+| November 2026 | Flutter Web – CORS für lokale Browserentwicklung | `CORSMiddleware` ergänzt und Backend neu gestartet; Browserproblem behoben gemeldet |
+| November 2026 | Teamportal-Landing, Login-HTML und drei zusätzliche SQL-Tabellen | `portal_account`, `portal_session`, `portal_facility_audit` |
+| November 2026 | Argon2-Authentifizierung, Sessions, CSRF, Logout | Echter Admin-Login, Dashboard und Logout erfolgreich getestet |
+| November 2026 | Nginx-Login-Rate-Limit | Konfiguration/Reload erfolgreich; Website und API weiter HTTP 200 |
+| November 2026 | Dashboard und geschützte Hilfestellenübersicht | TestClient-Tests und Browserprüfung erfolgreich |
+| **17.11.2026** | Bearbeitung bestehender Hilfestellen | POST-Update, Audit-Eintrag, Wiederherstellung fiktiver Testdaten und produktiver Browser-Test erfolgreich |
+| **17.11.2026 – Pause** | Dokumentation des aktuellen Stands | Nächstes Feature: **Neue Hilfestelle anlegen** |
 
-## 2. Was wurde geändert gegenüber der Dokumentation vom 20.10.2026?
+## 2. Fachlicher Funktionsstatus
 
-Die ältere Dokumentation enthielt Server-, Datenbank-, Reverse-Proxy- und TLS-Schritte. Der Flutter-Client war darin lediglich eine geplante Systemkomponente. Die Erweiterung zum 27.10.2026 ergänzt **nicht nur Installationsanleitungen**, sondern auch die tatsächlichen Datenmodelle, Repositories, Controller, Live-Tests, Fake-Tests und ihre Fehlersuche. Die Systemarchitektur und die API-Referenz wurden entsprechend aktualisiert.
-
-| Neu/aktualisiert | Zweck |
+| Funktion | Status |
 |---|---|
-| [Flutter-Installation](../installation/flutter-setup.md) | Windows-SDK, lokaler Git-Klon, Android-Debug-Build |
-| [Client-Architektur](flutter-architektur.md) | Drei Schichten und Verantwortung der Dateien |
-| [API-Datenzugriff](flutter-api-anbindung.md) | Modelle, JSON, Repositories und gemeinsamer API-Client |
-| [Controller](flutter-controller.md) | `ChangeNotifier`, Lade-/Fehlerzustand, Lebenszyklus |
-| [Testkonzept](flutter-tests.md) | Fake-Controller-Tests vs. Live-Smoke-Tests |
-| [Flutter-Fehlerprotokoll](flutter-troubleshooting.md) | Tatsächliche Fehlermeldungen und Gegenmaßnahmen |
-| [Team-Workflow](flutter-teamworkflow.md) | Übergabe an UI-Entwicklung und Git-Pull-Requests |
-| [Betrieb und Sicherheit](betrieb-sicherheit.md) | Status der mobilen Anbindung und weitere Risiken |
+| Öffentliche YANA-Website | **Implementiert** |
+| App-Downloadlink | Noch nicht veröffentlicht |
+| Allgemeine GET-API | **Implementiert** (mit Testdaten) |
+| Admin-Login, Logout, Session-Schutz, CSRF | **Implementiert, Basis- und Browser-Tests erfolgreich** |
+| Hilfestellenliste für `admin`/`team` | **Implementiert** |
+| Hilfestellen bearbeiten: Name, Telefon, E-Mail, Öffnungszeiten | **Implementiert** |
+| Audit-Log der Änderungen | **Implementiert** |
+| Neue Hilfestellen anlegen | **Noch nicht implementiert** |
+| Hilfestellen löschen / deaktivieren / freigeben | Noch nicht implementiert |
+| Externe Hilfestellenaccounts mit eigenen Datensätzen | Noch nicht implementiert |
+| Vertrauliche Adressen in öffentlicher API schützen | Sicherheitsaufgabe **offen** |
+| Flutter-UI vollständig verknüpft | Nicht abschließend bestätigt; Team arbeitet parallel daran |
+| Verifizierte Notfallkontakte / anonyme Beratung | Noch nicht bereitgestellt |
 
-## 3. Nächste Entwicklungsschritte
+## 3. Wesentliche Fehler und Korrekturen
 
-- [ ] Controller in die von der Projektgruppe entwickelte Flutter-Oberfläche einbinden.
-- [ ] Hilfestellen und Kategorien auf einem Android-Gerät sichtbar darstellen; Lade-, Fehler- und Leerzustand prüfen.
-- [ ] Notfallnummern ausschließlich mit verifizierten Daten freigeben; Offline-Verfügbarkeit prüfen.
-- [ ] `http.MockClient`-Tests für nicht-leere API-Antworten und fehlerhafte JSON-Formate ergänzen.
-- [ ] Servercode aus dem nur lokal auf dem VPS liegenden `yana-backend` kontrolliert in `services/api/` versionieren (ohne `.env` und Geheimnisse).
-- [ ] Authentifizierung, Autorisierung, Logging und Datenschutznachweise erarbeiten, bevor Chat- oder Nutzerdaten über die API verarbeitet werden.
-- [ ] GitHub Actions für Analyse und Unit-Tests erstellen.
-- [ ] Vollständigen erfolgreichen Sicherungs- und Wiederherstellungstest dokumentieren.
-- [ ] Release-/Installationsanleitung, Screenshots, App-Download und Promovideo ergänzen.
+| Problem | Korrektur |
+|---|---|
+| `git push` mehrfach `non-fast-forward` | `git pull --rebase origin main` bei sauberem Arbeitsstand, danach Push |
+| Python-`__pycache__/*.pyc` im Git-Status | `.gitignore` ergänzen und getrackte Cache-Dateien entfernen |
+| Flutter Web blockiert API mangels CORS | Korrekte lokale Origin-Regex in `CORSMiddleware`, Backend-Neustart |
+| `EOFError` bei interaktivem Python-Heredoc | `login_test_local.py` als separate Datei ausführen |
+| Beim Skript statt ID `TEST` eingegeben | Zuerst numerische `facility_id`, erst danach Bestätigung `TEST` |
+| `TemplateNotFound: portal/hilfestelle_bearbeiten.html` | Richtigen Pluralnamen `hilfestellen_bearbeiten.html` konsistent einsetzen |
+| Versehentlich `journalctl` ausgeführt | Nur Loglesebefehl, keine Veränderung des Systems |
 
-## 4. Nachweisdokumentation
+Einzelheiten finden sich unter [Portal-Fehlerprotokoll](teamportal-troubleshooting.md) und [Flutter-Fehlerprotokoll](flutter-troubleshooting.md).
 
-Um den Projektfortschritt später objektiv beurteilen zu können, sollten für jeden neuen Meilenstein die **betroffenen Commit-IDs, der getestete Branch, der konkrete Befehl, das Ergebnis und gegebenenfalls ein bereinigter Screenshot** ergänzt werden. Bisher wurden Ergebnisse im Entwicklungsdialog mit Terminalausgaben bestätigt, jedoch noch nicht als CI-Artefakte bzw. konkrete Git-Commits referenziert.
+## 4. Nächster Entwicklungsschritt
 
-**Sicherheitsregel:** Screenshots und Logs vor dem Hochladen auf sensible Daten prüfen; insbesondere keine Zugangsdaten, Privatschlüssel, echten Chat- oder Standortdaten öffentlich dokumentieren.
+**Bei der nächsten Sitzung direkt bei „Neue Hilfestelle anlegen“ fortfahren.** Vor der Implementierung prüfen: Pflichtfelder von `hilfestelle`, Stand der Identity-Sequenz, Behandlung öffentlicher Standortdaten, sichere `INSERT`-Transaktion, Berechtigungen, CSRF, Audit der Erstellung und Tests mit fiktiven Daten. Den genauen Projekt-Checkpoint enthält [Wiedereinstieg](weiterarbeit.md).
+
+## 5. Nachweise für künftige Änderungen
+
+Nach jedem größeren Feature ergänzen: Datum, betroffene Dateien, Git-Commit-ID, geänderte Datenbankstruktur, Testfälle mit Ergebnissen, Produktions-Deployment und offene Sicherheitsrisiken. Ein erfolgreicher manueller Browser-Test ist keine vollständige Sicherheitsprüfung.

@@ -98,3 +98,19 @@ Der lokale Entwicklungsordner liegt außerhalb von OneDrive; ein beispielhafter 
 Windows-Benutzernamen und absolute Home-Pfade wurden absichtlich generalisiert. In öffentlichen GitHub-Issues oder Screenshots **keine Passwörter, Tokens, SSH-Schlüssel, Datenbank-Exports oder sensible Standortdaten veröffentlichen**.
 
 Weitere Fehler zum Server, Nginx, Zertifikaten und Backup-Agent stehen im [Server-Fehlerprotokoll](troubleshooting.md). Eine Übersicht der Testarten befindet sich unter [Flutter-Tests](flutter-tests.md).
+
+## Flutter Web in Chrome: CORS (November 2026)
+
+Nach Korrektur der `ApiConfig.baseUrl` funktionierte `dart run tool/api_connection_test.dart` erfolgreich und lieferte zwei fiktive Hilfestellen. In **Flutter (Chrome)** erschien dennoch „Fehler beim Laden“, weil Browser die Same-Origin-Policy anwenden und dem Backend zunächst CORS-Header fehlten. Für die lokale Entwicklung wurde in `main.py` `CORSMiddleware` ergänzt und der Dienst `yana-api` neu gestartet:
+
+```python
+app.add_middleware(
+    CORSMiddleware,
+    allow_origin_regex=r"^http://(localhost|127\.0\.0\.1)(:\d+)?$",
+    allow_methods=["GET"],
+    allow_headers=["*"],
+    allow_credentials=False,
+)
+```
+
+Bei der Eingabe des Codes darauf achten, dass die Markdown-Schreibweise **keine** versehentlichen eckigen Klammern um die URL erzeugt. Die CORS-Freigabe ist auf lokale Entwicklungs-Origins beschränkt und erteilt keine Datenbankberechtigungen. Der Browser-Fehler wurde im Team als behoben gemeldet. Mehr: [API-Referenz](api-referenz.md) und [Portal-Fehlerprotokoll](teamportal-troubleshooting.md).

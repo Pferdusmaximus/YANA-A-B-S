@@ -285,3 +285,9 @@ curl -Iv https://SERVER_IP/docs
 - Die Verbindung über eine IP-Adresse ist derzeit bewusst ein **Entwicklungssetup ohne eigene Domain**.
 
 Weiter zu [Betrieb und Sicherheit](../technik/betrieb-sicherheit.md) und [API-Referenz](../technik/api-referenz.md).
+
+## Nachtrag: Website und Login-Rate-Limit (17.11.2026)
+
+Die öffentliche Root-URL `/` liefert inzwischen die YANA-Website, nicht mehr den ursprünglich dokumentierten `404`- bzw. JSON-Setup-Stand. Die geschützte Website nutzt dieselbe HTTPS-Verbindung unter `/portal/`. Für `POST /portal/login` wurde eine zusätzliche Nginx-Regel im `http`-Kontext eingerichtet und nach `nginx -t` per `systemctl reload nginx` geladen. Detaillierte Beschreibung: [Teamportal-Login](../technik/teamportal-login.md).
+
+Die vorhandenen Certbot-Erneuerungs- und ACME-Abschnitte dieses Kapitels dokumentieren die ursprüngliche Einrichtung; sie sollen durch die Webportal-Erweiterung **nicht** ersetzt werden.

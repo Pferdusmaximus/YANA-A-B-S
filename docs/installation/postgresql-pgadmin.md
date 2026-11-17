@@ -88,3 +88,7 @@ Die Tabellen wurden mit einem SQL-Skript im Query Tool erstellt: `app_db` auswä
 - FastAPI greift über `127.0.0.1` auf PostgreSQL zu.
 - Die Datenbankzugangsdaten liegen lokal in einer geschützten `.env`-Datei, nicht im Quellcode.
 - Datenbankrollen für Schreib-/Lesezugriff später differenzieren; derzeit ist `app_user` Eigentümer der Datenbank.
+
+## Nachtrag: Portal-Datenbank (November 2026)
+
+Die ursprüngliche `app_db` mit acht Tabellen wurde nicht ersetzt, sondern um die Portal-Tabellen **`portal_account`**, **`portal_session`** und **`portal_facility_audit`** ergänzt. Der Administrator wird durch einen Argon2-Hash authentifiziert, nicht über das Chat-/App-Modell `nutzerin`. Weitere Informationen: [Portal-Datenbanktabellen](../technik/teamportal-datenbank.md) und [Login](../technik/teamportal-login.md).

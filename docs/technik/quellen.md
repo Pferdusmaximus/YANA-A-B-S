@@ -31,3 +31,19 @@ Diese Quellen wurden für die Überprüfung von Installationsverfahren, Schnitts
 - **Änderbarkeit:** Änderungen an Code, Schema, Ressourcen und Laufzeit sollten künftig mit Datum ergänzt werden.
 - **Verifikationsstatus:** Dart-Live-Tests und Fake-Controller-Tests sind bestätigt; eine vollständige Flutter-UI-Integration und ein E2E-Test auf einem Android-Gerät dagegen nicht.
 - **Projektbezug:** [GitHub-Repository YANA-A-B-S](https://github.com/Pferdusmaximus/YANA-A-B-S).
+
+## Ergänzende offizielle Referenzen für Website und Portal
+
+| Thema | Primärdokumentation |
+|---|---|
+| FastAPI Templates | [FastAPI – Templates](https://fastapi.tiangolo.com/advanced/templates/) |
+| Statische Dateien | [FastAPI – Static Files](https://fastapi.tiangolo.com/tutorial/static-files/) |
+| Formulardaten | [FastAPI – Request Forms](https://fastapi.tiangolo.com/tutorial/request-forms/) |
+| Passwort-Hashing | [FastAPI – OAuth2 Password Hashing](https://fastapi.tiangolo.com/tutorial/security/oauth2-jwt/) |
+| Session-Middleware | [Starlette – SessionMiddleware](https://www.starlette.io/middleware/#sessionmiddleware) |
+| Nginx Rate Limit | [NGINX – ngx_http_limit_req_module](https://nginx.org/en/docs/http/ngx_http_limit_req_module.html) |
+| OWASP Sessions | [OWASP – Session Management Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/Session_Management_Cheat_Sheet.html) |
+| OWASP CSRF | [OWASP – CSRF Prevention Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/Cross-Site_Request_Forgery_Prevention_Cheat_Sheet.html) |
+| Git – Rebase | [Git Documentation – git rebase](https://git-scm.com/docs/git-rebase) |
+
+Die genannten Quellen erläutern etablierte technische Verfahren. **Durchgeführte** Projektarbeiten sind aus den gemeinsam dokumentierten Tests ersichtlich; offizielle Dokumentation allein belegt keinen erfolgreichen Test des YANA-Systems.

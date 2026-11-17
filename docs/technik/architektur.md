@@ -1,84 +1,98 @@
 # Technische Systemarchitektur
 
-## Architekturprinzip
+**Stand: 17.11.2026**
 
-Das YANA-System verwendet eine **Client-Server-Architektur**. Die Flutter-App ist als mobiler Client vorgesehen; das Python-Backend bietet HTTP/JSON-Endpunkte, Nginx terminiert TLS und PostgreSQL verwaltet die persistenten Daten. **Der Flutter-Client verwendet inzwischen für drei Datenbereiche echte HTTPS-Abfragen. Die Integration dieser Daten in fertige, sichtbare Flutter-Screens ist noch offen.**
+## 1. Architekturprinzip
+
+YANA verwendet eine **Client-Server-Architektur** mit gemeinsamem FastAPI-Backend und PostgreSQL-Datenbank. Es gibt drei wichtige Clients: die Flutter-App, die **öffentliche HTML-Website** und den **geschützten Browserzugang zum Teamportal**. Nginx terminiert HTTPS; der Backend-Dienst wird über `systemd` betrieben.
 
 ```mermaid
 flowchart TB
-    C["Flutter / Dart\nModels, Repositories, Controller implementiert\nUI in Entwicklung"]
-    P["Öffentliches Internet\nHTTPS / TCP 443"]
-    subgraph VPS["IONOS VPS – 2 vCores, 4 GB RAM – Ubuntu 24.04 LTS"]
-      N["Nginx\nReverse Proxy + TLS"]
-      F["FastAPI / Uvicorn\n127.0.0.1:8000"]
-      DB[("PostgreSQL 16\n127.0.0.1:5432")]
-      S["systemd: yana-api.service"]
-      B["Acronis Cyber Protect\nIONOS Cloud Backup-Agent"]
-      ADM["pgAdmin 4 Desktop\nIONOS-Konsole / GNOME"]
-      N -->|"Proxy intern"| F
-      F -->|"SQL via Psycopg 3"| DB
-      S -.->|"verwaltet"| F
-      ADM -.->|"lokale Administration"| DB
+    F["Flutter / Dart<br/>Models, Repositories, Controller"]
+    V["Öffentliche Website<br/>Informationen und Download-Hinweis"]
+    T["Teamportal im Browser<br/>Login, Dashboard, Hilfestellenbearbeitung"]
+    subgraph VPS["IONOS VPS: Ubuntu 24.04 · 2 vCores / 4 GB RAM"]
+      N["Nginx: HTTPS und Login-Rate-Limit"]
+      API["FastAPI / Uvicorn<br/>website.py · portal.py · portal_facilities.py · main.py"]
+      DB[("PostgreSQL 16<br/>Fach- und Portal-Tabellen")]
+      S["systemd: yana-api"]
+      B["IONOS/Acronis Backup-Agent"]
+      PG["pgAdmin 4 / Ubuntu-Konsole"]
+      N --> API
+      API --> DB
+      S -.-> API
+      PG -.-> DB
     end
-    C -->|"HTTPS GET: 3 Bereiche live getestet"| P
-    P --> N
-    B -.->|"Backup-Konsole"| X["IONOS Cloud Backup"]
+    F -->|"HTTPS JSON GET"| N
+    V -->|"HTTPS /"| N
+    T -->|"HTTPS /portal/"| N
+    B -.-> VPS
 ```
 
-**Hinweis:** Ein erfolgreicher Backup-Lauf ist gesondert nachzuweisen. Die Flutter-Datenzugriffsschicht hat die öffentliche API erfolgreich kontaktiert (2 Hilfestellen, 2 Kategorien, 0 Notfallnummern). Die produktive Darstellung in fertigen Screens ist **noch nicht bestätigt**.
+Die Website und das Portal werden nicht auf einem zweiten Webserver betrieben; sie verwenden denselben FastAPI-Prozess wie die REST-API. **Die Datenbank ist nicht öffentlich erreichbar.** Die getrennte Test-Codekopie greift derzeit auf dieselbe DB zu; diese Einschränkung wird unter [Portal-Tests](teamportal-tests.md) erläutert.
 
-## Komponenten und Verantwortlichkeiten
+## 2. Verantwortlichkeiten
 
-| Komponente | Verantwortlichkeit | Vertrauensgrenze |
+| Komponente | Aufgabe | Bestätigter Stand |
 |---|---|---|
-| Flutter/Dart | Model/Repository/Controller implementiert; Oberfläche in Entwicklung | Öffentlicher Client, HTTPS-Zugriff erfolgreich getestet |
-| Nginx | HTTPS-Zugang über Port 443, Weiterleitung an lokales Backend | Öffentlich zugängliche Serverkomponente |
-| FastAPI/Uvicorn | API-Routing, DB-Abfragen, HTTP-Antworten | Lokal `127.0.0.1:8000` |
-| PostgreSQL | Datenintegrität, persistente Speicherung, relationale Verknüpfungen | Lokal `127.0.0.1:5432` |
-| pgAdmin Desktop | Administration und SQL-Ausführung | Lokale GNOME-Sitzung auf VPS |
-| systemd | Autostart und Neustart des API-Prozesses | Lokales Betriebsmanagement |
-| Certbot | Ausstellung und Erneuerung des IP-TLS-Zertifikats | ACME-HTTP-Prüfung über Port 80 |
-| Backup-Agent | Registrierung des VPS in der IONOS Backup-Konsole | Backup-Infrastruktur |
+| Flutter | App-Oberfläche (in Entwicklung), Datenabruf und Zustandsverwaltung | GET-Datenzugriff/Controller/Tests implementiert |
+| Website/Jinja2 | Informationsseiten unter `/`, statische Dateien | Produktiv im Browser getestet |
+| Portal/Jinja2 | Login, Dashboard, Hilfestellenverwaltung | Produktiv im Browser getestet |
+| FastAPI | Routing, Session-Prüfung, SQL-Operationen, JSON-Ausgabe | Funktioniert für vorhandene Routen |
+| PostgreSQL | Acht ursprüngliche Fach-/Chat-Tabellen plus drei Portal-Tabellen | Schema und Speichertest nachgewiesen |
+| Nginx | HTTPS, Weiterleitung, Rate-Limit für Login | Konfiguration geprüft und aktiv |
+| systemd | Start/Neustart von `yana-api` | Aktiv |
+| Certbot | IP-TLS-Zertifikat und Erneuerung | Zertifikat und Dry-Run bestätigt |
+| Backup-Agent | Backup-Infrastruktur | Installiert/registriert; vollständiger Restore-Test offen |
 
-## Beispiel-Datenfluss: Hilfestellen abrufen
+## 3. Typische Datenflüsse
+
+### Flutter liest Hilfestellen
 
 ```mermaid
 sequenceDiagram
-    participant Client as Dart Live-Smoke-Test (bestätigt)
+    participant F as Flutter / Dart
     participant N as Nginx
-    participant API as FastAPI
-    participant PG as PostgreSQL
-    Client->>N: GET /hilfestellen (HTTPS)
-    N->>API: Proxy an 127.0.0.1:8000
-    API->>PG: SELECT * FROM hilfestelle
-    PG-->>API: Datensätze
-    API-->>N: HTTP 200 + JSON
-    N-->>Client: HTTP 200 + JSON über TLS
+    participant A as FastAPI
+    participant D as PostgreSQL
+    F->>N: GET /hilfestellen (HTTPS)
+    N->>A: HTTP intern
+    A->>D: SELECT hilfestelle
+    D-->>A: Datensätze
+    A-->>F: HTTP 200 + JSON über Nginx
 ```
 
-Der Ablauf wurde sowohl mit Browser/Swagger **als auch** mit eigenständigen Dart-CLI-Tests über HTTPS erfolgreich erprobt. Die Einbindung in sichtbare Flutter-Widgets ist noch offen. Siehe [Flutter-Schichtenmodell](flutter-architektur.md) und [Live-Testergebnisse](flutter-tests.md).
+Bei Flutter Web in Chrome muss außerdem die CORS-Origin erlaubt sein. Für lokale `localhost`-/`127.0.0.1`-Entwicklungsports wurde `CORSMiddleware` in `main.py` ergänzt.
 
-## Projektverzeichnis und Konfigurationspfade
+### Teammitglied ändert Hilfestelle
 
-| Pfad | Inhalt |
-|---|---|
-| `/home/yana/yana-backend/main.py` | FastAPI-Endpunkte |
-| `/home/yana/yana-backend/database.py` | PostgreSQL-Verbindungsfunktion |
-| `/home/yana/yana-backend/.env` | DB-Zugangsdaten, **nicht veröffentlichen** |
-| `/home/yana/yana-backend/.venv/` | Virtuelle Python-Umgebung |
-| `/etc/systemd/system/yana-api.service` | API-Dienstdefinition |
-| `/etc/nginx/sites-available/yana-api` | Lokaler Reverse Proxy + HTTPS |
-| `/etc/nginx/sites-available/yana-acme` | HTTP-01-Challenge-Endpunkt |
-| `/var/www/yana-acme/` | ACME-Webroot |
-| `/etc/letsencrypt/live/SERVER_IP/` | Zertifikatsdateien und privater Schlüssel |
-| `/etc/letsencrypt/renewal-hooks/deploy/reload-nginx.sh` | Nginx-Neuladen nach Erneuerung |
+Das Teamportal verwendet ein signiertes Cookie mit zufälliger Session-ID. FastAPI verifiziert den zugehörigen Hash in `portal_session`, die Account-Rolle und beim POST den CSRF-Token. Die Zeile in `hilfestelle` wird mit `SELECT ... FOR UPDATE` gesperrt. Das SQL-UPDATE und der Eintrag in `portal_facility_audit` werden gemeinsam als Transaktion durchgeführt. Anschließend gibt FastAPI HTTP 303 zur Bearbeitungsseite zurück. Mehr: [Hilfestellenverwaltung](teamportal-hilfestellen.md).
 
-Beim Benutzer- und Home-Pfad handelt es sich um den bisherigen VPS-Zustand. Bei anderen Servern müssen die Pfade angepasst werden.
+## 4. Repository- und Serverstruktur
 
-## Flutter im selben Monorepo
+```text
+YANA-A-B-S/
+├── apps/mobile/             # Flutter
+├── services/api/            # FastAPI + Website/Portal
+├── docs/                    # Diese MkDocs-Dokumentation
+└── mkdocs.yml               # Navigation und Site-Konfiguration
 
-Die mobile Anwendung liegt unter `apps/mobile/` im Repository [YANA-A-B-S](https://github.com/Pferdusmaximus/YANA-A-B-S). Die für drei GET-Endpunkte umgesetzten Models, Repositories und `ChangeNotifier`-Controller sind in [Flutter-Architektur](flutter-architektur.md) und [API-Anbindung](flutter-api-anbindung.md) dokumentiert. Automatisierte Controller-Tests und getrennte Dart-Live-Tests werden unter [Tests](flutter-tests.md) beschrieben.
+IONOS VPS:
+~/yana-deploy-source/       # GitHub-Klon (Entwicklungsversion)
+~/yana-portal-test/          # Python-Testkopie
+~/yana-backend/              # Produktiver FastAPI-Code, .venv, .env
+/etc/systemd/system/yana-api.service
+/etc/nginx/...
+```
 
-## Technologiewahl und Einschränkungen
+Es wurde bewusst **nicht** für jede Weboberfläche ein neues Backend oder eine zweite PostgreSQL-Instanz eingeführt. Dies vereinfacht den Einstieg, verlangt jedoch konsequente Rollenprüfung und vorsichtige Releases.
 
-Die Entscheidung für FastAPI statt einer selbst gehosteten vollständigen Supabase-Umgebung beruht auf dem begrenzten VPS-Ressourcenbudget und dem Wunsch nach einer schlanken, direkt kontrollierten REST-API. FastAPI **ersetzt nur die benötigten Backend-Funktionen**; Supabase-Funktionen wie Authentifizierung, Realtime, Storage und integrierte Policies werden **nicht automatisch** mitgeliefert. Sie müssen bei Bedarf eigenständig konzipiert werden. Siehe [Entscheidungen](entscheidungen.md) und [Sicherheit](betrieb-sicherheit.md).
+## 5. Technologische und fachliche Grenzen
+
+- Die öffentliche `/hilfestellen`-API kann weiterhin Standortangaben enthalten; Schutzunterkünfte vor Aufnahme realer Datensätze besonders behandeln.
+- Accounts für externe Organisationen sind noch nicht an ihre eigenen Einrichtungen gebunden.
+- Noch keine Veröffentlichungsgenehmigung, kein „Neue Hilfestelle anlegen“, keine freigegebenen realen Notfallangebote.
+- Technische Logik in Flutter ist getestet, vollständige sichtbare App-Screens noch nicht als fertig nachgewiesen.
+- Es gibt noch keinen isolierten Staging-Datenbankbetrieb und keinen automatisierten CI-/Deployment-Prozess.
+
+Verweise: [Teamportal-Architektur](teamportal-architektur.md), [Entscheidungen](entscheidungen.md), [Betrieb und Sicherheit](betrieb-sicherheit.md) und [Wiedereinstieg](weiterarbeit.md).

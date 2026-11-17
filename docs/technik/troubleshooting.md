@@ -11,7 +11,7 @@ Diese Seite protokolliert die wesentlichen Probleme aus dem bisherigen YANA-Serv
 | GNOME-Nutzung über IONOS-Konsole | Zunächst nur Terminal | `ubuntu-desktop-minimal`, `graphical.target`, `gdm3` installiert/aktiviert; Oberfläche war über IONOS-Konsole sichtbar. Kein XRDP erforderlich. |
 | Acronis-Installation meldet Kernelmodul | `The UTF8 kernel module is missing` | Installation lief dennoch weiter und endete mit `Cyber Protection Agent has been successfully installed in the system`. Meldung im Ergebnis nicht blockierend. |
 | Nginx-Datei nicht speicherbar | `Error writing ... No such file or directory` | `/etc/nginx/sites-available` existierte. Korrekte Pfadangabe und `sudo nano ...` ermöglichten das Speichern. |
-| ACME-Test via öffentlicher IP | `404 Not Found nginx/1.24.0` | Root-Pfad liefert beabsichtigt 404; vollständige URL `/.well-known/acme-challenge/test.txt` verwenden. Danach `YANA-ACME-OK` sichtbar. |
+| ACME-Test via öffentlicher IP | `404 Not Found nginx/1.24.0` | Im ursprünglichen Setup lieferte der Root-Pfad 404 (seit der Website-Integration im November 2026 liefert `/` HTML); vollständige URL `/.well-known/acme-challenge/test.txt` verwenden. Danach `YANA-ACME-OK` sichtbar. |
 | HTTPS auf Smartphone als unsicher markiert | Swagger erreichbar, Firefox vertraute Zertifikat nicht | `curl -Iv` meldete `unable to get local issuer certificate`; `openssl` zeigte `(STAGING)` beim Issuer. Staging-Zertifikat durch Produktionszertifikat ersetzt, Nginx neu geladen; danach Firefox „sichere Verbindung“. |
 | Zugriff aus Schulnetzwerk | Fortinet-Firewall verhinderte Test | Externen Zugriff über Mobilfunk-Hotspot getestet; Server war darüber erreichbar. Schulnetzrichtlinien nicht umgehen; ggf. mit Schul-IT abstimmen. |
 | API-Test vor Testdaten | `HTTP 200` + `[]` | Kein Fehler: Tabelle war leer. Nach Einfügen fiktiver Datensätze JSON-Antwort mit zwei Hilfestellen. |
@@ -44,3 +44,9 @@ curl -Iv https://SERVER_IP/docs
 ```
 
 Bitte keine Passwörter, Tokens, `privkey.pem`-Inhalte oder personenbezogenen Daten aus Logs in öffentliche GitHub-Issues kopieren.
+
+## Ergänzung: Website, Teamportal und Git (November 2026)
+
+Seit der früheren Servereinrichtung wurden zusätzlich Browser-CORS-Probleme bei Flutter Web, mehrfach `non-fast-forward`-Git-Pushes, versehentlich versionierte Python-Caches, ein `EOFError` bei interaktiven Python-Heredocs und ein falsch benanntes Jinja2-Template beobachtet. Die tatsächlich angewendeten Korrekturen stehen auf der separaten Seite **[Website/Teamportal – Fehlerprotokoll](teamportal-troubleshooting.md)**.
+
+Der Befehl `sudo journalctl -u yana-api -n 40 --no-pager` kann bedenkenlos zur Diagnose ausgeführt werden: Er liest nur Logs und verändert den Backend-Dienst nicht.

@@ -1,5 +1,7 @@
 # FastAPI einrichten und als Dienst betreiben
 
+> **Historischer Server-Setup-Stand (Oktober 2026):** Die folgenden Codebeispiele zeigen die ursprüngliche JSON-API. Seit November 2026 liefert `GET /` eine HTML-Startseite. Die aktuelle Website, die Portalanmeldung und die Hilfestellenbearbeitung sind unter [Website/Teamportal](website-teamportal.md) dokumentiert; die aktuelle Routenliste steht unter [API-Referenz](../technik/api-referenz.md).
+
 Ziel: Die in PostgreSQL angelegte Datenbank `app_db` wird über eine lokale FastAPI-REST-Schnittstelle angesprochen. Die API selbst wird dauerhaft von **systemd** betrieben; Nginx und HTTPS sind im [nächsten Kapitel](nginx-https.md) beschrieben.
 
 ## 1. Laufzeitumgebung vorbereiten

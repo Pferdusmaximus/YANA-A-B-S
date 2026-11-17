@@ -54,3 +54,11 @@ Im mobilen Client werden Fachbereiche durch **Model + Repository + `ChangeNotifi
 ## Nachvollziehbarkeit der Änderungen
 
 Eine zeitliche Zusammenfassung von Servereinrichtung, TLS und neu hinzugekommener Flutter-API-Schicht steht im [Entwicklungsprotokoll](entwicklungsstand.md).
+
+## Ergänzung November 2026: Website und geschütztes Teamportal
+
+Für die öffentliche Website und das Portal wurde **FastAPI mit serverseitigen Jinja2-Templates**, HTML und CSS statt eines zusätzlichen JavaScript-SPA-Frameworks gewählt. Gründe: Wiederverwendung des vorhandenen Backends/Servers, geringe Infrastrukturkomplexität, klare Dateistruktur und einfache Integration von Sessions und Rollenprüfungen. Die Zuständigkeiten sind unter [Teamportal-Architektur](teamportal-architektur.md) beschrieben.
+
+Die Anmeldung wurde auf PostgreSQL-eigene Portal-Tabellen aufgebaut und **getrennt vom Chat-Modell `nutzerin`** gehalten. Passwörter werden mit Argon2 gehasht, Sessions haben einen serverseitig prüfbaren Hash. Das Backend prüft die Rollen `admin`/`team` für die Hilfestellenbearbeitung und protokolliert Änderungen. Externe `facility`-Rollen sind **noch nicht** durch Organisationszuordnungen freigeschaltet.
+
+Der frühere Abschnitt „Offene Entscheidungen“ stammt aus der Flutter-/Serverphase. **Login- und Basis-Rollenmodell für das interne Teamportal sind inzwischen umgesetzt**; offen bleiben organisatorisch eingeschränkte externe Rechte, Freigabe, sichtbare Schutzstandortfilter und die vollständige Chat-/Nutzerinnen-Authentifizierung. Siehe [Wiedereinstieg](weiterarbeit.md).

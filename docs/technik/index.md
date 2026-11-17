@@ -1,28 +1,41 @@
 # Technische Dokumentation
 
-Diese Seiten dokumentieren die Systemarchitektur sowie die bestätigten Implementierungen des YANA-Projekts. **Stand: 27. Oktober 2026.** Inhalte mit dem Kennzeichen *geplant* oder *noch offen* dürfen nicht als implementierte Funktionen verstanden werden.
+Diese Seiten dokumentieren den **nachgewiesenen Stand vom 17. November 2026**. Vorhandene Dokumente zur Servereinrichtung und Flutter-Schicht wurden erhalten; die Website, das Teamportal und die Datenpflege sind hinzugekommen. *Geplant* bedeutet ausdrücklich **nicht implementiert**.
 
-## System und Backend
+## System, Server und Datenbank
 
-- [Systemarchitektur](architektur.md) – Flutter, FastAPI, Nginx, PostgreSQL und Betriebsdienste.
-- [REST-API-Referenz](api-referenz.md) – `/hilfestellen`, `/kategorien`, `/notfallnummern` und Diagnose-Endpunkte.
-- [Relationales Datenmodell](datenmodell.md) – ER-Modell, SQL-Schema und fiktive Testdaten.
-- [Betrieb, Backups und Sicherheit](betrieb-sicherheit.md) – Vertrauensgrenzen, Secrets und offene Schutzmaßnahmen.
-- [Technische Entscheidungen](entscheidungen.md) – Begründete Stack- und Betriebsentscheidungen.
+- [Systemarchitektur](architektur.md) – öffentliche Website, Browserportal, Flutter, FastAPI, Nginx und PostgreSQL.
+- [REST-API und Portal-Routen](api-referenz.md) – öffentliche JSON- und geschützte HTML-Endpunkte.
+- [Relationales Datenmodell](datenmodell.md) – ursprüngliches ER-Modell mit acht Tabellen.
+- [Zusätzliche Portal-Datenbanktabellen](teamportal-datenbank.md) – Accounts, Sessions und Audit.
+- [Betrieb, Backups und Sicherheit](betrieb-sicherheit.md) – Ist-Stand, Risiken und offene Schutzmaßnahmen.
+- [Technische Entscheidungen](entscheidungen.md) – Begründung für die Architektur.
+
+## Website, Teamportal und Datenpflege
+
+- [Öffentliche Website](website.md) – Inhalte, Templates und bisherige Bereitstellung.
+- [Teamportal-Architektur und Rollen](teamportal-architektur.md) – Struktur, URLs und Verantwortlichkeiten.
+- [Login, Sessions und CSRF](teamportal-login.md) – PostgreSQL-Authentifizierung und Cookie-Sicherheit.
+- [Hilfestellenübersicht und Bearbeitung](teamportal-hilfestellen.md) – Formular, SQL-Update und Audit-Log.
+- [Portal-Tests](teamportal-tests.md) – tatsächliche HTTP-Statuscodes und Speichertest.
+- [Portal-Fehlerbehebung](teamportal-troubleshooting.md) – beobachtete Probleme und Korrekturen.
+- [GitHub und Deployment](git-deployment.md) – Entwicklung/Server-Dateikopien, Git-Konflikte und `.gitignore`.
+- [Produktive Bereitstellung](teamportal-deployment.md) – Backup, Testumgebung, Neustart und Rollback.
+- [Wiedereinstieg und nächstes Feature](weiterarbeit.md) – **„Neue Hilfestelle anlegen“**.
 
 ## Flutter / Dart
 
-- [Flutter: Drei-Schichtenmodell](flutter-architektur.md) – Präsentation, Controller und Datenzugriff.
-- [Flutter: API-Anbindung](flutter-api-anbindung.md) – HTTP-Client, Model-Parsing und drei Repositories.
+- [Drei-Schichtenmodell](flutter-architektur.md) – Model, Repository, Controller und Präsentation.
+- [Flutter: API-Anbindung](flutter-api-anbindung.md) – HTTP-Client, Models und Repositories.
 - [Flutter: Controller](flutter-controller.md) – `ChangeNotifier` und UI-Zustände.
-- [Flutter: Tests](flutter-tests.md) – Erfolgreiche Live- und Unit-Tests, verbleibende Testlücken.
-- [Flutter: Fehlerbehebung](flutter-troubleshooting.md) – OneDrive, Android SDK, Dart-Typen, HTTP 400 und Lints.
-- [Flutter: Teamübergabe](flutter-teamworkflow.md) – Git-Workflow und Schnittstellen für die UI.
+- [Flutter: Tests](flutter-tests.md) – Live- und Unit-Tests.
+- [Flutter: Fehlerbehebung](flutter-troubleshooting.md) – Android SDK, OneDrive, Dart-Typen, HTTP 400 und CORS.
+- [Flutter: Teamübergabe](flutter-teamworkflow.md) – Zusammenarbeit bei der UI.
 
-## Projektnachvollziehbarkeit
+## Verlauf und Grundlagen
 
-- [Entwicklungsstand und Änderungsprotokoll](entwicklungsstand.md) – Meilensteine und offene Punkte.
-- [Server-Fehlerbehebung](troubleshooting.md) – Tatsächlich aufgetretene Infrastrukturprobleme.
-- [Quellen und offizielle Referenzen](quellen.md) – Weiterführende Dokumentation.
+- [Entwicklungsstand und Änderungsprotokoll](entwicklungsstand.md) – Meilensteine bis 17.11.2026.
+- [Server-Fehlerbehebung](troubleshooting.md) – Infrastruktur- und Betriebsprobleme.
+- [Quellen](quellen.md) – Offizielle technische Referenzen.
 
-Für die lokale Einrichtung siehe [Installation & Quick Start](../installation/index.md). Für Endanwender gilt der aktuelle Status im [Nutzungshandbuch](../nutzung/index.md).
+Für eine Reproduktion mit Testdaten siehe [Installation und Quick Start](../installation/index.md). Für die Portalbedienung siehe [Benutzung des Teamportals](../nutzung/teamportal.md).
