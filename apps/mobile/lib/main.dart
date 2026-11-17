@@ -263,9 +263,7 @@ class _WideButton extends StatelessWidget {
       child: FilledButton(
         style: FilledButton.styleFrom(
           backgroundColor: kDark,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(6),
-          ),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
         ),
         onPressed: onPressed,
         child: Text(label),
@@ -280,12 +278,69 @@ class _WideButton extends StatelessWidget {
 class StartMenu extends StatelessWidget {
   const StartMenu({super.key});
 
-  static const _entries = <(String, String)>[
-    ('Hilfenummern', '/hilfenummern'),
-    ('Anonyme Hilfestellen', '/anonyme-hilfestellen'),
-    ('Frauenhäuser', '/frauenhaeuser'),
-    ('Psychische Unterstützung', '/psychische-unterstuetzung'),
-    ('Rechtliche Hilfe', '/rechtliche-hilfe'),
+  // (Titel, Endpoint, Allgemeine Informationen)
+  static const _entries = <(String, String, String)>[
+    (
+      'Hilfenummern',
+      '/hilfenummern',
+      'Hilfenummern sind Telefonnummern, unter denen du schnell und meist '
+          'kostenlos mit geschulten Beraterinnen und Beratern sprechen kannst.\n\n'
+          'Wofür kann ich sie nutzen?\n'
+          '• Wenn du akut Hilfe, Rat oder einfach jemanden zum Reden brauchst\n'
+          '• Um dich über deine Möglichkeiten und nächste Schritte zu informieren\n'
+          '• Um an passende Stellen in deiner Nähe weitervermittelt zu werden\n\n'
+          'Viele Nummern sind rund um die Uhr erreichbar. In akuter Gefahr '
+          'wähle bitte immer den Notruf 110 oder 112.',
+    ),
+    (
+      'Anonyme Hilfestellen',
+      '/anonyme-hilfestellen',
+      'Anonyme Hilfestellen sind Beratungsangebote, bei denen du deinen Namen '
+          'nicht nennen musst. Was du erzählst, bleibt vertraulich.\n\n'
+          'Wofür kann ich sie nutzen?\n'
+          '• Wenn du Hilfe suchst, aber (noch) nicht erkannt werden möchtest\n'
+          '• Um deine Situation erst einmal unverbindlich zu schildern\n'
+          '• Für Beratung per Telefon, Chat, E-Mail oder persönlich vor Ort\n\n'
+          'Du entscheidest selbst, wie viel du erzählst und ob weitere '
+          'Schritte folgen sollen.',
+    ),
+    (
+      'Frauenhäuser',
+      '/frauenhaeuser',
+      'Frauenhäuser sind geschützte Einrichtungen, in denen Frauen (und ihre '
+          'Kinder), die von Gewalt betroffen oder bedroht sind, vorübergehend '
+          'sicher wohnen können. Die Adressen werden meist geheim gehalten.\n\n'
+          'Wofür kann ich sie nutzen?\n'
+          '• Als sicherer Zufluchtsort, wenn du zu Hause nicht sicher bist\n'
+          '• Für Unterstützung und Beratung durch Fachkräfte\n'
+          '• Für Hilfe bei Behördengängen, Finanzen, Wohnungssuche und rechtlichen Fragen\n\n'
+          'Eine Aufnahme ist oft auch kurzfristig möglich – ruf am besten '
+          'direkt an.',
+    ),
+    (
+      'Psychische Unterstützung',
+      '/psychische-unterstuetzung',
+      'Psychische Unterstützung umfasst Angebote wie Krisendienste, '
+          'psychologische Beratungsstellen, Seelsorge und Therapie.\n\n'
+          'Wofür kann ich sie nutzen?\n'
+          '• Wenn dich belastende Erlebnisse, Angst, Trauer oder Stress überfordern\n'
+          '• Um Erlebtes zu verarbeiten und wieder Stabilität zu finden\n'
+          '• In seelischen Krisen, auch kurzfristig und anonym\n\n'
+          'Hilfe zu suchen ist kein Zeichen von Schwäche. Bei Gedanken, dir '
+          'selbst etwas anzutun, wende dich bitte sofort an den Notruf 112.',
+    ),
+    (
+      'Rechtliche Hilfe',
+      '/rechtliche-hilfe',
+      'Rechtliche Hilfe bekommst du bei Anwältinnen und Anwälten, '
+          'Rechtsberatungsstellen und Opferhilfe-Organisationen.\n\n'
+          'Wofür kann ich sie nutzen?\n'
+          '• Um deine Rechte kennenzulernen, z. B. bei Gewalt, Trennung oder Sorgerecht\n'
+          '• Für Fragen zu Anzeige, Schutzanordnungen oder Kontaktverboten\n'
+          '• Für Begleitung und Vertretung in einem Gerichtsverfahren\n\n'
+          'Wenn du wenig Geld hast, kannst du unter Umständen Beratungs- oder '
+          'Prozesskostenhilfe erhalten.',
+    ),
   ];
 
   @override
@@ -303,7 +358,7 @@ class StartMenu extends StatelessWidget {
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 16),
-              for (final (title, endpoint) in _entries)
+              for (final (title, endpoint, info) in _entries)
                 Padding(
                   padding: const EdgeInsets.only(bottom: 12),
                   child: Material(
@@ -319,6 +374,7 @@ class StartMenu extends StatelessWidget {
                             builder: (_) => InfoListScreen(
                               title: title,
                               endpoint: endpoint,
+                              info: info,
                             ),
                           ),
                         );
@@ -464,10 +520,15 @@ class InfoListScreen extends StatefulWidget {
     super.key,
     required this.title,
     required this.endpoint,
+    this.info,
   });
 
   final String title;
   final String endpoint;
+
+  /// Optionaler Erklärtext, der oben fest als aufklappbares
+  /// "Allgemeine Informationen"-Menü angezeigt wird.
+  final String? info;
 
   @override
   State<InfoListScreen> createState() => _InfoListScreenState();
@@ -488,9 +549,7 @@ class _InfoListScreenState extends State<InfoListScreen> {
     if (data is! List) {
       throw const FormatException('Unerwartetes Antwortformat der API');
     }
-    return data
-        .map((item) => Map<String, dynamic>.from(item as Map))
-        .toList();
+    return data.map((item) => Map<String, dynamic>.from(item as Map)).toList();
   }
 
   void _reload() {
@@ -501,42 +560,91 @@ class _InfoListScreenState extends State<InfoListScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text(widget.title)),
-      body: FutureBuilder<List<Map<String, dynamic>>>(
-        future: _future,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState != ConnectionState.done) {
-            return const Center(child: CircularProgressIndicator());
-          }
-          if (snapshot.hasError) {
-            return _ErrorView(onRetry: _reload);
-          }
-          final items = snapshot.data ?? [];
-          if (items.isEmpty) {
-            return const Center(child: Text('Keine Einträge vorhanden.'));
-          }
-          return ListView.separated(
-            padding: const EdgeInsets.all(16),
-            itemCount: items.length,
-            separatorBuilder: (_, _) => const SizedBox(height: 8),
-            itemBuilder: (context, i) {
-              final item = items[i];
-              final phone = item['telefon'] as String?;
-              return Card(
-                child: ListTile(
-                  title: Text('${item['name'] ?? ''}'),
-                  subtitle: Text('${item['beschreibung'] ?? ''}'),
-                  trailing: (phone != null && phone.isNotEmpty)
-                      ? IconButton(
-                          tooltip: 'Anrufen',
-                          icon: const Icon(Icons.call),
-                          onPressed: () => callNumber(phone),
-                        )
-                      : null,
-                ),
-              );
-            },
-          );
-        },
+      body: Column(
+        children: [
+          if (widget.info != null) _GeneralInfoDropdown(text: widget.info!),
+          Expanded(child: _buildList()),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildList() {
+    return FutureBuilder<List<Map<String, dynamic>>>(
+      future: _future,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState != ConnectionState.done) {
+          return const Center(child: CircularProgressIndicator());
+        }
+        if (snapshot.hasError) {
+          return _ErrorView(onRetry: _reload);
+        }
+        final items = snapshot.data ?? [];
+        if (items.isEmpty) {
+          return const Center(child: Text('Keine Einträge vorhanden.'));
+        }
+        return ListView.separated(
+          padding: const EdgeInsets.all(16),
+          itemCount: items.length,
+          separatorBuilder: (_, _) => const SizedBox(height: 8),
+          itemBuilder: (context, i) {
+            final item = items[i];
+            final phone = item['telefon'] as String?;
+            return Card(
+              child: ListTile(
+                title: Text('${item['name'] ?? ''}'),
+                subtitle: Text('${item['beschreibung'] ?? ''}'),
+                trailing: (phone != null && phone.isNotEmpty)
+                    ? IconButton(
+                        tooltip: 'Anrufen',
+                        icon: const Icon(Icons.call),
+                        onPressed: () => callNumber(phone),
+                      )
+                    : null,
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
+}
+
+// ---------------------------------------------------------------------------
+// "Allgemeine Informationen": oben fest angezeigtes, aufklappbares Menü
+// ---------------------------------------------------------------------------
+class _GeneralInfoDropdown extends StatelessWidget {
+  const _GeneralInfoDropdown({required this.text});
+
+  final String text;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
+      child: Card(
+        clipBehavior: Clip.antiAlias,
+        margin: EdgeInsets.zero,
+        child: ConstrainedBox(
+          // Begrenzt die Höhe, damit die Liste darunter sichtbar bleibt.
+          constraints: BoxConstraints(
+            maxHeight: MediaQuery.of(context).size.height * 0.45,
+          ),
+          child: SingleChildScrollView(
+            child: ExpansionTile(
+              leading: const Icon(Icons.info_outline, color: kPrimary),
+              title: const Text(
+                'Allgemeine Informationen',
+                style: TextStyle(fontWeight: FontWeight.w600),
+              ),
+              shape: const Border(),
+              collapsedShape: const Border(),
+              childrenPadding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+              expandedCrossAxisAlignment: CrossAxisAlignment.start,
+              children: [Text(text, style: const TextStyle(height: 1.4))],
+            ),
+          ),
+        ),
       ),
     );
   }
@@ -550,9 +658,9 @@ class ProfileScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Scaffold(
-        appBar: AppBar(title: const Text('Profil')),
-        body: const Center(child: Text('Profil – folgt')),
-      );
+    appBar: AppBar(title: const Text('Profil')),
+    body: const Center(child: Text('Profil – folgt')),
+  );
 }
 
 class SettingsScreen extends StatelessWidget {
@@ -560,9 +668,9 @@ class SettingsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Scaffold(
-        appBar: AppBar(title: const Text('Einstellungen')),
-        body: const Center(child: Text('Einstellungen – folgen')),
-      );
+    appBar: AppBar(title: const Text('Einstellungen')),
+    body: const Center(child: Text('Einstellungen – folgen')),
+  );
 }
 
 // ---------------------------------------------------------------------------
