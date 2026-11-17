@@ -1,3 +1,7 @@
+from pathlib import Path
+from fastapi.staticfiles import StaticFiles
+from website import router as website_router
+
 from fastapi import FastAPI, HTTPException
 from psycopg.rows import dict_row
 from psycopg import Error
@@ -9,6 +13,15 @@ app = FastAPI(
     version="1.0.0"
 )
 
+BASE_DIR = Path(__file__).resolve().parent
+
+app.mount(
+    "/static",
+    StaticFiles(directory=str(BASE_DIR / "static")),
+    name="static"
+)
+
+app.include_router(website_router)
 
 @app.get("/")
 def startseite():
