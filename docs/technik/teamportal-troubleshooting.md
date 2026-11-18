@@ -1,6 +1,6 @@
 # Website und Teamportal: Fehlerprotokoll
 
-**Stand: 17.11.2026.** Diese Tabelle unterscheidet beobachtete Fehlermeldungen von daraus gezogenen Schlussfolgerungen. Wo eine Ursache nicht endgültig überprüft wurde, ist das vermerkt.
+**Stand: 18.11.2026.** Diese Tabelle unterscheidet beobachtete Fehlermeldungen von daraus gezogenen Schlussfolgerungen. Wo eine Ursache nicht endgültig überprüft wurde, ist das vermerkt.
 
 | Situation | Meldung / Beobachtung | Ursache und wirksame Maßnahme |
 |---|---|---|
@@ -49,3 +49,12 @@ Erwartet: erfolgreiche Antwort und `Access-Control-Allow-Origin: http://localhos
 Logs, Tracebacks und Screenshots können reale Daten oder Zugangsinformationen enthalten. Vor dem Teilen personenbezogene Daten und Secrets entfernen. `SERVER_IP` ist in Beispielen nur ein Platzhalter.
 
 Weiterführend: [Git-Workflow](git-deployment.md), [Portal-Tests](teamportal-tests.md), [Server-Fehlerbehebung](troubleshooting.md).
+
+## Nachträge: Partnerzugriff und Formular (18.11.2026)
+
+- **Partner sieht „Keine Berechtigung“ statt Hilfestellen-Link:** Die Rollenfilterung in Python und PostgreSQL kann korrekt sein, während `templates/portal/dashboard.html` noch `admin`/`team` statt `admin`/`partner` prüft. HTML-Bedingung aktualisieren, danach Dashboard neu laden.
+- **CSRF-Token im neuen Formular fehlt:** Kontrollieren, ob `hilfestellen_neu.html` in VS Code gespeichert, zu GitHub gepusht und anschließend in Test-/Produktivverzeichnis kopiert wurde. Im Formular muss `<input type="hidden" name="csrf_token" ...>` vorhanden sein.
+- **Router über `app.routes` nicht angezeigt:** Bei der eingesetzten FastAPI-Version können verschachtelte Router in der einfachen Auflistung fehlen. Den tatsächlichen Endpunkt mit `TestClient` prüfen.
+- **Änderungsantrag kann nicht freigegeben werden (HTTP 409):** Veröffentlichungsstatus, aktiven Antrag und Vergleich von `base_data` mit aktuellen Daten prüfen; veraltete Daten nicht blind überschreiben.
+
+Die Testkopie greift auf dieselbe PostgreSQL-Instanz zu. Fehlgeschlagene Schreibtests erst anhand von `facility_id`/`change_id` kontrollieren, bevor erneut ausgeführt wird.

@@ -1,6 +1,6 @@
 # GitHub, Teamarbeit und Deployment-Ablauf
 
-**Dokumentationsstand: 17. November 2026**
+**Dokumentationsstand: 18. November 2026**
 
 ## 1. Was liegt wo?
 

@@ -180,12 +180,14 @@ Dies ist eine **empfohlene Nacharbeit**, nicht bereits bestätigter Einrichtungs
 - Filterung nach Nähe wird noch nicht implementiert; dafür sind präzise Datenvalidierung und ggf. Geodatenindexierung erforderlich.
 - Das Datenmodell allein bildet **keine** Autorisierung ab. Authentifizierung und Berechtigungsregeln müssen im Backend implementiert werden.
 
-## Ergänzung November 2026: Teamportal-Schema
+## Ergänzung November 2026: Verwaltungsportal
 
-Das oben dokumentierte ER-Modell umfasst weiterhin die **ursprünglichen acht Fach- und Chat-Tabellen**. Zusätzlich wurden für das Website-Teamportal die Tabellen `portal_account`, `portal_session` und `portal_facility_audit` angelegt. **Aktuell sind damit elf Tabellen dokumentiert**, sofern das ursprüngliche Schema vollständig vorhanden ist. Diese Portal-Erweiterung ist **nicht** im oben eingebundenen ursprünglichen ER-Bild eingezeichnet.
+Das oben eingebundene ER-Bild zeigt weiterhin nur die **ursprünglichen acht Fach- und Chat-Tabellen**. Für das Verwaltungsportal wurden zusätzlich **fünf Tabellen** eingerichtet: `portal_account`, `portal_session`, `portal_facility_audit`, `portal_facility_assignment` und `portal_facility_change`. Wenn das Ursprungsschema vollständig vorhanden ist, umfasst die Datenbank damit **13 Tabellen**.
 
-Einzelheiten zu den neuen Feldern, Fremdschlüsseln, Rollen-/DB-Berechtigungen und SQL-Definitionen stehen auf der Seite [Portal-Datenbank](teamportal-datenbank.md). Die ersten Änderungen an bestehenden Hilfestellen wurden einschließlich Audit-Log erfolgreich getestet. Die Neuaufnahme (`INSERT`) von Hilfestellen ist **noch nicht implementiert**.
+Zusätzlich besitzt `hilfestelle` jetzt `publication_status VARCHAR(20) NOT NULL DEFAULT 'draft'` mit den erlaubten Werten `draft`, `pending_review` und `published`. Der öffentliche GET-Endpunkt `/hilfestellen` gibt nur `published` zurück.
 
-### Vor der ersten neuen Hilfestelle
+Die neue Zuordnungstabelle `portal_facility_assignment` erlaubt Partner-Accounts ausschließlich Zugriff auf zugewiesene Hilfestellen. `portal_facility_change` speichert getrennte JSONB-Änderungsvorschläge; erst die Adminfreigabe übernimmt die vier Kontaktfelder in den veröffentlichten Datensatz.
 
-Die Seed-Datensätze wurden mit expliziten `facility_id`-Werten eingefügt. Vor einem automatischen `INSERT` den Identity-Sequenzstand gegen die höchste vergebene ID prüfen (siehe vorstehende `setval`-Hinweise), Pflichtfelder und öffentliche Sichtbarkeit klären. Besonders wichtig: Die heutige öffentliche JSON-API würde neue Einträge unmittelbar ausliefern; reale Schutzstandorte dürfen nicht unkontrolliert enthalten sein.
+Die erste automatische ID-Vergabe für die Neuerstellung wurde inzwischen getestet; der frühere Hinweis zur Identity-Sequenz dokumentiert nur die damalige Ausgangssituation. **Für ein erneutes Initialisieren der Datenbank sind ursprüngliches Basisschema und spätere Migrationen getrennt auszuführen.** Einzelheiten unter [Portal-Datenbank](teamportal-datenbank.md) und [Änderungsfreigabe](teamportal-aenderungsfreigabe.md).
+
+> Die **Testdatenbeschränkung `YANA Test`** bleibt aktiv. Ein Veröffentlichungsstatus ist kein Schutz gegen die öffentliche Übertragung von Adresse und Koordinaten; für echte Schutzstandorte ist eine zusätzliche Datensicht erforderlich.

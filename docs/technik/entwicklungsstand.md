@@ -1,63 +1,54 @@
-# Entwicklungsstand und Änderungsprotokoll
+# Entwicklungsstand und Projektmeilensteine
 
-**Dokumentationsstand: 17. November 2026**
-
-Dieser Verlauf enthält nur Tätigkeiten, die im Projektgespräch als umgesetzt und erfolgreich getestet bestätigt wurden. Der derzeitige Quellcode wurde für diese Dokumentationsaktualisierung nicht erneut live vom GitHub-Repository abgerufen. Technische Aussagen basieren auf den gemeinsam implementierten Schritten und den vom Team berichteten Testresultaten. Für eine neue Veröffentlichung sind aktuelle Commits und Tests gesondert nachzuweisen.
+**Dokumentationsstand: 18. November 2026 · Beschrieben ist der im Projektverlauf bestätigte Stand.**
 
 ## 1. Zeitlicher Verlauf
 
-| Zeitraum | Entwicklung | Verifizierter Stand |
+| Zeitraum | Umsetzung | Ergebnis |
 |---|---|---|
-| Oktober 2026 | IONOS-VPS mit Ubuntu 24.04 LTS, GNOME, Backup-Agent | Ubuntu-GUI und Agent eingerichtet |
-| Oktober 2026 | PostgreSQL 16, pgAdmin 4, ursprüngliches Schema mit acht Tabellen | SQL-Schema, zwei fiktive Hilfestellen, zwei Kategorien |
-| 20.10.2026 | FastAPI, Uvicorn, systemd `yana-api`, Nginx/HTTPS, Let's Encrypt | Öffentliche GET-API, Certbot-Erneuerungstest erfolgreich |
-| Bis Ende Oktober / Anfang November | Flutter SDK, Dart, Android-Debug-Build; Models, Repositories, Controller | Drei Live-Verbindungstests und automatisierte Controller-Tests erfolgreich |
-| November 2026 | Öffentliche HTML-/CSS-Website mit Jinja2 und FastAPI | Im Browser auf IONOS veröffentlicht und geprüft |
-| November 2026 | Gemeinsame GitHub-Versionierung für `services/api` und lokale VPS-Arbeitskopie | Manuelles Deployment eingerichtet; `main.py`, `website.py`, Templates und Styles versioniert |
-| November 2026 | Flutter Web – CORS für lokale Browserentwicklung | `CORSMiddleware` ergänzt und Backend neu gestartet; Browserproblem behoben gemeldet |
-| November 2026 | Teamportal-Landing, Login-HTML und drei zusätzliche SQL-Tabellen | `portal_account`, `portal_session`, `portal_facility_audit` |
-| November 2026 | Argon2-Authentifizierung, Sessions, CSRF, Logout | Echter Admin-Login, Dashboard und Logout erfolgreich getestet |
-| November 2026 | Nginx-Login-Rate-Limit | Konfiguration/Reload erfolgreich; Website und API weiter HTTP 200 |
-| November 2026 | Dashboard und geschützte Hilfestellenübersicht | TestClient-Tests und Browserprüfung erfolgreich |
-| **17.11.2026** | Bearbeitung bestehender Hilfestellen | POST-Update, Audit-Eintrag, Wiederherstellung fiktiver Testdaten und produktiver Browser-Test erfolgreich |
-| **17.11.2026 – Pause** | Dokumentation des aktuellen Stands | Nächstes Feature: **Neue Hilfestelle anlegen** |
+| Oktober 2026 | Ubuntu-VPS, PostgreSQL, pgAdmin, FastAPI, Nginx/HTTPS | Server und GET-API erreichbar |
+| Oktober/November 2026 | Flutter-Entwicklungsumgebung; API-Models, Repositories, Controller und Tests | Technische Grundlagen für App und API-Anbindung |
+| November 2026 | Öffentliche Website, GitHub-Workflow und CORS | Website auf IONOS erreichbar, lokaler Flutter-Web-Zugriff möglich |
+| November 2026 | Login, Session-Hash, Argon2, CSRF, Nginx-Loginbegrenzung | Geschütztes Verwaltungsportal |
+| **17.11.2026** | Hilfestellen anzeigen und vorhandene Kontaktfelder bearbeiten | Test und produktive Browserprüfung mit Audit bestanden |
+| **18.11.2026** | Neue Hilfestellen erfassen, ID automatisch generieren, Audit | Funktionstests und fiktiver Speichertest erfolgreich; produktiv |
+| **18.11.2026** | Veröffentlichungsstatus und öffentliche API-Filterung | `draft` / `pending_review` / `published`; API liefert nur `published` |
+| **18.11.2026** | Freigabeaktionen für Neuaufnahmen | Einreichen, Freigeben, Zurückweisen und Zurücknehmen getestet; produktiv |
+| **18.11.2026** | Partnerrolle und Einrichtungszuordnung | `admin`/`partner`, `portal_facility_assignment`; Testpartner kann eigene Einrichtung sehen |
+| **18.11.2026** | Änderungen an veröffentlichten Einträgen | Getrennter Entwurf, Admin-Freigabe, öffentliche API erst danach aktualisiert; E2E-Test und Produktivprüfung bestanden |
 
-## 2. Fachlicher Funktionsstatus
+## 2. Aktueller Funktionsstatus
 
 | Funktion | Status |
 |---|---|
 | Öffentliche YANA-Website | **Implementiert** |
-| App-Downloadlink | Noch nicht veröffentlicht |
-| Allgemeine GET-API | **Implementiert** (mit Testdaten) |
-| Admin-Login, Logout, Session-Schutz, CSRF | **Implementiert, Basis- und Browser-Tests erfolgreich** |
-| Hilfestellenliste für `admin`/`team` | **Implementiert** |
-| Hilfestellen bearbeiten: Name, Telefon, E-Mail, Öffnungszeiten | **Implementiert** |
-| Audit-Log der Änderungen | **Implementiert** |
-| Neue Hilfestellen anlegen | **Noch nicht implementiert** |
-| Hilfestellen löschen / deaktivieren / freigeben | Noch nicht implementiert |
-| Externe Hilfestellenaccounts mit eigenen Datensätzen | Noch nicht implementiert |
-| Vertrauliche Adressen in öffentlicher API schützen | Sicherheitsaufgabe **offen** |
-| Flutter-UI vollständig verknüpft | Nicht abschließend bestätigt; Team arbeitet parallel daran |
-| Verifizierte Notfallkontakte / anonyme Beratung | Noch nicht bereitgestellt |
+| Öffentliche GET-API | **Implementiert**, nur veröffentlichte fiktive Hilfestellen |
+| Admin- und Partner-Login / Sessions / Logout / CSRF | **Implementiert und geprüft** |
+| Neue fiktive Hilfestellen anlegen | **Implementiert**, derzeit nur durch Admin |
+| Entwürfe bearbeiten und einreichen | **Implementiert** |
+| Neuaufnahmen freigeben / zurückweisen / zurücknehmen | **Implementiert** (Adminentscheidung) |
+| Partner sehen nur zugewiesene Einrichtungen | **Implementiert und im Browser geprüft** |
+| Änderungsvorschläge veröffentlichter Einträge | **Implementiert**, Name/Telefon/E-Mail/Öffnungszeiten |
+| Administrator prüft Änderungsvorschläge | **Implementiert**, alt/neu, Freigabe/Zurückweisung |
+| Audit-Protokollierung | **Implementiert**; noch keine allgemeine Audit-Webansicht |
+| Partnerkonten über Website erstellen / zuordnen | **Offen** – derzeit nur per pgAdmin |
+| Reale Einrichtungen und vertrauliche Adressen schützen | **Offen; zwingend vor Realbetrieb** |
+| Hilfestellen komplett löschen | **Offen** |
+| App-Download und vollständige mobile UI | **Noch nicht veröffentlicht / nicht vollständig nachgewiesen** |
+| Reale anonyme Beratung und verifizierte Notfallhilfe | **Nicht als produktiver Dienst verfügbar** |
 
-## 3. Wesentliche Fehler und Korrekturen
+## 3. Relevante Korrekturen
 
-| Problem | Korrektur |
-|---|---|
-| `git push` mehrfach `non-fast-forward` | `git pull --rebase origin main` bei sauberem Arbeitsstand, danach Push |
-| Python-`__pycache__/*.pyc` im Git-Status | `.gitignore` ergänzen und getrackte Cache-Dateien entfernen |
-| Flutter Web blockiert API mangels CORS | Korrekte lokale Origin-Regex in `CORSMiddleware`, Backend-Neustart |
-| `EOFError` bei interaktivem Python-Heredoc | `login_test_local.py` als separate Datei ausführen |
-| Beim Skript statt ID `TEST` eingegeben | Zuerst numerische `facility_id`, erst danach Bestätigung `TEST` |
-| `TemplateNotFound: portal/hilfestelle_bearbeiten.html` | Richtigen Pluralnamen `hilfestellen_bearbeiten.html` konsistent einsetzen |
-| Versehentlich `journalctl` ausgeführt | Nur Loglesebefehl, keine Veränderung des Systems |
+- `hilfestellen_bearbeiten.html` muss im Template-Renderaufruf im **Plural** referenziert werden.
+- Die Erstellungsmaske benötigte ein gespeichertes und übertragenes HTML-Template mit `<input name="csrf_token">`; erst danach bestanden alle zehn Funktionstests.
+- Beim Partnerlogin zeigte das Dashboard zunächst **„Keine Berechtigung“**, obwohl Python-Rollenprüfungen und DB-Zuordnung korrekt waren. Ursache war der alte `admin`/`team`-Zweig im Dashboard-Template; nach Umstellung auf `admin`/`partner` konnte der Partner seine Hilfestelle öffnen.
+- FastAPI-Route-Introspektion über `app.routes` zeigte bei verschachtelten Routern nicht alle Pfade; ein realer `TestClient`-Aufruf bestätigte die Endpunkte.
+- Testkopie und Produktivcode nutzen dieselbe PostgreSQL-Datenbank; echte Schreibtests wurden bewusst auf fiktive Daten begrenzt und wiederhergestellt.
 
-Einzelheiten finden sich unter [Portal-Fehlerprotokoll](teamportal-troubleshooting.md) und [Flutter-Fehlerprotokoll](flutter-troubleshooting.md).
+## 4. Nachweise und Entwicklungsprozess
 
-## 4. Nächster Entwicklungsschritt
+Entwickelt wird unter Windows/VS Code, versioniert über GitHub, geprüft in `~/yana-portal-test` und nach bestandenen Tests mit Sicherung in `~/yana-backend` bereitgestellt. Der produktive Systemdienst heißt `yana-api`. Automatische Integrationshilfen/ZIP-Pakete waren nur temporäre Entwicklungswerkzeuge; die dauerhaft benötigten Python-Module, Templates, CSS-Änderungen, Migration und sinnvolle Tests bleiben im Projekt nachvollziehbar dokumentiert.
 
-**Bei der nächsten Sitzung direkt bei „Neue Hilfestelle anlegen“ fortfahren.** Vor der Implementierung prüfen: Pflichtfelder von `hilfestelle`, Stand der Identity-Sequenz, Behandlung öffentlicher Standortdaten, sichere `INSERT`-Transaktion, Berechtigungen, CSRF, Audit der Erstellung und Tests mit fiktiven Daten. Den genauen Projekt-Checkpoint enthält [Wiedereinstieg](weiterarbeit.md).
+## 5. Nächste Meilensteine
 
-## 5. Nachweise für künftige Änderungen
-
-Nach jedem größeren Feature ergänzen: Datum, betroffene Dateien, Git-Commit-ID, geänderte Datenbankstruktur, Testfälle mit Ergebnissen, Produktions-Deployment und offene Sicherheitsrisiken. Ein erfolgreicher manueller Browser-Test ist keine vollständige Sicherheitsprüfung.
+Priorität haben die **Administrator-Benutzerverwaltung mit Partnerzuordnung**, der Schutz sensibler Standortinformationen, die Bereinigung der Testdaten-Zwangsregel vor einem echten Pilotbetrieb sowie eine isolierte Testdatenbank. Siehe [Weiterarbeit](weiterarbeit.md).

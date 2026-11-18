@@ -2,44 +2,42 @@
 
 **Hilfe finden. Informationen erhalten. In schwierigen Situationen schneller handeln.**
 
-YANA ist ein Schul-/Entwicklungsprojekt für eine mobile Anwendung, die betroffenen Frauen den Zugang zu Notfallkontakten, Hilfestellen und Informationen zu Gewaltprävention erleichtern soll. Ergänzend zur Flutter-App existiert inzwischen eine **öffentliche Informationswebsite** und ein **geschütztes Webportal** für die Pflege der Hilfestellendaten. Die technische Basis besteht aus Flutter/Dart, FastAPI, PostgreSQL und Nginx auf einem IONOS-VPS.
+YANA ist ein Schul- und Entwicklungsprojekt für eine mobile Anwendung, die betroffenen Frauen den Zugang zu Notfallkontakten, Hilfestellen und Informationen zur Gewaltprävention erleichtern soll. Neben der Flutter-App gibt es eine öffentliche Informationswebsite und **ein gemeinsames, geschütztes Verwaltungsportal** für das YANA-Team und externe Partnerorganisationen. Die technische Grundlage bilden Flutter/Dart, FastAPI, PostgreSQL und Nginx auf einem IONOS-VPS.
 
-**Gesamtstand: 17. November 2026.** Die Website und das Teamportal laufen auf dem IONOS-VPS. Ein Administrator kann sich anmelden, Hilfestellen anzeigen und **bestehende** Einträge (Name, Telefon, E-Mail, Öffnungszeiten) bearbeiten. Das Speichern und die Audit-Protokollierung wurden im Test und anschließend im Browser erfolgreich geprüft. Die Funktion **„Neue Hilfestelle anlegen“ ist noch nicht implementiert**; hier setzen wir beim nächsten Mal fort.
+**Dokumentationsstand: 18. November 2026.** Website, öffentliche GET-API und die nachfolgend beschriebenen Verwaltungsfunktionen sind auf dem VPS produktiv bereitgestellt bzw. im Projektverlauf getestet. Für fiktive Hilfestellen funktionieren Neuaufnahme, Veröffentlichungsstatus, rollenabhängiger Zugriff sowie Änderungsvorschläge mit Administratorfreigabe. Der vollständige Änderungsworkflow wurde mit einem Partner-Testaccount und anschließend produktiv im Browser überprüft.
 
-> **Entwicklungs- und Sicherheitshinweis:** Die bisherigen Hilfestellen sind fiktive Testdaten. YANA ist noch kein verlässlicher Notfall- oder Beratungsdienst. Keine geheimen Schutzunterkunft-Adressen eintragen, solange die öffentliche API sie ungefiltert ausgibt. In einer akuten Gefahrensituation offizielle Notrufstellen kontaktieren.
+> **Entwicklungs- und Sicherheitshinweis:** YANA ist noch kein regulärer Notfall- oder Beratungsdienst. Verwendet werden fiktive **„YANA Test“**-Einträge. Auch veröffentlichte Einträge werden über `/hilfestellen` einschließlich Adresse und Koordinaten öffentlich ausgegeben. Keine vertraulichen Schutzunterkunft-Adressen oder realen personenbezogenen Hilfedaten hinterlegen. Im Notfall offizielle Notrufstellen kontaktieren.
 
-## Neu: Website und Teamportal
+## Portal und zentrale Neuerungen
 
-- [Öffentliche YANA-Website](technik/website.md) – Landingpage, App-Informationen und Download-Hinweis.
-- [Teamportal: Architektur und Rollen](technik/teamportal-architektur.md) – Zugang, Dashboard und Verantwortlichkeiten.
-- [Anmeldung und Sicherheit](technik/teamportal-login.md) – Argon2, Sessions, CSRF und Nginx-Loginbegrenzung.
-- [Hilfestellen anzeigen und bearbeiten](technik/teamportal-hilfestellen.md) – Formular, SQL-Update und Audit.
-- [Teamportal bedienen](nutzung/teamportal.md) – Benutzerablauf im Browser.
-- [Wiedereinstieg: nächster Schritt](technik/weiterarbeit.md) – Fertiggestellte Funktionen und **„Neue Hilfestelle anlegen“**.
+- [Verwaltungsportal benutzen](nutzung/teamportal.md) – gemeinsamer Login und unterschiedliche Funktionen für `admin` und `partner`.
+- [Portalarchitektur und Rollenmodell](technik/teamportal-architektur.md) – ein Portal, Berechtigung pro Einrichtung, Module und Datenfluss.
+- [Hilfestellenverwaltung](technik/teamportal-hilfestellen.md) – erfassen, Entwürfe bearbeiten, einreichen und veröffentlichen.
+- [Änderungsvorschläge und Freigaben](technik/teamportal-aenderungsfreigabe.md) – veröffentlichte Daten bleiben bis zur Adminentscheidung bestehen.
+- [Datenbank des Portals](technik/teamportal-datenbank.md) – Accounts, Sessions, Zuordnungen, Audit und Änderungsvorschläge.
+- [Login und Sicherheit](technik/teamportal-login.md) – Argon2, Sitzungen, Rollen und CSRF.
 
 ## Gesamtdokumentation
 
-- [Installation und Quick Start](installation/index.md) – Server, Backend, Webportal und Flutter-Umgebung.
-- [Technische Dokumentation](technik/index.md) – Architektur, API, Datenbank, Sicherheit und Tests.
-- [Systemarchitektur](technik/architektur.md) – Flutter + Website/Portal + FastAPI + Nginx + PostgreSQL.
-- [REST-API-Referenz](technik/api-referenz.md) – Öffentliche und geschützte Routen.
-- [Flutter: API-Anbindung](technik/flutter-api-anbindung.md) und [Tests](technik/flutter-tests.md).
-- [GitHub- und Deployment-Workflow](technik/git-deployment.md).
-- [Entwicklungsprotokoll](technik/entwicklungsstand.md).
+- [Installation und Quick Start](installation/index.md) – Server, Backend, Datenbank, Website und Flutter.
+- [Technische Dokumentation](technik/index.md) – Architektur, Schnittstellen, Tests, Sicherheit und Betrieb.
+- [REST-API-Referenz](technik/api-referenz.md) – öffentliche Endpunkte und geschützte Browser-Routen.
+- [Flutter-API-Anbindung](technik/flutter-api-anbindung.md) und [Flutter-Tests](technik/flutter-tests.md).
+- [GitHub und Deployment](technik/git-deployment.md) – Entwicklung unter Windows, Testkopie und produktiver Dienst.
+- [Entwicklungsstand](technik/entwicklungsstand.md) und [Weiterarbeit](technik/weiterarbeit.md).
 
-## Nachgewiesener technischer Stand
+## Nachgewiesener Stand
 
-| Bereich | Status / Nachweis |
+| Bereich | Stand am 18.11.2026 |
 |---|---|
-| PostgreSQL / FastAPI / HTTPS | Laufendes Backend; bestehende GET-API weiterhin erreichbar |
-| Öffentliche Informationswebsite | Im Browser produktiv aufgerufen; App-Download noch ausstehend |
-| Teamportal-Login | Admin-Login, Dashboard, Logout und CSRF-Grundtests bestanden |
-| Hilfestellenverwaltung | Geschützte Übersicht, Bearbeitung, UPDATE und Audit; Test-/Browserprüfung bestanden |
-| Datenbankteststand | Zwei fiktive Hilfestellen, zwei Kategorien; Notfallnummernliste leer |
-| Flutter-Client | Models, Repositories und Controller für drei Bereiche; Dart-CLI- und Unit-Tests |
-| Flutter-Web-Zugriff | CORS-Freigabe für lokale Entwicklung ergänzt |
-| App-Screens / reale Hilfevermittlung | Entwicklung läuft, nicht als fertig nachgewiesen |
+| PostgreSQL / FastAPI / HTTPS | Auf dem IONOS-VPS eingerichtet; JSON-GET-Endpunkte erreichbar |
+| Öffentliche Website | Produktiv; App-Download weiterhin ausstehend |
+| Portal-Authentifizierung | Administrator- und Partner-Testlogin, Session, Logout und CSRF-Schutz getestet |
+| Hilfestellen | Neue fiktive Einträge anlegen, Entwürfe bearbeiten, Status `draft` / `pending_review` / `published` verwalten |
+| Zugriffsrechte | Admin sieht alle; Partner sieht nur über `portal_facility_assignment` zugewiesene Einträge |
+| Änderungsfreigabe | Veröffentlichung bleibt bei Entwurf und Einreichung unverändert; Änderung erst nach Adminfreigabe |
+| Audit | Datensatz- und Statusänderungen sowie Änderungsanträge protokolliert |
+| Flutter | Modelle, Repositories, Controller und Entwicklungstests vorhanden; App-Oberfläche noch in Arbeit |
+| Reale Beratung / verifizierte Einrichtungen | Noch nicht für den Realbetrieb freigegeben |
 
-## Veröffentlichung und Medien
-
-App-Download, Screenshots und Projektvideo werden ergänzt, sobald passende freigegebene Inhalte vorliegen. Ein tatsächlicher App-Download ist noch **nicht** bereitgestellt. Eine Teamportal-Anmeldung ersetzt keine öffentliche Registrierung oder Hilfevermittlung.
+Das ursprüngliche ER-Diagramm bildet nur acht Fach-/Chat-Tabellen ab. In der laufenden Anwendung wurden fünf Portal-Tabellen ergänzt; die [Schemaübersicht](technik/datenmodell.md) dokumentiert diese Erweiterung gesondert.

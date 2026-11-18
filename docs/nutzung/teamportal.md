@@ -1,45 +1,67 @@
-# Teamportal verwenden: Hilfestellen ansehen und bearbeiten
+# YANA-Verwaltungsportal verwenden
 
-**Gültig für den bestätigten Stand vom 17.11.2026.** Das Portal ist bislang für das YANA-Team gedacht; der Login für externe Hilfestellen/Kanzleien und das Anlegen neuer Einrichtungen sind noch nicht fertig.
+**Stand: 18. November 2026 · Gemeinsames Portal für YANA-Administratoren und externe Partner**
 
-## Zugang zum Teamportal
+Die Rollen nutzen **denselben Login, dasselbe Dashboard und dieselbe Hilfestellenübersicht**. Das Backend filtert die Daten und erlaubt je nach Rolle unterschiedliche Aktionen. Es gibt weiterhin **keine öffentliche Registrierung**.
 
-1. Die öffentliche YANA-Website über den eingerichteten HTTPS-Zugang öffnen.
-2. Die URL `https://SERVER_IP/portal/login` aufrufen (`SERVER_IP` durch die tatsächliche Serveradresse ersetzen).
-3. Mit dem vom YANA-Team vergebenen Portal-Account anmelden. Es gibt keine öffentliche Registrierung.
-4. Nach erfolgreichem Login erscheint das Dashboard.
+## Zugang und Rollen
 
-E-Mail und Passwort werden serverseitig geprüft. Bei falscher Anmeldung erscheint eine allgemeine Fehlermeldung; nach mehreren Fehlversuchen kann ein Account vorübergehend gesperrt werden. Passwörter niemals per Chat oder als Screenshot weitergeben.
+1. HTTPS-Website öffnen und `/portal/login` aufrufen (`https://SERVER_IP/portal/login`).
+2. Mit dem bereitgestellten Account anmelden.
+3. Im Dashboard die Hilfestellenverwaltung öffnen.
+4. Nach der Arbeit über **Abmelden** die Session beenden.
 
-## Hilfestellenübersicht öffnen
+| Rolle | In der Übersicht sichtbar | Wichtige Aktionen |
+|---|---|---|
+| `admin` – YANA-Team | Alle Hilfestellen (aktuell auf 100 pro Aufruf begrenzt) | Testeinträge anlegen, Entwürfe bearbeiten, Freigaben/Zurückweisungen, Partnerzuordnung bisher per Datenbank |
+| `partner` – externe Einrichtung/Kanzlei | Nur ausdrücklich zugewiesene Hilfestellen | Eigene Entwürfe bearbeiten und einreichen; veröffentlichte Kontaktdaten als Änderungsvorschlag einreichen |
 
-Im Dashboard die Kachel **Hilfestellen** wählen und auf **Hilfestellen anzeigen** klicken. Die Tabelle unter `/portal/hilfestellen` enthält aktuell z. B. ID, Name, Typ, Kategorie, Adresse und Telefon. Sie zeigt derzeit nur die ersten 100 alphabetisch sortierten Datensätze; eine Such-/Filter-/Paginierungsfunktion ist noch nicht umgesetzt.
+Ein Partner erhält **keinen** allgemeinen Zugriff auf fremde Einträge. Die Zuordnung erfolgt über `portal_facility_assignment`. Zugriffsschutz wird serverseitig geprüft; bloß ausgeblendete Schaltflächen reichen nicht aus. Ein fremder Eintrag ist für Partner auch bei direkter URL nicht abrufbar (typischerweise HTTP 404).
 
-**Berechtigung:** `admin` und `team` dürfen die Übersicht nutzen. Eine Rolle `facility` darf momentan **nicht** pauschal alle Einträge sehen oder ändern.
+## Neue Hilfestelle erfassen (Administrator)
 
-## Vorhandene Hilfestelle bearbeiten
+1. Unter `/portal/hilfestellen` **Neue Hilfestelle** auswählen.
+2. Name, Einrichtungstyp, Adresse, Breiten-/Längengrad und Kapazität eingeben; Kategorie und Kontaktdaten nach Bedarf ergänzen.
+3. Formular speichern. Das Backend validiert die Eingaben, vergibt die `facility_id` automatisch und erstellt einen Audit-Eintrag `created`.
+4. Der neue Eintrag beginnt grundsätzlich als **`draft` (Entwurf)** und erscheint **noch nicht** in der öffentlichen Flutter-API.
 
-1. In der betreffenden Zeile **Bearbeiten** anklicken.
-2. Die vier freigegebenen Felder prüfen: **Name, Telefonnummer, E-Mail, Öffnungszeiten**.
-3. Änderungen eingeben und **Änderungen speichern** wählen.
-4. Die Seite wird neu geladen und zeigt die Erfolgsmeldung, wenn der Vorgang erfolgreich war.
-5. Die angezeigten Werte überprüfen; bei Bedarf die JSON-API oder pgAdmin zur technischen Verifikation verwenden.
+**Testbegrenzung:** Die derzeitige Erstellungsfunktion akzeptiert ausschließlich Namen mit Präfix `YANA Test`. Partner können selbst keine neuen Hilfestellen erstellen; diese Berechtigung liegt aktuell beim Administrator.
 
-**Nicht** über das aktuelle Formular bearbeitbar: Standortadresse, Koordinaten, Kapazität, Typ, Kategorie, Leistungen. Andere Verwaltungsaktionen wie „Neue Hilfestelle“, „Löschen“ oder „Freigeben“ existieren noch nicht.
+## Entwurf bearbeiten und veröffentlichen
 
-## Nachvollziehbarkeit
+Einträge mit Status `draft` lassen sich über **Bearbeiten** ändern (Name, Telefon, E-Mail, Öffnungszeiten). Danach kann der berechtigte Account **Zur Prüfung einreichen** auswählen. Der Status wechselt auf `pending_review`, und die direkte Bearbeitung wird gesperrt.
 
-Änderungen werden zusammen mit Account-ID und Zeitpunkt in `portal_facility_audit` dokumentiert. Gespeichert werden die Werte **vor** und **nach** der Änderung. Die Audit-Tabelle ist derzeit nur über autorisierte Datenbankadministration einsehbar; im Portal gibt es noch keine Protokollansicht.
+Der YANA-Administrator kann den Entwurf **Freigeben** (`published`) oder **Zurückweisen** (zurück zu `draft`). Eine bereits veröffentlichte Einrichtung kann der Administrator **zurücknehmen**, wodurch sie erneut zum Entwurf und aus der öffentlichen API entfernt wird. Im Teststand dürfen nur als `YANA Test` gekennzeichnete Einträge veröffentlicht werden.
 
-## Abmelden
+## Veröffentlichte Einrichtung ändern – ohne Offline-Schaltung
 
-Im Dashboard auf **Abmelden** klicken. Die aktive Session wird gelöscht. Danach darf der geschützte Bereich nicht ohne erneute Anmeldung geöffnet werden. Bei einem gemeinsam genutzten Computer zusätzlich das Browserfenster schließen.
+Bei einer bereits veröffentlichten, dem Partner zugeordneten Einrichtung wird **Änderung vorschlagen** verwendet, **nicht** die direkte Bearbeitung von `/edit`.
 
-## Sicherheitshinweise
+1. Partner öffnet **Änderung vorschlagen** und ändert z. B. eine Telefonnummer.
+2. **Als Entwurf speichern** speichert den Vorschlag ausschließlich in `portal_facility_change`. Die bisher freigegebenen Kontaktdaten bleiben in `hilfestelle` und in der Flutter-API unverändert.
+3. **Zur Prüfung einreichen** setzt den Antrag auf `pending_review`; weitere Bearbeitung ist bis zur Entscheidung gesperrt.
+4. Administrator öffnet **Änderungsanträge prüfen** unter `/portal/aenderungen` und sieht alte und vorgeschlagene Werte nebeneinander.
+5. Bei **Änderungen freigeben** werden die vier zulässigen Felder in einer Transaktion aktualisiert. Bei **Zurückweisen** bleiben die veröffentlichten Werte unverändert; eine optionale Begründung kann eingetragen werden.
 
-- Das Portal ist ein Entwicklungs-/Teamwerkzeug, kein offizieller Kontakt- oder Notfalldienst.
-- Die bisherigen Standorte sind fiktive Testdatensätze.
-- Keine echten Schutzunterkunft-Adressen oder persönlichen Beratungsdaten eintragen, solange öffentliche Sichtbarkeit, Rollen und Datenschutz nicht abgesichert sind.
-- Das Speichern kann im aktuellen Stand Daten unmittelbar in der öffentlich abrufbaren Flutter-API verändern.
+Pro Einrichtung ist maximal ein aktiver Änderungsentwurf oder Prüfantrag gleichzeitig zulässig. Ein eigener Entwurf kann verworfen werden. Ein anderer berechtigter Bearbeiter darf einen fremden aktiven Entwurf nicht übernehmen.
 
-Technische Details: [Hilfestellenbearbeitung](../technik/teamportal-hilfestellen.md), [Login und Sessions](../technik/teamportal-login.md).
+## Status und Nachvollziehbarkeit
+
+| Status des Eintrags (`hilfestelle`) | Bedeutung | Öffentliche API |
+|---|---|---|
+| `draft` | Nicht veröffentlicht; direkt bearbeitbar | Nein |
+| `pending_review` | Neuaufnahme wird geprüft | Nein |
+| `published` | Freigegebener Eintrag | Ja, mit aktuellen öffentlichen Spalten |
+
+**Davon getrennt** existiert der Status eines *Änderungsvorschlags*: `draft`, `pending_review`, `approved`, `rejected` oder `cancelled`. Ein offener Änderungsvorschlag verändert den Veröffentlichungsstatus der Hilfestelle nicht.
+
+Änderungen und Freigaben werden mit Account-Zuordnung und Zeitstempel in `portal_facility_audit` protokolliert. Eine allgemeine Audit-Historienansicht im Browser ist noch nicht umgesetzt.
+
+## Sicherheit und Grenzen
+
+- Nur fiktive Daten verwenden; keine realen Schutzunterkunft-Adressen speichern. **Der Veröffentlichungsfilter schützt nicht einzelne Adressfelder.**
+- Name, Telefon, E-Mail und Öffnungszeiten sind die vier Felder des Änderungsworkflows. Standortdaten, Leistungen, Kapazität und Kategorie sind damit noch nicht nachträglich bearbeitbar.
+- Die Administrator- und Partnerkonten werden noch über pgAdmin eingerichtet und zugeordnet. Eine Benutzerverwaltungsoberfläche, Passwort-Reset und MFA fehlen.
+- Die öffentliche API ist kein Login-geschützter Dienst. Vor echten Einträgen sind Datenfreigabe und Datenschutzkonzept erforderlich.
+
+Weitere Informationen: [Technischer Ablauf der Änderungsfreigabe](../technik/teamportal-aenderungsfreigabe.md), [Hilfestellenverwaltung](../technik/teamportal-hilfestellen.md), [Portal-Sicherheit](../technik/teamportal-login.md).

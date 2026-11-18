@@ -1,13 +1,13 @@
 # Technische Dokumentation
 
-Diese Seiten dokumentieren den **nachgewiesenen Stand vom 17. November 2026**. Vorhandene Dokumente zur Servereinrichtung und Flutter-Schicht wurden erhalten; die Website, das Teamportal und die Datenpflege sind hinzugekommen. *Geplant* bedeutet ausdrücklich **nicht implementiert**.
+Diese Seiten dokumentieren den **nachgewiesenen Stand vom 18. November 2026**. Vorhandene Dokumente zur Servereinrichtung und Flutter-Schicht wurden erhalten; die Website, das Teamportal und die Datenpflege sind hinzugekommen. *Geplant* bedeutet ausdrücklich **nicht implementiert**.
 
 ## System, Server und Datenbank
 
 - [Systemarchitektur](architektur.md) – öffentliche Website, Browserportal, Flutter, FastAPI, Nginx und PostgreSQL.
 - [REST-API und Portal-Routen](api-referenz.md) – öffentliche JSON- und geschützte HTML-Endpunkte.
 - [Relationales Datenmodell](datenmodell.md) – ursprüngliches ER-Modell mit acht Tabellen.
-- [Zusätzliche Portal-Datenbanktabellen](teamportal-datenbank.md) – Accounts, Sessions und Audit.
+- [Zusätzliche Portal-Datenbanktabellen](teamportal-datenbank.md) – Accounts, Sessions, Audit, Partnerzuordnung und Änderungsanträge.
 - [Betrieb, Backups und Sicherheit](betrieb-sicherheit.md) – Ist-Stand, Risiken und offene Schutzmaßnahmen.
 - [Technische Entscheidungen](entscheidungen.md) – Begründung für die Architektur.
 
@@ -16,12 +16,13 @@ Diese Seiten dokumentieren den **nachgewiesenen Stand vom 17. November 2026**. V
 - [Öffentliche Website](website.md) – Inhalte, Templates und bisherige Bereitstellung.
 - [Teamportal-Architektur und Rollen](teamportal-architektur.md) – Struktur, URLs und Verantwortlichkeiten.
 - [Login, Sessions und CSRF](teamportal-login.md) – PostgreSQL-Authentifizierung und Cookie-Sicherheit.
-- [Hilfestellenübersicht und Bearbeitung](teamportal-hilfestellen.md) – Formular, SQL-Update und Audit-Log.
+- [Hilfestellenverwaltung](teamportal-hilfestellen.md) – Neuaufnahme, Entwürfe und Veröffentlichung.
+- [Änderungsvorschläge und Freigabe](teamportal-aenderungsfreigabe.md) – Änderungen an bereits veröffentlichten Einträgen und Adminprüfung.
 - [Portal-Tests](teamportal-tests.md) – tatsächliche HTTP-Statuscodes und Speichertest.
 - [Portal-Fehlerbehebung](teamportal-troubleshooting.md) – beobachtete Probleme und Korrekturen.
 - [GitHub und Deployment](git-deployment.md) – Entwicklung/Server-Dateikopien, Git-Konflikte und `.gitignore`.
 - [Produktive Bereitstellung](teamportal-deployment.md) – Backup, Testumgebung, Neustart und Rollback.
-- [Wiedereinstieg und nächstes Feature](weiterarbeit.md) – **„Neue Hilfestelle anlegen“**.
+- [Wiedereinstieg und nächste Aufgaben](weiterarbeit.md) – **Benutzerverwaltung und Schutz sensibler Daten**.
 
 ## Flutter / Dart
 
@@ -34,7 +35,7 @@ Diese Seiten dokumentieren den **nachgewiesenen Stand vom 17. November 2026**. V
 
 ## Verlauf und Grundlagen
 
-- [Entwicklungsstand und Änderungsprotokoll](entwicklungsstand.md) – Meilensteine bis 17.11.2026.
+- [Entwicklungsstand und Änderungsprotokoll](entwicklungsstand.md) – Meilensteine bis 18.11.2026.
 - [Server-Fehlerbehebung](troubleshooting.md) – Infrastruktur- und Betriebsprobleme.
 - [Quellen](quellen.md) – Offizielle technische Referenzen.
 

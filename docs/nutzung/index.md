@@ -1,6 +1,6 @@
 # Nutzungshandbuch – Entwicklungsstand
 
-**Stand: 17. November 2026.** YANA besitzt inzwischen zwei klar getrennte Nutzungsebenen: die öffentliche Informationswebsite mit Download-Hinweis und ein geschütztes Teamportal für die interne Datenpflege. Die Flutter-App selbst befindet sich weiterhin in Entwicklung; eine veröffentlichte Download-Version oder verlässliche echte Notfallberatung ist nicht bestätigt.
+**Stand: 18. November 2026.** YANA besitzt inzwischen zwei klar getrennte Nutzungsebenen: die öffentliche Informationswebsite mit Download-Hinweis und ein geschütztes Teamportal für die interne Datenpflege. Die Flutter-App selbst befindet sich weiterhin in Entwicklung; eine veröffentlichte Download-Version oder verlässliche echte Notfallberatung ist nicht bestätigt.
 
 ## Öffentliche Website
 
@@ -8,7 +8,7 @@
 
 ## Geschütztes Teamportal
 
-Berechtigte Mitglieder des YANA-Teams können sich unter `/portal/login` anmelden, im Dashboard eine Liste vorhandener Hilfestellen ansehen und die vier freigegebenen Kontaktfelder bearbeiten. Die Änderungen werden in PostgreSQL gespeichert und mit Zeitstempel und Benutzerzuordnung protokolliert. Die Funktion „Neue Hilfestelle anlegen“ ist **noch nicht verfügbar**.
+Administratoren des YANA-Teams und zugeordnete externe Partner melden sich unter `/portal/login` an. Im selben Dashboard sehen Partner ausschließlich ihre Einrichtungen, Administratoren dagegen alle. Neue Test-Hilfestellen können erstellt, Entwürfe zur Veröffentlichung eingereicht und veröffentlichte Kontaktdaten über getrennte Änderungsvorschläge mit Administratorfreigabe aktualisiert werden. Aktionen werden in PostgreSQL protokolliert.
 
 Die vollständige Anleitung steht unter **[Teamportal bedienen](teamportal.md)**. Technische Details: [Hilfestellenverwaltung](../technik/teamportal-hilfestellen.md).
 

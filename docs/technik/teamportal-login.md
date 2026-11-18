@@ -1,6 +1,6 @@
 # Teamportal: Authentifizierung, Sessions und Zugriffsrechte
 
-**Stand: 17. November 2026 · Basis-Login produktiv und mit TestClient geprüft**
+**Stand: 18. November 2026 · Administrator- und Partner-Testlogin im gemeinsamen Portal geprüft**
 
 ## 1. Login-Ablauf
 
@@ -37,7 +37,7 @@ sequenceDiagram
 | Account-Sperre | Nach fünf Fehlversuchen bei einem vorhandenen Account ungefähr 15 Minuten Sperrzeit |
 | Nginx-Rate-Limit | Separat konfiguriert für `POST /portal/login` über HTTPS |
 | Logout | `POST /portal/logout` prüft CSRF und löscht die DB-Session |
-| Rollen | `admin` und `team` sind für die Hilfestellenverwaltung berechtigt; `facility` nicht |
+| Rollen | `admin` besitzt Gesamtrechte; `partner` nur Rechte an zugewiesenen Einrichtungen |
 
 **Wichtige Einschränkung:** Das signierte Cookie ist nicht verschlüsselt; deshalb enthält es keine Passwörter oder sonstige sensiblen Profildaten. Der Session-Schlüssel steht in der serverseitigen `.env` und darf nicht in GitHub gelangen. Tests haben Basis-Login, Logout, CSRF und ohne Login geschützte Seiten bestätigt; eine unabhängige Sicherheitsprüfung/Penetrationstest wurde **nicht** durchgeführt.
 
@@ -83,9 +83,9 @@ app.add_middleware(
 
 ## 5. Rollen und Servergrenzen
 
-`portal.py` enthält `session_account(request)` und `check_csrf(request, token)`. Die Hilfestellen-Routen importieren diese Hilfsfunktionen, führen aber **zusätzlich eine eigene Rollenprüfung** durch. Das Dashboard allein schützt keine Bearbeitungsroute; jede Datenänderung muss separat prüfen, ob das Konto berechtigt ist.
+`portal.py` enthält `session_account(request)` und `check_csrf(request, token)`. Die Hilfestellen-Routen prüfen zusätzlich Rolle und Einrichtungszuordnung, u. a. mit `portal_access.py`. Für Partner reicht eine Anmeldung allein nicht aus: Einrichtungsrechte werden bei jeder relevanten Route serverseitig geprüft. Das Dashboard allein schützt keine Bearbeitungsroute; jede Datenänderung muss separat prüfen, ob das Konto berechtigt ist.
 
-**Nicht umgesetzt:** Externe `facility`-Accounts können noch keiner eigenen Hilfestelle zugeordnet werden; Selbstregistrierung, Passwortzurücksetzung, Mehrfaktor-Authentifizierung, Freigabe-Workflow und explizite Administrationsoberfläche für Konten fehlen.
+**Inzwischen umgesetzt:** Externe Accounts mit Rolle `partner` können sich anmelden und erhalten serverseitig nur Zugriff auf ihre in `portal_facility_assignment` verknüpften Einrichtungen. Veröffentlichung und Änderungsvorschläge werden durch Administratoren geprüft. **Offen:** Selbstregistrierung (derzeit nicht vorgesehen), Passwortzurücksetzung, MFA und eine Verwaltungsoberfläche für Accounts und Zuweisungen. Ein Testpartner wurde über pgAdmin erstellt.
 
 ## 6. Nginx-Schutz gegen Login-Fluten
 
@@ -108,10 +108,10 @@ Wichtig: Bestätigt wurden Konfigurationsannahme und fortgesetzte Erreichbarkeit
 
 Der Projektverlauf dokumentiert diese Tests als bestanden. Für einen neuen Deployment-Stand müssen sie erneut ausgeführt werden. Testdetails stehen unter [Portal-Teststrategie](teamportal-tests.md).
 
-## 8. Sicherheitsaufgaben vor externen Logins
+## 8. Sicherheitsaufgaben vor echtem Partnerbetrieb
 
 - Keine Veröffentlichung echter vertraulicher Adressen / personenbezogener Daten über die öffentliche `/hilfestellen`-API.
-- Berechtigungen für Fremdorganisationen (Account-zu-Einrichtung-Zuordnung) implementieren und negativ testen.
+- Bestehende Partnerzuordnung und Berechtigungsprüfung mit weiteren Accounts, abgelaufenen Sessions und parallelen Anträgen regressionsprüfen; Benutzerverwaltung mit Entzug von Zuweisungen ergänzen.
 - Sitzungs-/Cookie-/CSRF-Integration in realistischen Browsern prüfen, Passwort-Reset und MFA-Konzept definieren.
 - Nginx-Rate-Limit unter kontrollierten Bedingungen prüfen; Proxy-IP-Vertrauen korrekt konfigurieren.
 - Secret-Rotation, Audit- und Löschkonzept; zuverlässige DB-Backups und Recovery-Test.

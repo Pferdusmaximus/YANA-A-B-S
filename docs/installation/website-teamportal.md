@@ -1,6 +1,6 @@
 # Website und Teamportal einrichten (Entwicklungsablauf)
 
-**Stand: 17. November 2026 · Das Teamportal wurde bereits auf dem YANA-VPS eingerichtet.** Die Seite dokumentiert die Vorgehensweise zur Wiederholung auf einem neuen Server. Sie ist keine Aufforderung, SQL oder Installationsbefehle unüberprüft noch einmal auf dem laufenden Produktionsserver auszuführen.
+**Stand: 18. November 2026 · Das gemeinsame Verwaltungsportal wurde auf dem YANA-VPS um Partner und Änderungsfreigaben erweitert.** Die Seite dokumentiert die Vorgehensweise zur Wiederholung auf einem neuen Server. Sie ist keine Aufforderung, SQL oder Installationsbefehle unüberprüft noch einmal auf dem laufenden Produktionsserver auszuführen.
 
 ## Voraussetzungen
 
@@ -18,7 +18,11 @@ services/api/
 ├── database.py
 ├── website.py
 ├── portal.py
+├── portal_access.py
 ├── portal_facilities.py
+├── portal_facilities_create.py
+├── portal_facilities_status.py
+├── portal_facility_changes.py
 ├── templates/
 │   ├── base.html
 │   ├── index.html
@@ -26,7 +30,10 @@ services/api/
 │       ├── login.html
 │       ├── dashboard.html
 │       ├── hilfestellen.html
-│       └── hilfestellen_bearbeiten.html
+│       ├── hilfestellen_bearbeiten.html
+│       ├── hilfestellen_neu.html
+│       ├── aenderung_bearbeiten.html
+│       └── aenderungen_pruefen.html
 └── static/css/style.css
 ```
 
@@ -46,7 +53,7 @@ python -m pip install jinja2 'pwdlib[argon2]' itsdangerous python-multipart pyth
 
 ## 3. Datenbank und erster Admin
 
-Für das Portal wurden `portal_account`, `portal_session` und `portal_facility_audit` ergänzend zu den acht Fach-Tabellen angelegt. Vollständiges dokumentiertes Schema und GRANT-Befehle stehen auf [Portal-Datenbank](../technik/teamportal-datenbank.md).
+Für das Portal wurden `portal_account`, `portal_session`, `portal_facility_audit`, `portal_facility_assignment` und `portal_facility_change` ergänzend zu den acht Fach-Tabellen angelegt. Die neuere Variante des Schemas erlaubt nur `admin` und `partner`; die Migrationen dürfen nicht pauschal erneut auf der Produktivdatenbank ausgeführt werden. Vollständiges dokumentiertes Schema und GRANT-Befehle stehen auf [Portal-Datenbank](../technik/teamportal-datenbank.md).
 
 Der erste Administrator wurde in pgAdmin mit `role='admin'` und einem vorab lokal erzeugten **Argon2-Hash** angelegt. Keinen Klartext in `INSERT`-Befehlen oder in Markdown/GitHub speichern. Vor dem Test prüfen:
 
@@ -61,7 +68,7 @@ In der **serverlokalen** `.env` wurde `PORTAL_SESSION_SECRET` als kryptografisch
 
 ## 5. FastAPI konfigurieren
 
-In `main.py` werden `website_router`, `portal_router`, `facilities_router` und `StaticFiles` eingebunden. Hinzu kommen `SessionMiddleware` (geschützte Cookie-Konfiguration) und eine lokale CORS-Freigabe für Flutter Web. **Nicht** den gesamten ursprünglichen API-Code löschen: Die GET-Endpunkte `/health`, `/hilfestellen`, `/kategorien`, `/notfallnummern` müssen erhalten bleiben.
+In `main.py` werden die Website, `portal_router`, die Router für Hilfestellen, Neuaufnahme, Statusfreigabe und Änderungsvorschläge sowie `StaticFiles` eingebunden. Hinzu kommen `SessionMiddleware` (geschützte Cookie-Konfiguration) und eine lokale CORS-Freigabe für Flutter Web. **Nicht** den gesamten ursprünglichen API-Code löschen: Die GET-Endpunkte `/health`, `/hilfestellen`, `/kategorien`, `/notfallnummern` müssen erhalten bleiben.
 
 Unter `/` wird inzwischen eine HTML-Seite statt der ursprünglichen JSON-Willkommensmeldung angezeigt. Routen und Schutzregeln stehen unter [API-Referenz](../technik/api-referenz.md).
 
@@ -84,4 +91,4 @@ curl -sS -o /dev/null -w '%{http_code}\n' https://SERVER_IP/
 curl -sS -o /dev/null -w '%{http_code}\n' https://SERVER_IP/hilfestellen
 ```
 
-Danach im Browser `/portal/login` und `/portal/hilfestellen` testen, Anmeldung und Abmeldung prüfen. Vor der Freigabe echter Daten sind Datenschutz, externe Rollenbeschränkungen, öffentliche Standortfilter und ein separates Testsystem erforderlich.
+Danach im Browser `/portal/login` und `/portal/hilfestellen` testen, Anmeldung und Abmeldung prüfen. Die externen Partnerberechtigungen und Freigaben sind inzwischen für fiktive Daten implementiert. Vor der Freigabe echter Daten fehlen insbesondere Datenschutzregeln für öffentliche Standortinformationen, eine Admin-Accountverwaltung und ein separates Testsystem.

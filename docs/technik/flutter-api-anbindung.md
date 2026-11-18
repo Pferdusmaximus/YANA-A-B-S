@@ -8,7 +8,7 @@ Dieser Abschnitt dokumentiert die Datenzugriffsschicht, die zusätzlich zum best
 
 | Dart-Repository | API-Anfrage | PostgreSQL-Tabelle | Live-Test |
 |---|---|---|---|
-| `HelpRepository` | `GET /hilfestellen` | `hilfestelle` | HTTP-Ergebnis verarbeitet, **2** Datensätze |
+| `HelpRepository` | `GET /hilfestellen` | veröffentlichte Einträge aus `hilfestelle` | HTTP-Ergebnis verarbeitet; Anzahl hängt vom Freigabestatus ab (anfangs 2 Testeinträge) |
 | `CategoryRepository` | `GET /kategorien` | `kategorie` | **2** Datensätze |
 | `EmergencyRepository` | `GET /notfallnummern` | `notfallnummer` | **0** Datensätze, reguläre leere Liste |
 
@@ -329,3 +329,9 @@ dart run tool/emergency_connection_test.dart
 - Später typisierte API-Fehler, explizite Response-Modelle, Pagination und einen austauschbaren HTTP-Client ergänzen.
 
 Weitere Informationen: [Controller und Lebenszyklus](flutter-controller.md), [API-Referenz](api-referenz.md), [Betrieb und Sicherheit](betrieb-sicherheit.md).
+
+## Nachtrag 18.11.2026: Veröffentlichungsfilter
+
+Der Endpunkt `GET /hilfestellen` liefert seit der Portal-Freigabeerweiterung **nur Einträge mit `publication_status = 'published'`**. Flutter benötigt für den Abruf weiterhin keinen Portal-Login; die bisherigen Models/Repositories bleiben erhalten, da der Status in der Datenbank gefiltert wird. Die Zahl der Einträge ist deshalb nicht dauerhaft auf zwei festgelegt. Änderungsvorschläge von Partnern werden erst **nach Administratorfreigabe** in der Flutter-API sichtbar.
+
+**Datenschutz:** Auch veröffentlichte Datensätze enthalten derzeit Adressen und Koordinaten. Deshalb nur fiktive Entwicklungsdaten verwenden.

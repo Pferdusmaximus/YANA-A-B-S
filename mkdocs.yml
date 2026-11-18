@@ -37,6 +37,7 @@ nav:
       - API-Referenz: technik/api-referenz.md
       - Betrieb & Sicherheit: technik/betrieb-sicherheit.md
       - Architekturentscheidungen: technik/entscheidungen.md
+      - Änderungsfreigabe: technik/teamportal-aenderungsfreigabe.md
       - Fehlerbehebung: technik/troubleshooting.md
       - Quellen: technik/quellen.md
   - Nutzungshandbuch: nutzung/index.md

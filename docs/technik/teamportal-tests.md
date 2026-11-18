@@ -1,120 +1,93 @@
-# Teamportal: Tests und bestätigte Ergebnisse
+# Verwaltungsportal: Tests und bestätigte Ergebnisse
 
-**Dokumentationsstand: 17.11.2026**
+**Stand: 18. November 2026 · API-, Rollen-, Datenbank- und Freigabefunktionstests dokumentiert**
 
-Die Dokumentation trennt **Syntax-/Importtests**, **HTTP-Tests mit `TestClient`**, **echte Schreibtests mit gemeinsamer PostgreSQL-Datenbank** und **Browser-Smoke-Tests auf dem VPS**. Ein grüner Syntaxcheck ist keine Sicherheitsprüfung.
+## 1. Testumgebung und wichtige Einschränkung
 
-## 1. Testumgebung
-
-| Umgebung | Pfad auf dem IONOS-VPS | Zweck |
+| Ort | Pfad / System | Aufgabe |
 |---|---|---|
-| Produktiver Code | `~/yana-backend/` | Vom systemd-Dienst `yana-api` genutzt |
-| GitHub-Arbeitskopie | `~/yana-deploy-source/` | Quelle für neue Versionen |
-| Testkopie | `~/yana-portal-test/` | Unabhängiger Python-Code ohne produktiven Dienstneustart |
-| PostgreSQL | `app_db` | **Von Test- und Produktivcode gemeinsam genutzt** |
+| Quellcode | Windows / VS Code / `YANA-A-B-S/services/api` | Entwicklung |
+| GitHub-Arbeitskopie | `~/yana-deploy-source` | Bereitstellung |
+| Testkopie | `~/yana-portal-test` | Lokaler `TestClient` ohne Dienst-Neustart |
+| Produktivcode | `~/yana-backend` | Systemd-Dienst `yana-api` |
+| Datenbank | PostgreSQL `app_db` | **Gemeinsam von Test- und Produktivcode benutzt** |
 
-Die Testkopie verweist für die Konfiguration auf die produktive `.env`. Dadurch sind Authentifizierung und Datenbankzugang realitätsnah, aber **nicht vollständig isoliert**. Der Testbetrieb darf daher keine echten sensiblen Datensätze verändern. Ziel für die Zukunft ist eine separate Test-DB.
+**Kritisch:** Ein TestClient-Schreibtest in `~/yana-portal-test` ändert dieselbe Datenbank, aus der die öffentliche API liest. Daher ausschließlich eindeutig markierte fiktive Testeinträge verwenden, Ausgangswerte notieren, Audit und API kontrollieren und Testwerte wiederherstellen. Perspektivisch eigene Testdatenbank einrichten.
 
-## 2. Syntax und Imports
-
-Auf dem VPS:
+## 2. Syntax und Import
 
 ```bash
 cd ~/yana-portal-test
 source ~/yana-backend/.venv/bin/activate
-python -m py_compile main.py website.py portal.py portal_facilities.py database.py
+python -m py_compile main.py portal.py portal_access.py \
+  portal_facilities.py portal_facilities_create.py \
+  portal_facilities_status.py portal_facility_changes.py
 python -c "from main import app; print('FastAPI-Import erfolgreich')"
 ```
 
-Bei einem frühen Test wurde ausdrücklich bestätigt, dass `database.py` die Funktion `get_connection()` bereitstellt; andernfalls hätte der neue Login-Code nicht importiert werden können. Für die Tests wurden `httpx` und die weiteren [Login-Abhängigkeiten](teamportal-login.md) eingerichtet.
+Das prüft nur Syntax und Importierbarkeit, **keine** vollständige Funktion oder Berechtigung.
 
-## 3. TestClient-Prüfung: öffentliche und geschützte Seiten
+## 3. Rückblick auf bestätigte Tests
+
+| Arbeitspaket | Nachweis / Ergebnis im Projektverlauf |
+|---|---|
+| Login / Logout / CSRF | Admin-Login, geschützte Seiten, Sitzung, Logout und fehlerhafter Token geprüft |
+| Hilfestelle bearbeiten | `FOR UPDATE`, SQL-Update, Audit-Eintrag, Wiederherstellung von Testwerten |
+| Hilfestelle neu anlegen | Zehn Formular-/Sicherheitstests; anschließender Speichertest mit ID, Audit und API erfolgreich |
+| Veröffentlichungsfilter | Nur `published`-IDs in `GET /hilfestellen` gegenüber DB abgeglichen |
+| Statusfreigabe | `submit`, `approve`, `reject`, `unpublish`, unzulässige Übergänge, Audit und API-Verhalten getestet |
+| Partnerrechte | Simulierte Negativtests für fremde Hilfestellen; anschließend Test-Partneraccount mit eigener Zuordnung und Browserlogin |
+| Änderungsvorschläge | Schreibfreie Endpunkttests und End-to-End-Test: Entwurf, Einreichung, Freigabe, Originalwert wiederhergestellt, Audit-Ereignisse |
+| Produktiv-Deployment | Website und Portal nach jeweils relevanten Deployments im Browser geprüft |
+
+Die Tests belegen den Entwicklungsstand **mit fiktiven Datensätzen**, ersetzen aber weder isolierte CI-Tests noch einen unabhängigen Sicherheitstest.
+
+## 4. Relevante HTTP-Negativtests
+
+| Fall | Erwartung |
+|---|---|
+| Geschütztes Portal ohne Anmeldung | Login-Redirect bei GET oder HTTP 401 je nach Route |
+| Ungültiger CSRF-Wert bei POST | HTTP 403 |
+| Partner öffnet fremde Hilfestelle direkt | HTTP 404 |
+| Partner versucht Freigabe / Admin-Prüfseite | HTTP 403 |
+| Partner versucht selbst neue Hilfestelle anzulegen | HTTP 403 |
+| Entwurf direkt ohne Einreichung freigeben | HTTP 409 |
+| Veröffentlichten Datensatz direkt über `/edit` ändern | HTTP 409 |
+| Änderungsantrag mit inzwischen veralteter öffentlicher Basis | HTTP 409 bei Freigabe |
+| Ungültige Eingabe im Erstellungs-/Änderungsformular | HTTP 422 |
+
+## 5. Ende-zu-Ende-Test der Änderungsfreigabe
+
+Der zuletzt ausgeführte `change_requests_e2e_test.py` testete den fiktiven Partner mit einer zugewiesenen, veröffentlichten Test-Hilfestelle. Das gemeldete erfolgreiche Ergebnis umfasst:
+
+1. Partner und Administrator anmelden sowie Rechte prüfen.
+2. Neue Telefonnummer als Entwurf speichern; öffentliche API zeigt weiter die ursprüngliche Nummer.
+3. Zur Prüfung einreichen; die öffentliche API bleibt unverändert.
+4. Als Administrator freigeben; erst jetzt wird die neue Nummer über `/hilfestellen` ausgegeben.
+5. Ursprüngliche Telefonnummer durch einen weiteren genehmigten Änderungsvorschlag wiederherstellen.
+6. Erwartete Audit-Ereignisse prüfen.
+
+Das Skript ist ein **Schreibtest**, darf nicht blind gegen reale Einrichtungen laufen und wird nicht im produktiven Backend benötigt. Die Testskripte können als methodische Nachweise unter `services/api/tests/` im Repository liegen; Installationshilfen und ZIP-Transportpakete sind keine notwendigen Laufzeitbestandteile.
+
+## 6. Wiederholbare schreibfreie Probe
 
 ```python
 from fastapi.testclient import TestClient
 from main import app
 
 with TestClient(app, base_url="https://testserver", follow_redirects=False) as client:
-    for path, expected in {
-        "/": 200,
-        "/health": 200,
-        "/hilfestellen": 200,
-        "/kategorien": 200,
-        "/notfallnummern": 200,
-        "/portal/login": 200,
-        "/portal/dashboard": 303,
-        "/portal/hilfestellen": 303,
-    }.items():
-        response = client.get(path)
-        assert response.status_code == expected, (path, response.status_code)
+    for path in ("/", "/health", "/hilfestellen", "/portal/login"):
+        assert client.get(path).status_code == 200
+    assert client.get("/portal/hilfestellen").status_code == 303
+    assert client.get("/portal/dashboard").status_code == 303
 ```
 
-Die erwarteten HTTP-Statuscodes wurden im Verlauf bestätigt. Die Statuscodes `303` bedeuten hier **gewollte Weiterleitung zum Login**, nicht Funktionsfehler. Für den TestClient mit `Secure`-Cookie wird `https://testserver` verwendet.
+Für `Secure`-Sessions verwendet der `TestClient` die HTTPS-Basisadresse. Unter aktuellen FastAPI-Versionen kann eine reine Iteration über `app.routes` eingebundene Router übersehen; ein tatsächlicher HTTP-Test ist die zuverlässigere Prüfung.
 
-## 4. Authentifizierung und CSRF
+## 7. Weitere Testziele
 
-Für den ersten echten Admin-Login wurde `login_test_local.py` unter `~/yana-portal-test/` angelegt. Es liest die E-Mail per `input()` und das Passwort per `getpass()` ein, extrahiert den CSRF-Wert aus dem Login-HTML und führt Login → Dashboard → Logout → erneut Dashboard aus. Keine Passwörter werden im Code gespeichert.
-
-| Test | Beobachtetes Ergebnis |
-|---|---|
-| Login-Seite | 200 |
-| Gültiger Admin-Login | 303 |
-| Dashboard mit Session | 200 |
-| Logout | 303 |
-| Dashboard nach Logout | 303 |
-| Dashboard ohne Login | 303 |
-| Gefälschtes Login-CSRF | 403 |
-| Gefälschtes Logout-CSRF | 403 |
-| Bestehende `/hilfestellen`-API | 200 |
-
-Ein zusätzlicher Aufruf von `curl` mit `Origin: http://localhost:54321` wurde für die CORS-Konfiguration der Flutter-Web-Entwicklung vorgesehen. Der Server wurde mit CORS neu gestartet und die Browser-Nutzung als behoben gemeldet; aktuelle Browser-Regressionschecks sind bei späteren Änderungen erneut nötig.
-
-## 5. Hilfestellenübersicht
-
-Das Skript `facility_test_local.py` kontrollierte ohne Login (303), mit Admin (200), Tabellenzeilen gegen `SELECT COUNT(*) FROM hilfestelle` und die weiterhin erfolgreiche öffentliche `/hilfestellen`-API. Bei der damaligen Testdatenbasis waren es zwei Einrichtungen; die Liste ist inzwischen auf 100 Zeilen begrenzt, deshalb berücksichtigt der Test `min(count, 100)`.
-
-## 6. Bearbeiten, Datenbank und Audit
-
-Das lokale Skript `facility_edit_test_local.py` wurde als Datei angelegt und über `python facility_edit_test_local.py` gestartet. Beim Test wurde eine **ausdrücklich fiktive** Einrichtung ausgewählt, temporär eine Test-Telefonnummer gespeichert, die Datenbank erneut gelesen, der Audit-Eintrag überprüft und die ursprüngliche Telefonnummer wiederhergestellt.
-
-| Prüfschritt | Erwartet und im Verlauf als erfolgreich bestätigt |
-|---|---|
-| Kein Login | HTTP 303 |
-| Admin-Login | HTTP 303 |
-| Bearbeitungsformular | HTTP 200 |
-| Falsches CSRF | HTTP 403 |
-| Ungültiger Name | HTTP 422 |
-| Gültiger Speichervorgang | HTTP 303 |
-| Datenbankprüfung | Testnummer vorhanden |
-| Audit-Prüfung | Protokolleintrag vorhanden |
-| Rücksetzen | HTTP 303, alter Wert wieder vorhanden |
-| Logout | HTTP 303 |
-
-**Wichtig:** Eine Rücksetzung nach einem Test erzeugt üblicherweise einen **zweiten** Audit-Eintrag. Ein `try/finally` im Testskript reduziert das Risiko, garantiert aber bei Rechnerabsturz oder Abbruch **keine** Wiederherstellung. Bei Unklarheiten unmittelbar den Datensatz in pgAdmin kontrollieren.
-
-**Prüfung in pgAdmin (ohne Audit-Inhalte auszugeben):**
-
-```sql
-SELECT facility_id, name, phone, email, opening_hours
-FROM public.hilfestelle
-WHERE facility_id = 1;
-
-SELECT audit_id, facility_id, account_id, changed_at
-FROM public.portal_facility_audit
-ORDER BY changed_at DESC LIMIT 10;
-```
-
-## 7. Produktive Browserprüfung
-
-Nach jedem erfolgreichen Test wurden die betroffenen Dateien mit Backup in `~/yana-backend/` übernommen, per `python -m py_compile`/Import/HTTP geprüft und `sudo systemctl restart yana-api` ausgeführt. Die Anmeldung, Hilfestellenübersicht und **das Bearbeiten/Speichern samt Rücksetzung** wurden anschließend auch im Browser bestätigt.
-
-## 8. Verbleibende Testlücken
-
-- Separate Testdatenbank; automatisierte DB-Rollbacks und isolierte Integrationstests.
-- Negativtests für fremde `facility`-Accounts, inaktive Accounts, abgelaufene Sessions und alle Rollen nach jeder neuen Route.
-- Automatisierter Test für Nginx-429-Rate-Limit; Cookie-/CSRF-Prüfung im echten Browser.
-- Fuzz-/Sicherheitstests, HTML-Formularvalidierung, Parallelbearbeitung und Fehlerfälle bei DB-Ausfall.
-- GitHub Actions/CI für Backend und Flutter; Versions-/Migrationsprüfung.
-- Fachlich verifizierte Testdaten und Datenschutz-/Lasttests vor echtem Einsatz.
-
-Zum Nacharbeiten von Fehlern siehe [Portal-Fehlerprotokoll](teamportal-troubleshooting.md).
+- Separate Testdatenbank und automatisierte Test-Isolation/Transaktions-Rollbacks.
+- Weitere Parallelitäts-/Race-Condition-Tests bei mehreren zugeordneten Partnern.
+- Tests für abgelaufene Sessions, deaktivierte Accounts, Rate-Limiting und manipulierbare Formularwerte.
+- Datenschutz-/Freigabetests für sensible Standortfelder vor Realbetrieb.
+- Reproduzierbare CI-Pipeline und versionierte DB-Migrationen.

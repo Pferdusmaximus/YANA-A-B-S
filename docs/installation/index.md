@@ -1,6 +1,6 @@
 # Installation & Quick Start
 
-Diese Dokumentation beschreibt die schrittweise Einrichtung von Server, Datenbank, API, Website, Teamportal und Flutter-Entwicklungsumgebung für **YANA – You Are Not Alone**. Die ursprüngliche Serverinstallation wurde im Oktober 2026 abgeschlossen; **Stand der ergänzten Website- und Portal-Implementierung ist der 17. November 2026**.
+Diese Dokumentation beschreibt die schrittweise Einrichtung von Server, Datenbank, API, Website, Teamportal und Flutter-Entwicklungsumgebung für **YANA – You Are Not Alone**. Die ursprüngliche Serverinstallation wurde im Oktober 2026 abgeschlossen; **Stand der ergänzten Website- und Portal-Implementierung ist der 18. November 2026**.
 
 ## Zielsystem
 

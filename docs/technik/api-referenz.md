@@ -1,81 +1,87 @@
-# HTTP-Schnittstellen: öffentliche API und Webportal
+# HTTP-Schnittstellen: öffentliche API und Verwaltungsportal
 
-**Stand: 17. November 2026.** FastAPI betreibt auf dem IONOS-VPS sowohl die öffentliche JSON-API für Flutter als auch die HTML-Website und das geschützte Teamportal. Nginx stellt HTTPS bereit. Die Swagger-Oberfläche der öffentlichen API ist unter `/docs` verfügbar; Portal-Routen werden in der OpenAPI-Sicht ausgeblendet.
+**Stand: 18. November 2026 · Freigabe- und Partnerworkflow produktiv bereitgestellt**
 
 ## Zugriffswege
 
 | Umgebung | Adresse | Zweck |
 |---|---|---|
-| Uvicorn auf dem VPS | `http://127.0.0.1:8000` | FastAPI intern |
-| Nginx intern | `http://127.0.0.1:8080` | Lokaler Proxy-Test |
-| Nginx öffentlich | `https://SERVER_IP` | Website, Portal und Flutter-API über TLS |
+| Interne FastAPI | `http://127.0.0.1:8000` | Dienst auf dem VPS |
+| Interner Nginx-Test | `http://127.0.0.1:8080` | Lokaler Reverse Proxy |
+| Öffentlicher HTTPS-Zugang | `https://SERVER_IP` | Website, API und Portal |
 
-`SERVER_IP` ist ein Platzhalter; niemals DB-Port `5432` und Uvicorn-Port `8000` ungeschützt veröffentlichen.
+`SERVER_IP` bezeichnet die tatsächlich konfigurierte Serveradresse. Datenbankport 5432 und internen FastAPI-Port 8000 nicht offen ins Internet stellen.
 
 ## 1. Öffentliche Endpunkte
 
-| Methode | Pfad | Antwort | Status |
-|---|---|---|---|
-| `GET` | `/` | HTML-Landingpage von Jinja2 | Produktiv im Browser getestet |
-| `GET` | `/static/css/style.css` | CSS-Datei | Produktiv geladen |
-| `GET` | `/health` | `{"status":"ok"}` | API-Smoke-Test erfolgreich |
-| `GET` | `/hilfestellen` | JSON-Liste aus `hilfestelle` | GET-Test erfolgreich; zwei fiktive Einträge |
-| `GET` | `/kategorien` | JSON-Liste aus `kategorie` | Zwei fiktive Kategorien |
-| `GET` | `/notfallnummern` | JSON-Liste aus `notfallnummer` | GET-Test erfolgreich; aktuell `[]` |
-| `GET` | `/docs` | Swagger UI für die API | Vorhanden; Freigabe vor echtem Betrieb prüfen |
+| Methode | Pfad | Antwort / Bedeutung |
+|---|---|---|
+| `GET` | `/` | HTML-Website |
+| `GET` | `/health` | HTTP-Status und JSON-Health-Antwort |
+| `GET` | `/hilfestellen` | Nur Hilfestellen mit `publication_status = 'published'` |
+| `GET` | `/kategorien` | Liste verfügbarer Kategorien |
+| `GET` | `/notfallnummern` | Liste der Notfallnummern; in bisherigen Tests leer |
+| `GET` | `/static/css/style.css` | Website-/Portal-CSS |
+| `GET` | `/docs` | FastAPI-Swagger-Ansicht der sichtbaren API-Routen |
 
-### Änderung gegenüber dem ursprünglichen Backend
+Einträge in `draft` oder `pending_review` werden bei `GET /hilfestellen` **nicht** ausgegeben. Für veröffentlichte Einträge gehören Adresse und Koordinaten weiterhin zum öffentlichen Datensatz; dies ist für echte Schutzstandorte **nicht geeignet**. Die Portal-Routen sind in Swagger ausgeblendet (`include_in_schema=False`), aber dadurch nicht sicherheitsgeschützt.
 
-Früher antwortete `GET /` mit einer JSON-Willkommensmeldung. **Seit der Website-Integration liefert `/` HTML.** Die übrigen GET-API-Endpunkte wurden beim Website-Deployment weiter getestet und beibehalten.
+## 2. Anmeldung und Portal
 
-`GET /health` prüft aktuell primär die API-Erreichbarkeit, nicht die vollständige Datenbankgesundheit.
+| Methode | Pfad | Aktion |
+|---|---|---|
+| `GET` / `POST` | `/portal/login` | Loginformular / Anmeldung |
+| `GET` | `/portal/dashboard` | Gemeinsames Dashboard (Admin/Partner) |
+| `POST` | `/portal/logout` | Session beenden, CSRF |
+| `GET` | `/portal/hilfestellen` | Rollenabhängige Hilfestellenübersicht |
 
-Beispielhafter Ausschnitt einer **fiktiven** Hilfestelle:
+Partner sehen im selben Portal nur zugewiesene Einrichtungen. Fremde IDs sind auch über direkte URLs nicht zugänglich. Für POST-Aktionen werden Login, Rolle, Zuordnung, CSRF und Eingaben geprüft.
 
-```json
-{
-  "facility_id": 1,
-  "name": "YANA Test-Beratungsstelle",
-  "facility_type": "Beratungsstelle",
-  "address": "Musterstraße 1, Regensburg",
-  "latitude": 49.0134,
-  "longitude": 12.1016,
-  "phone": null,
-  "email": null,
-  "opening_hours": "Mo-Fr 09:00-17:00 (Testdaten)",
-  "capacity": 10,
-  "category_id": 1
-}
-```
+## 3. Neue Einträge und Statusfreigabe
 
-Der reale Inhalt kann sich durch Bearbeitungen im Teamportal ändern. Nicht davon ausgehen, dass die Test-Telefonnummer noch gespeichert ist; der Speichertest hat sie wiederhergestellt.
+| Methode | Pfad | Erlaubter Nutzer / Funktion |
+|---|---|---|
+| `GET` / `POST` | `/portal/hilfestellen/neu` | Nur Admin; fiktiven Entwurf anlegen |
+| `GET` / `POST` | `/portal/hilfestellen/{id}/edit` | Admin / zugeordneter Partner; nur bei `draft` |
+| `POST` | `/portal/hilfestellen/{id}/status/submit` | Admin / zugeordneter Partner; Entwurf einreichen |
+| `POST` | `/portal/hilfestellen/{id}/status/approve` | Nur Admin; `pending_review → published` |
+| `POST` | `/portal/hilfestellen/{id}/status/reject` | Nur Admin; `pending_review → draft` |
+| `POST` | `/portal/hilfestellen/{id}/status/unpublish` | Nur Admin; `published → draft` |
 
-## 2. Geschützte Teamportal-Routen
+Die Statusaktionen validieren Übergänge und protokollieren Entscheidungen. Neue Einträge beginnen als `draft` und erscheinen erst nach Freigabe öffentlich.
 
-| Methode | Pfad | Antwort | Voraussetzung |
-|---|---|---|---|
-| `GET` | `/portal/login` | HTML-Formular mit CSRF | Öffentlich |
-| `POST` | `/portal/login` | Bei Erfolg 303 → Dashboard | CSRF, gültiger Account und Passwort |
-| `GET` | `/portal/dashboard` | HTML-Dashboard | Gültige Session |
-| `POST` | `/portal/logout` | Session löschen, HTTP 303 | CSRF / bestehende Session |
-| `GET` | `/portal/hilfestellen` | HTML-Tabelle | `admin` oder `team` |
-| `GET` | `/portal/hilfestellen/{facility_id}/edit` | HTML-Formular | `admin` oder `team` |
-| `POST` | `/portal/hilfestellen/{facility_id}/edit` | UPDATE + Audit, HTTP 303 bei Erfolg | `admin` oder `team`, CSRF, valide Eingaben |
+## 4. Änderungsvorschläge für veröffentlichte Einträge
 
-Anonymes GET auf eine geschützte Seite führt üblicherweise zu **HTTP 303** in Richtung `/portal/login`. Ungültiges CSRF wird mit **403**, ein ungültiges Bearbeitungsformular z. B. mit **422** beantwortet. Ein Account mit Rolle `facility` erhält für die allgemeine Hilfestellenverwaltung **403**.
+| Methode | Pfad | Beschreibung |
+|---|---|---|
+| `GET` | `/portal/hilfestellen/{id}/aenderung` | Formular für zugeordnete veröffentlichte Einrichtung |
+| `POST` | `/portal/hilfestellen/{id}/aenderung` | `mode=save` oder `mode=submit`; getrennt speichern |
+| `POST` | `/portal/hilfestellen/{id}/aenderung/discard` | Eigenen aktiven Entwurf verwerfen |
+| `GET` | `/portal/aenderungen` | Admin-Warteschlange offener Anträge |
+| `POST` | `/portal/aenderungen/{change_id}/approve` | Admin übernimmt gültige Änderung und protokolliert sie |
+| `POST` | `/portal/aenderungen/{change_id}/reject` | Admin lehnt Antrag ab; veröffentlichten Datensatz nicht verändern |
 
-Das Portal rendert HTML und verwendet Sessions/Cookies. Die Flutter-GET-API ist davon getrennt und benötigt derzeit **keinen** Portal-Login.
+Nur die vier Kontaktfelder `name`, `phone`, `email`, `opening_hours` gehören zum Änderungsantrag. Die Transaktion prüft, dass die ursprünglich veröffentlichten Werte zwischenzeitlich nicht verändert wurden.
 
-## 3. Flutter Web: CORS
+## 5. HTTP-Verhalten
 
-Für die lokale Flutter-Web-Entwicklung wurde in `main.py` `CORSMiddleware` ergänzt. Sie erlaubt GET-Zugriffe von `http://localhost` bzw. `http://127.0.0.1` mit wechselnden lokalen Ports; `allow_credentials=False`. Das löst Browser-Origin-Probleme bei lokalen Flutter-Chrome-Tests. Es ist **keine** Freigabe für beliebige Websites und **kein** Ersatz für Backend-Berechtigungen.
+| Status | Typischer Fall |
+|---|---|
+| `200` | Webseite oder erlaubter GET-Endpunkt |
+| `303` | Weiterleitung nach Formularaktion oder zum Login |
+| `401` | Fehlende Anmeldung auf geschützter API-/POST-Route |
+| `403` | Ungültiger CSRF-Token oder unzulässige Rolle |
+| `404` | Nicht vorhandene bzw. für Partner nicht zugängliche Einrichtung |
+| `409` | Konflikt mit aktuellem Veröffentlichungs- oder Antragsstatus |
+| `422` | Ungültige Formulardaten oder Testdateneinschränkung |
 
-```python
-# Kern der Entwicklungsregel (Auszug)
-allow_origin_regex = r"^http://(localhost|127\.0\.0\.1)(:\d+)?$"
-```
+Die konkreten Codes hängen von der Route und der Art des Aufrufs ab. Die Browseransicht nutzt Formulare, Cookies und Redirects, die Flutter-API ist davon getrennt.
 
-## 4. Smoke-Tests
+## 6. Flutter Web und CORS
+
+`main.py` erlaubt für die lokale Flutter-Web-Entwicklung GET-Anfragen von `http://localhost` bzw. `http://127.0.0.1` mit wechselnden Ports. Die CORS-Regel ist **keine** Authentifizierung und erlaubt keinen Portalzugang.
+
+## 7. Smoke-Tests
 
 ```bash
 curl -i https://SERVER_IP/
@@ -83,16 +89,10 @@ curl -i https://SERVER_IP/health
 curl -i https://SERVER_IP/hilfestellen
 curl -i https://SERVER_IP/kategorien
 curl -i https://SERVER_IP/notfallnummern
-curl -i -H 'Origin: http://localhost:54321' https://SERVER_IP/hilfestellen
 ```
 
-`curl` sendet ohne Browser-Session kein gültiges Portal-Cookie; daher `/portal/dashboard` als anonymer Aufruf typischerweise mit Weiterleitung. Für echte Login-Tests TestClient und Browser verwenden, siehe [Portal-Tests](teamportal-tests.md).
+Authentifizierte Portalabläufe testet man über Browser oder FastAPI `TestClient` mit HTTPS-Basisadresse und gültiger Session. Informationen zum verifizierten Teststand: [Portal-Tests](teamportal-tests.md).
 
-## 5. Noch nicht implementiert
+## 8. Noch nicht umgesetzt
 
-- `POST /portal/hilfestellen/neu` und ein Formular zum **Anlegen** neuer Hilfestellen.
-- Löschen, Deaktivieren, Veröffentlichungsfreigabe und Organisationszuordnung.
-- Chat-/Nachrichten-API, echte anonyme Erstberatung, Standortsuche und Push.
-- Vollständiges Rollen-/Datenschutzkonzept für reale Schutzstandorte.
-
-Mehr unter [Hilfestellenverwaltung](teamportal-hilfestellen.md), [API-Datenzugriff in Flutter](flutter-api-anbindung.md) und [Wiedereinstieg](weiterarbeit.md).
+Es gibt noch keine allgemeine Verwaltungsseite für Accounts/Zuweisungen, keine öffentliche Selbstregistrierung, keinen Passwort-Reset bzw. MFA und keinen vollständigen Datenschutzfilter für reale Schutzstandorte. Chat-/Beratungs-API, Standortsuche, Push sowie die veröffentlichte App-Version gehören ebenfalls nicht zu diesem Stand.

@@ -1,6 +1,6 @@
 # Öffentliche Website: Landingpage und App-Informationen
 
-**Dokumentationsstand: 17. November 2026 · Status: öffentlich erreichbar und im Browser geprüft**
+**Dokumentationsstand: 18. November 2026 · Status: öffentlich erreichbar und im Browser geprüft**
 
 ## Zweck und Abgrenzung
 
@@ -31,7 +31,7 @@ flowchart LR
 
 ## Funktionalität: Ist und geplant
 
-| Funktion | Stand 17.11.2026 |
+| Funktion | Stand 18.11.2026 |
 |---|---|
 | Informationsseite, Navigation, responsive Grundgestaltung | **Umgesetzt und öffentlich aufgerufen** |
 | Öffentliche HTTPS-Auslieferung über Nginx/FastAPI | **Umgesetzt** |
