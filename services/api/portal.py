@@ -99,6 +99,7 @@ def session_account(request: Request):
                 WHERE s.session_hash = %s
                   AND s.expires_at > NOW()
                   AND a.is_active = TRUE
+                  AND a.role IN ('admin', 'partner')
                 """,
                 (session_hash,)
             )
@@ -144,6 +145,7 @@ def login(
                 SELECT
                     account_id,
                     password_hash,
+                    role,
                     is_active,
                     failed_attempts,
                     locked_until
@@ -161,6 +163,7 @@ def login(
 
             elif (
                 account["is_active"]
+                and account["role"] in ("admin", "partner")
                 and (
                     account["locked_until"] is None
                     or account["locked_until"]

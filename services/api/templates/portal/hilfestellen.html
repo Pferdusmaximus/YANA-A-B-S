@@ -21,12 +21,14 @@ YANA – Hilfestellenverwaltung
     </p>
 
     <div style="margin: 20px 0 30px;">
-        <a
-            href="/portal/hilfestellen/neu"
-            class="new-facility-button"
-        >
-            + Neue Hilfestelle
-        </a>
+        {% if account.role == "admin" %}
+            <a
+                href="/portal/hilfestellen/neu"
+                class="new-facility-button"
+            >
+                + Neue Hilfestelle
+            </a>
+        {% endif %}
     </div>
 
     <div class="facility-overview">

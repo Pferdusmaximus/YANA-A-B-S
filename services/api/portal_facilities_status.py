@@ -4,7 +4,8 @@ from psycopg.rows import dict_row
 from psycopg.types.json import Jsonb
 
 from database import get_connection
-from portal import session_account, check_csrf
+from portal import check_csrf
+from portal_access import require_account
 
 
 router = APIRouter(
@@ -21,7 +22,7 @@ ACTIONS = {
     "submit": (
         "draft",
         "pending_review",
-        ("admin", "team"),
+        ("admin", "partner"),
         "submitted",
     ),
     "approve": (
@@ -58,14 +59,8 @@ def change_facility_status(
     ),
 ):
 
-    # 1. Anmeldung überprüfen
-    account = session_account(request)
-
-    if account is None:
-        raise HTTPException(
-            status_code=401,
-            detail="Anmeldung erforderlich"
-        )
+    # 1. Anmeldung und zulässige Rolle überprüfen
+    account = require_account(request)
 
     # 2. Aktion überprüfen
     rule = ACTIONS.get(action)
@@ -100,11 +95,20 @@ def change_facility_status(
                     facility_id,
                     name,
                     publication_status
-                FROM public.hilfestelle
-                WHERE facility_id = %s
-                FOR UPDATE
+                FROM public.hilfestelle AS h
+                WHERE h.facility_id = %s
+                  AND (
+                      %s = 'admin'
+                      OR EXISTS (
+                          SELECT 1
+                          FROM public.portal_facility_assignment AS pfa
+                          WHERE pfa.account_id = %s
+                            AND pfa.facility_id = h.facility_id
+                      )
+                  )
+                FOR UPDATE OF h
                 """,
-                (facility_id,)
+                (facility_id, account["role"], account["account_id"])
             )
 
             facility = cur.fetchone()

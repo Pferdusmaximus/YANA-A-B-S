@@ -10,8 +10,8 @@ from psycopg.rows import dict_row
 from psycopg.types.json import Jsonb
 
 from database import get_connection
-from portal import check_csrf, csrf_token
-from portal_facilities import get_staff_account
+from portal import check_csrf, csrf_token, session_account
+from portal_access import require_admin
 
 
 BASE_DIR = Path(__file__).resolve().parent
@@ -196,14 +196,11 @@ def validate(values, categories):
     response_class=HTMLResponse
 )
 def new_facility_page(request: Request):
-    account = get_staff_account(request)
+    if session_account(request) is None:
+        return RedirectResponse("/portal/login", status_code=303)
 
-    if account is None:
-        return RedirectResponse(
-            "/portal/login",
-            status_code=303
-        )
-
+    # Nur das YANA-Team darf neue Einrichtungen anlegen.
+    require_admin(request)
     return render_form(request)
 
 
@@ -225,14 +222,7 @@ def create_facility(
         ..., alias="csrf_token"
     )
 ):
-    account = get_staff_account(request)
-
-    if account is None:
-        raise HTTPException(
-            status_code=401,
-            detail="Anmeldung erforderlich"
-        )
-
+    account = require_admin(request)
     check_csrf(request, submitted_csrf)
 
     values = {

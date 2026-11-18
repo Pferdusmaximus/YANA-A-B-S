@@ -36,18 +36,13 @@ router = APIRouter(
 )
 
 
-# Nur Teammitglieder und Administratoren
-# dürfen Hilfestellen verwalten.
+# Bestehender Name aus Kompatibilitaetsgruenden beibehalten.
+# Admins und Partner duerfen das Portal benutzen; einzelne
+# Einrichtungen werden zusaetzlich per SQL gefiltert.
 def get_staff_account(request: Request):
     account = session_account(request)
-
-    if account is not None:
-        if account["role"] not in ("admin", "team"):
-            raise HTTPException(
-                status_code=403,
-                detail="Keine Berechtigung",
-            )
-
+    if account is not None and account["role"] not in ("admin", "partner"):
+        raise HTTPException(status_code=403, detail="Keine Berechtigung")
     return account
 
 
@@ -109,22 +104,32 @@ def list_facilities(request: Request):
                 FROM public.hilfestelle AS h
                 LEFT JOIN public.kategorie AS k
                     ON h.category_id = k.category_id
+                WHERE (
+                    %s = 'admin'
+                    OR EXISTS (
+                        SELECT 1
+                        FROM public.portal_facility_assignment AS pfa
+                        WHERE pfa.account_id = %s
+                          AND pfa.facility_id = h.facility_id
+                    )
+                )
                 ORDER BY h.name ASC
                 LIMIT 100
-                """
+                """,
+                (account["role"], account["account_id"]),
             )
 
             facilities = cur.fetchall()
 
     return templates.TemplateResponse(
-    request=request,
-    name="portal/hilfestellen.html",
-    context={
-        "account": account,
-        "facilities": facilities,
-        "csrf_token": csrf_token(request),
-    },
-    headers={"Cache-Control": "no-store"},
+        request=request,
+        name="portal/hilfestellen.html",
+        context={
+            "account": account,
+            "facilities": facilities,
+            "csrf_token": csrf_token(request),
+        },
+        headers={"Cache-Control": "no-store"},
     )
 
 
@@ -161,10 +166,19 @@ def edit_facility_page(
                     email,
                     opening_hours,
                     publication_status
-                FROM public.hilfestelle
-                WHERE facility_id = %s
+                FROM public.hilfestelle AS h
+                WHERE h.facility_id = %s
+                  AND (
+                      %s = 'admin'
+                      OR EXISTS (
+                          SELECT 1
+                          FROM public.portal_facility_assignment AS pfa
+                          WHERE pfa.account_id = %s
+                            AND pfa.facility_id = h.facility_id
+                      )
+                  )
                 """,
-                (facility_id,),
+                (facility_id, account["role"], account["account_id"]),
             )
 
             facility = cur.fetchone()
@@ -274,11 +288,20 @@ def save_facility(
                     email,
                     opening_hours,
                     publication_status
-                FROM public.hilfestelle
-                WHERE facility_id = %s
-                FOR UPDATE
+                FROM public.hilfestelle AS h
+                WHERE h.facility_id = %s
+                  AND (
+                      %s = 'admin'
+                      OR EXISTS (
+                          SELECT 1
+                          FROM public.portal_facility_assignment AS pfa
+                          WHERE pfa.account_id = %s
+                            AND pfa.facility_id = h.facility_id
+                      )
+                  )
+                FOR UPDATE OF h
                 """,
-                (facility_id,),
+                (facility_id, account["role"], account["account_id"]),
             )
 
             facility = cur.fetchone()
