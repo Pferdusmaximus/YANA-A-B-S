@@ -521,3 +521,65 @@ footer {
     background: #edf0f2;
     color: #5d6973;
 }
+
+
+/* ---------------------------------------
+   Teamportal - Statusaktionen
+--------------------------------------- */
+
+.facility-actions {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+    min-width: 150px;
+}
+
+.facility-actions form {
+    margin: 0;
+}
+
+.action-button {
+    border: none;
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-family: inherit;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.action-submit {
+    background: #e8eef8;
+    color: #28549a;
+}
+
+.action-approve {
+    background: #e5f4ea;
+    color: #226b35;
+}
+
+.action-reject {
+    background: #fff2d9;
+    color: #946200;
+}
+
+.action-unpublish {
+    background: #fff0f0;
+    color: #a32626;
+}
+
+.action-button:hover {
+    filter: brightness(0.94);
+}
+
+.action-button:focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 3px;
+}
+
+.action-info {
+    font-size: 12px;
+    color: var(--muted);
+}
+

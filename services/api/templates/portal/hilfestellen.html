@@ -15,21 +15,19 @@ YANA – Hilfestellenverwaltung
 
     <h1>Hilfestellenverwaltung</h1>
 
-    <div style="margin: 20px 0 30px;">
-
-        <a href="/portal/hilfestellen/neu"
-        class="new-facility-button">
-
-            + Neue Hilfestelle
-
-        </a>
-
-    </div>
-
     <p>
-        Hier verwaltest du die Hilfestellen
-        aus der YANA-Datenbank.
+        Hier kannst du Hilfestellen verwalten
+        und ihren Veröffentlichungsstatus ändern.
     </p>
+
+    <div style="margin: 20px 0 30px;">
+        <a
+            href="/portal/hilfestellen/neu"
+            class="new-facility-button"
+        >
+            + Neue Hilfestelle
+        </a>
+    </div>
 
     <div class="facility-overview">
 
@@ -49,68 +47,184 @@ YANA – Hilfestellenverwaltung
                         <th>ID</th>
                         <th>Name</th>
                         <th>Typ</th>
-                        <th>Status</th>
                         <th>Kategorie</th>
-                        <th>Adresse</th>
+                        <th>Status</th>
                         <th>Telefon</th>
-                        <th>Aktion</th>
+                        <th>Aktionen</th>
                     </tr>
                 </thead>
 
                 <tbody>
 
-                    {% for facility in facilities %}
+                {% for facility in facilities %}
 
-                    <tr>
-                        <td>{{ facility.facility_id }}</td>
+                <tr>
 
-                        <td>
-                            <strong>
-                                {{ facility.name }}
-                            </strong>
-                        </td>
+                    <td>
+                        {{ facility.facility_id }}
+                    </td>
 
-                        <td>{{ facility.facility_type }}</td>
+                    <td>
+                        <strong>
+                            {{ facility.name }}
+                        </strong>
+                    </td>
 
+                    <td>
+                        {{ facility.facility_type }}
+                    </td>
 
-                        <td>
-                            {% if facility.publication_status == "published" %}
-                                <span class="status-published">
-                                    Veröffentlicht
-                                </span>
+                    <td>
+                        {{ facility.category_name or "–" }}
+                    </td>
+
+                    <td>
+
+                        {% if facility.publication_status == "published" %}
+
+                            <span class="status-published">
+                                Veröffentlicht
+                            </span>
+
+                        {% elif facility.publication_status == "pending_review" %}
+
+                            <span class="status-review">
+                                In Prüfung
+                            </span>
+
+                        {% else %}
+
+                            <span class="status-draft">
+                                Entwurf
+                            </span>
+
+                        {% endif %}
+
+                    </td>
+
+                    <td>
+                        {{ facility.phone or "–" }}
+                    </td>
+
+                    <td>
+
+                        <div class="facility-actions">
+
+                            {% if facility.publication_status == "draft" %}
+
+                                <a
+                                    href="/portal/hilfestellen/{{ facility.facility_id }}/edit"
+                                    class="facility-edit-link"
+                                >
+                                    Bearbeiten
+                                </a>
+
+                                <form
+                                    method="post"
+                                    action="/portal/hilfestellen/{{ facility.facility_id }}/status/submit"
+                                >
+                                    <input
+                                        type="hidden"
+                                        name="csrf_token"
+                                        value="{{ csrf_token }}"
+                                    >
+
+                                    <button
+                                        type="submit"
+                                        class="action-button action-submit"
+                                    >
+                                        Zur Prüfung einreichen
+                                    </button>
+                                </form>
 
                             {% elif facility.publication_status == "pending_review" %}
-                                <span class="status-review">
-                                    In Prüfung
-                                </span>
 
-                            {% else %}
-                                <span class="status-draft">
-                                    Entwurf
-                                </span>
+                                {% if account.role == "admin" %}
+
+                                    <form
+                                        method="post"
+                                        action="/portal/hilfestellen/{{ facility.facility_id }}/status/approve"
+                                    >
+                                        <input
+                                            type="hidden"
+                                            name="csrf_token"
+                                            value="{{ csrf_token }}"
+                                        >
+
+                                        <button
+                                            type="submit"
+                                            class="action-button action-approve"
+                                        >
+                                            Freigeben
+                                        </button>
+                                    </form>
+
+                                    <form
+                                        method="post"
+                                        action="/portal/hilfestellen/{{ facility.facility_id }}/status/reject"
+                                    >
+                                        <input
+                                            type="hidden"
+                                            name="csrf_token"
+                                            value="{{ csrf_token }}"
+                                        >
+
+                                        <button
+                                            type="submit"
+                                            class="action-button action-reject"
+                                        >
+                                            Zurückweisen
+                                        </button>
+                                    </form>
+
+                                {% else %}
+
+                                    <span class="action-info">
+                                        Wartet auf Freigabe
+                                    </span>
+
+                                {% endif %}
+
+                            {% elif facility.publication_status == "published" %}
+
+                                {% if account.role == "admin" %}
+
+                                    <form
+                                        method="post"
+                                        action="/portal/hilfestellen/{{ facility.facility_id }}/status/unpublish"
+                                        onsubmit="return confirm('Veröffentlichung wirklich zurücknehmen?');"
+                                    >
+                                        <input
+                                            type="hidden"
+                                            name="csrf_token"
+                                            value="{{ csrf_token }}"
+                                        >
+
+                                        <button
+                                            type="submit"
+                                            class="action-button action-unpublish"
+                                        >
+                                            Veröffentlichung zurücknehmen
+                                        </button>
+                                    </form>
+
+                                {% else %}
+
+                                    <span class="action-info">
+                                        Veröffentlicht
+                                    </span>
+
+                                {% endif %}
+
                             {% endif %}
-                        </td>
 
+                        </div>
 
-                        <td>
-                            {{ facility.category_name or "–" }}
-                        </td>
+                    </td>
 
-                        <td>{{ facility.address }}</td>
+                </tr>
 
-                        <td>{{ facility.phone or "–" }}</td>
-
-                        <td>
-                            <a
-                                href="/portal/hilfestellen/{{ facility.facility_id }}/edit"
-                                class="facility-edit-link"
-                            >
-                                Bearbeiten
-                            </a>
-                        </td>
-                    </tr>
-
-                    {% endfor %}
+                {% endfor %}
 
                 </tbody>
 
@@ -121,8 +235,7 @@ YANA – Hilfestellenverwaltung
         {% else %}
 
         <p>
-            Es sind noch keine Hilfestellen
-            vorhanden.
+            Es sind noch keine Hilfestellen vorhanden.
         </p>
 
         {% endif %}

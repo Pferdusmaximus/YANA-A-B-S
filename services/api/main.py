@@ -1,7 +1,7 @@
 import os
 
 from portal_facilities import router as facilities_router
-
+from portal_facilities_status import router as status_router
 from portal_facilities_create import router as facilities_create_router
 
 from dotenv import load_dotenv
@@ -28,6 +28,7 @@ app = FastAPI(
 
 app.include_router(facilities_router)
 app.include_router(facilities_create_router)
+app.include_router(status_router)
 
 load_dotenv()
 

@@ -117,13 +117,14 @@ def list_facilities(request: Request):
             facilities = cur.fetchall()
 
     return templates.TemplateResponse(
-        request=request,
-        name="portal/hilfestellen.html",
-        context={
-            "account": account,
-            "facilities": facilities,
-        },
-        headers={"Cache-Control": "no-store"},
+    request=request,
+    name="portal/hilfestellen.html",
+    context={
+        "account": account,
+        "facilities": facilities,
+        "csrf_token": csrf_token(request),
+    },
+    headers={"Cache-Control": "no-store"},
     )
 
 
@@ -158,7 +159,8 @@ def edit_facility_page(
                     name,
                     phone,
                     email,
-                    opening_hours
+                    opening_hours,
+                    publication_status
                 FROM public.hilfestelle
                 WHERE facility_id = %s
                 """,
@@ -171,6 +173,17 @@ def edit_facility_page(
         raise HTTPException(
             status_code=404,
             detail="Hilfestelle nicht gefunden",
+        )
+
+    if facility["publication_status"] != "draft":
+        raise HTTPException(
+            status_code=409,
+            detail=(
+                "Nur Entwürfe dürfen bearbeitet werden. "
+                "Die Hilfestelle muss gegebenenfalls "
+                "zuerst zurückgewiesen oder die "
+                "Veröffentlichung zurückgenommen werden."
+            ),
         )
 
     return edit_template(
@@ -259,7 +272,8 @@ def save_facility(
                     name,
                     phone,
                     email,
-                    opening_hours
+                    opening_hours,
+                    publication_status
                 FROM public.hilfestelle
                 WHERE facility_id = %s
                 FOR UPDATE
@@ -273,6 +287,17 @@ def save_facility(
                 raise HTTPException(
                     status_code=404,
                     detail="Hilfestelle nicht gefunden",
+                )
+
+            if facility["publication_status"] != "draft":
+                raise HTTPException(
+                    status_code=409,
+                    detail=(
+                        "Nur Entwürfe dürfen bearbeitet werden. "
+                        "Die Hilfestelle muss gegebenenfalls "
+                        "zuerst zurückgewiesen oder die "
+                        "Veröffentlichung zurückgenommen werden."
+                    ),
                 )
 
             if error:
