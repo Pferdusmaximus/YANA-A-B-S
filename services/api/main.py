@@ -2,6 +2,8 @@ import os
 
 from portal_facilities import router as facilities_router
 
+from portal_facilities_create import router as facilities_create_router
+
 from dotenv import load_dotenv
 from starlette.middleware.sessions import SessionMiddleware
 
@@ -25,6 +27,7 @@ app = FastAPI(
 )
 
 app.include_router(facilities_router)
+app.include_router(facilities_create_router)
 
 load_dotenv()
 

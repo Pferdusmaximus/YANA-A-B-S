@@ -432,3 +432,61 @@ footer {
         flex-direction: column;
     }
 }
+
+
+/* ---------------------------------------
+   Teamportal - Neue Hilfestelle
+--------------------------------------- */
+
+.edit-form select {
+    display: block;
+    width: 100%;
+    margin-bottom: 22px;
+    padding: 13px;
+    border: 1px solid #ccd8d4;
+    border-radius: 8px;
+    background: white;
+    font-family: inherit;
+    font-size: 15px;
+}
+
+.edit-form select:focus {
+    outline: 2px solid #d5eae5;
+    border-color: var(--primary);
+}
+
+.edit-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+.edit-warning {
+    padding: 14px;
+    margin-bottom: 25px;
+    border-radius: 8px;
+    background: #fff5df;
+    color: #76520b;
+    font-size: 14px;
+}
+
+@media (max-width: 600px) {
+    .edit-grid {
+        grid-template-columns: 1fr;
+        gap: 0;
+    }
+}
+
+.new-facility-button {
+    display: inline-block;
+    padding: 12px 22px;
+    background: var(--primary);
+    color: white;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.new-facility-button:hover {
+    background: var(--primary-dark);
+}
