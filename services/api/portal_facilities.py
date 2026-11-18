@@ -99,6 +99,7 @@ def list_facilities(request: Request):
                     h.facility_id,
                     h.name,
                     h.facility_type,
+                    h.publication_status,
                     h.address,
                     h.phone,
                     h.email,

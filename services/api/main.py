@@ -88,7 +88,27 @@ def get_hilfestellen():
     try:
         with get_connection() as conn:
             with conn.cursor(row_factory=dict_row) as cur:
-                cur.execute("SELECT * FROM hilfestelle")
+                
+                cur.execute(
+                    """
+                    SELECT
+                        facility_id,
+                        name,
+                        facility_type,
+                        address,
+                        latitude,
+                        longitude,
+                        phone,
+                        email,
+                        opening_hours,
+                        capacity,
+                        category_id
+                    FROM public.hilfestelle
+                    WHERE publication_status = 'published'
+                    ORDER BY name ASC
+                    """
+                )
+
                 hilfestellen = cur.fetchall()
 
         return hilfestellen

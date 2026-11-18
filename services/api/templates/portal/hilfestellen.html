@@ -14,7 +14,7 @@ YANA – Hilfestellenverwaltung
     </a>
 
     <h1>Hilfestellenverwaltung</h1>
-    
+
     <div style="margin: 20px 0 30px;">
 
         <a href="/portal/hilfestellen/neu"
@@ -49,6 +49,7 @@ YANA – Hilfestellenverwaltung
                         <th>ID</th>
                         <th>Name</th>
                         <th>Typ</th>
+                        <th>Status</th>
                         <th>Kategorie</th>
                         <th>Adresse</th>
                         <th>Telefon</th>
@@ -70,6 +71,26 @@ YANA – Hilfestellenverwaltung
                         </td>
 
                         <td>{{ facility.facility_type }}</td>
+
+
+                        <td>
+                            {% if facility.publication_status == "published" %}
+                                <span class="status-published">
+                                    Veröffentlicht
+                                </span>
+
+                            {% elif facility.publication_status == "pending_review" %}
+                                <span class="status-review">
+                                    In Prüfung
+                                </span>
+
+                            {% else %}
+                                <span class="status-draft">
+                                    Entwurf
+                                </span>
+                            {% endif %}
+                        </td>
+
 
                         <td>
                             {{ facility.category_name or "–" }}
