@@ -1,0 +1,216 @@
+{% extends "base.html" %}
+
+{% block title %}
+YANA – Neue Hilfestelle
+{% endblock %}
+
+{% block content %}
+
+<main class="section portal-edit">
+
+    <a href="/portal/hilfestellen" class="back-link">
+        Zurück zur Hilfestellenübersicht
+    </a>
+
+    <h1>Neue Hilfestelle anlegen</h1>
+
+    <p>
+        Erfasse hier eine neue Hilfestelle
+        für die YANA-Datenbank.
+    </p>
+
+    <div class="edit-container">
+
+        <p class="edit-warning">
+            Entwicklungsphase: Bitte ausschließlich
+            fiktive Testeinrichtungen mit erfundenen
+            Kontaktdaten erfassen.
+        </p>
+
+        {% if error %}
+        <div class="edit-error" role="alert">
+            {{ error }}
+        </div>
+        {% endif %}
+
+        <form method="post"
+              action="/portal/hilfestellen/neu"
+              class="edit-form">
+
+            <input
+                type="hidden"
+                name="csrf_token"
+                value="{{ csrf_token }}"
+            >
+
+            <label for="name">
+                Name der Hilfestelle *
+            </label>
+            <input
+                type="text"
+                id="name"
+                name="name"
+                value="{{ values.get('name', '') }}"
+                maxlength="150"
+                placeholder="YANA Test – Neue Beratungsstelle"
+                required
+            >
+
+            <label for="facility_type">
+                Art der Einrichtung *
+            </label>
+            <input
+                type="text"
+                id="facility_type"
+                name="facility_type"
+                value="{{ values.get('facility_type', '') }}"
+                maxlength="50"
+                placeholder="Beratungsstelle"
+                required
+            >
+
+            <label for="category_id">
+                Kategorie
+            </label>
+            <select
+                id="category_id"
+                name="category_id"
+            >
+                <option value="">
+                    Keine Kategorie
+                </option>
+
+                {% for category in categories %}
+                <option
+                    value="{{ category.category_id }}"
+                    {% if values.get('category_id', '') == (category.category_id | string) %}
+                    selected
+                    {% endif %}
+                >
+                    {{ category.name }}
+                </option>
+                {% endfor %}
+            </select>
+
+            <label for="address">
+                Anschrift *
+            </label>
+            <input
+                type="text"
+                id="address"
+                name="address"
+                value="{{ values.get('address', '') }}"
+                maxlength="255"
+                placeholder="Teststraße 3, Regensburg"
+                required
+            >
+
+            <div class="edit-grid">
+
+                <div>
+                    <label for="latitude">
+                        Breitengrad *
+                    </label>
+                    <input
+                        type="number"
+                        id="latitude"
+                        name="latitude"
+                        min="-90"
+                        max="90"
+                        step="0.0000001"
+                        value="{{ values.get('latitude', '') }}"
+                        placeholder="49.0134000"
+                        required
+                    >
+                </div>
+
+                <div>
+                    <label for="longitude">
+                        Längengrad *
+                    </label>
+                    <input
+                        type="number"
+                        id="longitude"
+                        name="longitude"
+                        min="-180"
+                        max="180"
+                        step="0.0000001"
+                        value="{{ values.get('longitude', '') }}"
+                        placeholder="12.1016000"
+                        required
+                    >
+                </div>
+
+            </div>
+
+            <label for="capacity">
+                Kapazität *
+            </label>
+            <input
+                type="number"
+                id="capacity"
+                name="capacity"
+                min="0"
+                max="100000"
+                step="1"
+                value="{{ values.get('capacity', '') }}"
+                required
+            >
+
+            <label for="phone">
+                Telefonnummer
+            </label>
+            <input
+                type="tel"
+                id="phone"
+                name="phone"
+                maxlength="30"
+                value="{{ values.get('phone', '') }}"
+            >
+
+            <label for="email">
+                E-Mail-Adresse
+            </label>
+            <input
+                type="email"
+                id="email"
+                name="email"
+                maxlength="150"
+                value="{{ values.get('email', '') }}"
+            >
+
+            <label for="opening_hours">
+                Öffnungszeiten
+            </label>
+            <textarea
+                id="opening_hours"
+                name="opening_hours"
+                maxlength="255"
+                rows="3"
+            >{{ values.get('opening_hours', '') }}</textarea>
+
+            <div class="edit-actions">
+
+                <button
+                    type="submit"
+                    class="login-button"
+                >
+                    Hilfestelle speichern
+                </button>
+
+                <a
+                    href="/portal/hilfestellen"
+                    class="edit-cancel"
+                >
+                    Abbrechen
+                </a>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</main>
+
+{% endblock %}
