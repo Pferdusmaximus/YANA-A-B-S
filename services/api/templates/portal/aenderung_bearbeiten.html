@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+
+{% block title %}YANA – Änderungsvorschlag{% endblock %}
+
+{% block content %}
+<main class="section yana-change-page">
+  <p><a href="/portal/hilfestellen" class="back-link">← Zurück zu den Hilfestellen</a></p>
+  <h1>Änderungsvorschlag</h1>
+  <p><strong>{{ facility.name }}</strong> · veröffentlichter Eintrag</p>
+  <p>Die bisher veröffentlichten Daten bleiben unverändert, bis das YANA-Team den Antrag freigibt.</p>
+
+  {% if request.query_params.get('saved') == '1' %}
+    <p class="yana-change-success" role="status">Dein Änderungsentwurf wurde gespeichert.</p>
+  {% endif %}
+  {% if request.query_params.get('submitted') == '1' %}
+    <p class="yana-change-success" role="status">Änderungen wurden zur Prüfung eingereicht.</p>
+  {% endif %}
+  {% if error %}
+    <p class="yana-change-error" role="alert">{{ error }}</p>
+  {% endif %}
+
+  {% if last_result and not proposal %}
+    {% if last_result.status == 'rejected' %}
+      <p class="yana-change-info">Der letzte Änderungsvorschlag wurde zurückgewiesen.
+      {% if last_result.review_note %}Begründung: {{ last_result.review_note }}{% endif %}</p>
+    {% elif last_result.status == 'approved' %}
+      <p class="yana-change-success">Der letzte Änderungsvorschlag wurde freigegeben.</p>
+    {% endif %}
+  {% endif %}
+
+  {% if another_editor %}
+    <p class="yana-change-info">Für diese Einrichtung bearbeitet bereits ein anderer berechtigter Benutzer einen Änderungsvorschlag.</p>
+  {% elif proposal and proposal.status == 'pending_review' %}
+    <p class="yana-change-info">Dieser Antrag befindet sich in Prüfung. Weitere Änderungen sind erst nach der Entscheidung des YANA-Teams möglich.</p>
+  {% endif %}
+
+  {% if not another_editor %}
+    <form method="post" action="/portal/hilfestellen/{{ facility.facility_id }}/aenderung" class="yana-change-form">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+      <label for="change-name">Name der Hilfestelle</label>
+      <input id="change-name" name="name" required maxlength="100" value="{{ values.name or '' }}" {% if not editable %}disabled{% endif %}>
+
+      <label for="change-phone">Telefonnummer</label>
+      <input id="change-phone" name="phone" maxlength="30" value="{{ values.phone or '' }}" {% if not editable %}disabled{% endif %}>
+
+      <label for="change-email">E-Mail-Adresse</label>
+      <input id="change-email" name="email" maxlength="150" type="email" value="{{ values.email or '' }}" {% if not editable %}disabled{% endif %}>
+
+      <label for="change-opening">Öffnungszeiten</label>
+      <textarea id="change-opening" name="opening_hours" maxlength="200" rows="3" {% if not editable %}disabled{% endif %}>{{ values.opening_hours or '' }}</textarea>
+
+      {% if editable %}
+        <div class="yana-change-actions">
+          <button type="submit" name="mode" value="save" class="yana-change-button yana-change-secondary">Als Entwurf speichern</button>
+          <button type="submit" name="mode" value="submit" class="yana-change-button yana-change-primary">Zur Prüfung einreichen</button>
+        </div>
+      {% endif %}
+    </form>
+  {% endif %}
+
+  {% if proposal and proposal.status == 'draft' and editable %}
+    <form method="post" action="/portal/hilfestellen/{{ facility.facility_id }}/aenderung/discard" class="yana-change-discard">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+      <button type="submit" class="yana-change-text-button">Entwurf verwerfen</button>
+    </form>
+  {% endif %}
+
+  <p class="yana-change-footnote">Aktuell werden Name, Telefon, E-Mail und Öffnungszeiten über diesen Workflow bearbeitet. Für die Testphase bleiben nur fiktive „YANA Test“-Einträge zulässig.</p>
+</main>
+{% endblock %}

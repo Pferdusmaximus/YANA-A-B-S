@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+
+{% block title %}YANA – Änderungsanträge prüfen{% endblock %}
+
+{% block content %}
+<main class="section yana-change-page">
+  <p><a href="/portal/hilfestellen" class="back-link">← Zurück zu den Hilfestellen</a></p>
+  <h1>Änderungsanträge prüfen</h1>
+  <p>Hier entscheidet das YANA-Team über eingereichte Änderungen an bereits veröffentlichten Hilfestellen.</p>
+
+  {% if not changes %}
+    <p class="yana-change-info">Es liegen derzeit keine offenen Änderungsanträge vor.</p>
+  {% endif %}
+
+  {% for change in changes %}
+    <article class="yana-change-card">
+      <h2>{{ change.facility_name }}</h2>
+      <p class="yana-change-meta">Antrag #{{ change.change_id }} · Hilfestelle #{{ change.facility_id }} · eingereicht von {{ change.author_email }}</p>
+      <div class="yana-change-table-wrap">
+        <table class="yana-change-table">
+          <thead><tr><th>Feld</th><th>Bisher öffentlich</th><th>Beantragt</th></tr></thead>
+          <tbody>
+          {% set labels = {'name': 'Name', 'phone': 'Telefon', 'email': 'E-Mail', 'opening_hours': 'Öffnungszeiten'} %}
+          {% for field in fields %}
+            {% if change.base_data.get(field) != change.proposed_data.get(field) %}
+              <tr>
+                <th scope="row">{{ labels[field] }}</th>
+                <td>{{ change.base_data.get(field) or '–' }}</td>
+                <td><strong>{{ change.proposed_data.get(field) or '–' }}</strong></td>
+              </tr>
+            {% endif %}
+          {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      <div class="yana-change-review-actions">
+        <form method="post" action="/portal/aenderungen/{{ change.change_id }}/approve">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+          <button class="yana-change-button yana-change-primary" type="submit">Änderungen freigeben</button>
+        </form>
+        <form method="post" action="/portal/aenderungen/{{ change.change_id }}/reject">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+          <label for="review-note-{{ change.change_id }}">Hinweis zur Zurückweisung (optional)</label>
+          <textarea id="review-note-{{ change.change_id }}" name="review_note" maxlength="500" rows="2"></textarea>
+          <button class="yana-change-button yana-change-secondary" type="submit">Antrag zurückweisen</button>
+        </form>
+      </div>
+    </article>
+  {% endfor %}
+</main>
+{% endblock %}

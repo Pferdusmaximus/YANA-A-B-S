@@ -31,7 +31,11 @@ YANA – Hilfestellenverwaltung
         {% endif %}
     </div>
 
-    <div class="facility-overview">
+    {% if account.role == "admin" %}
+        <p><a href="/portal/aenderungen" class="facility-edit-link">Änderungsanträge prüfen</a></p>
+        {% endif %}
+
+        <div class="facility-overview">
 
         <h2>
             Vorhandene Hilfestellen
@@ -111,6 +115,10 @@ YANA – Hilfestellenverwaltung
                     <td>
 
                         <div class="facility-actions">
+                            {% if facility.publication_status == "published" %}
+                                <a href="/portal/hilfestellen/{{ facility.facility_id }}/aenderung"
+                                   class="facility-edit-link">Änderung vorschlagen</a>
+                            {% endif %}
 
                             {% if facility.publication_status == "draft" %}
 

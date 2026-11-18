@@ -583,3 +583,27 @@ footer {
     color: var(--muted);
 }
 
+/* YANA-Aenderungsvorschlaege – an services/api/static/css/style.css anhaengen */
+.yana-change-page { max-width: 960px; margin: 0 auto; padding: 1.5rem; }
+.yana-change-page h1 { margin-bottom: .75rem; }
+.yana-change-form { display: grid; gap: .6rem; max-width: 720px; margin: 1.5rem 0; }
+.yana-change-form label, .yana-change-review-actions label { font-weight: 600; margin-top: .4rem; display: block; }
+.yana-change-form input, .yana-change-form textarea,
+.yana-change-review-actions textarea { box-sizing: border-box; width: 100%; min-height: 42px; padding: .65rem; border: 1px solid #b7c0c8; border-radius: 7px; background: #fff; color: #15222d; font: inherit; }
+.yana-change-form input:disabled, .yana-change-form textarea:disabled { opacity: .65; }
+.yana-change-actions, .yana-change-review-actions { display: flex; flex-wrap: wrap; align-items: start; gap: .9rem; margin-top: 1rem; }
+.yana-change-button { border: 0; border-radius: 7px; padding: .7rem 1rem; cursor: pointer; font: inherit; font-weight: 600; }
+.yana-change-primary { background: #174f7e; color: #fff; }
+.yana-change-secondary { background: #e6edf2; color: #183e5e; }
+.yana-change-text-button { border: 0; background: transparent; color: #9c2a2a; font: inherit; text-decoration: underline; cursor: pointer; }
+.yana-change-discard { margin-top: .8rem; }
+.yana-change-info { background: #eff5fa; padding: .9rem; border-radius: 7px; }
+.yana-change-success { background: #eaf6ee; padding: .9rem; border-radius: 7px; }
+.yana-change-error { background: #fff0ef; padding: .9rem; border-radius: 7px; }
+.yana-change-footnote, .yana-change-meta { color: #65717b; font-size: .9rem; }
+.yana-change-card { border: 1px solid #d7e0e6; border-radius: 11px; padding: 1.2rem; margin: 1.25rem 0; }
+.yana-change-table-wrap { overflow-x: auto; }
+.yana-change-table { width: 100%; border-collapse: collapse; }
+.yana-change-table th, .yana-change-table td { text-align: left; padding: .65rem; border-bottom: 1px solid #d7e0e6; vertical-align: top; overflow-wrap: anywhere; }
+.yana-change-review-actions > form { flex: 1 1 260px; }
+.yana-change-form button:focus-visible, .yana-change-review-actions button:focus-visible { outline: 3px solid #ffbf47; outline-offset: 3px; }
