@@ -15,9 +15,71 @@ YANA – Partnerverwaltung
     <h1>Partnerverwaltung</h1>
 
     <p>
-        Hier verwaltet das YANA-Team die Zuordnung
-        von Partner-Accounts zu Hilfestellen.
+        Hier verwaltet das YANA-Team Partner-Accounts
+        und deren zugewiesene Hilfestellen.
     </p>
+
+    <!-- Neuen Partner erstellen -->
+
+    <section class="partner-management-card">
+
+        <h2>Neuen Partner erstellen</h2>
+
+        <p>
+            Gib die E-Mail-Adresse des Partners ein.
+            Ein sicheres Startpasswort wird
+            automatisch erzeugt.
+        </p>
+
+        {% if error %}
+
+            <p role="alert" style="color: #a32626;">
+                {{ error }}
+            </p>
+
+        {% endif %}
+
+        <form
+            method="post"
+            action="/portal/partner/create"
+            class="partner-assign-form"
+        >
+
+            <input
+                type="hidden"
+                name="csrf_token"
+                value="{{ csrf_token }}"
+            >
+
+            <label for="partner_email">
+                E-Mail-Adresse
+            </label>
+
+            <input
+                type="email"
+                id="partner_email"
+                name="email"
+                value="{{ new_email }}"
+                maxlength="254"
+                autocomplete="off"
+                required
+            >
+
+            <button
+                type="submit"
+                class="action-button action-submit"
+            >
+                Partner erstellen
+            </button>
+
+        </form>
+
+    </section>
+
+
+    <!-- Vorhandene Partner -->
+
+    <h2>Vorhandene Partner</h2>
 
     {% if not partners %}
 
@@ -27,17 +89,22 @@ YANA – Partnerverwaltung
 
     {% endif %}
 
+
     {% for partner in partners %}
 
         <section class="partner-management-card">
 
-            <h2>{{ partner.email }}</h2>
+            <h3>{{ partner.email }}</h3>
 
             <p>
                 {% if partner.is_active %}
-                    <span class="status-published">Aktiv</span>
+                    <span class="status-published">
+                        Aktiv
+                    </span>
                 {% else %}
-                    <span class="status-draft">Deaktiviert</span>
+                    <span class="status-draft">
+                        Deaktiviert
+                    </span>
                 {% endif %}
             </p>
 
@@ -54,6 +121,7 @@ YANA – Partnerverwaltung
                     {% for assignment in assigned %}
 
                         <li>
+
                             <span>
                                 {{ assignment.facility_name }}
                                 (ID {{ assignment.facility_id }})
@@ -61,32 +129,35 @@ YANA – Partnerverwaltung
 
                             {% if partner.is_active %}
 
-                            <form
-                                method="post"
-                                action="/portal/partner/{{ partner.account_id }}/unassign"
-                                onsubmit="return confirm('Zuordnung wirklich entfernen?');"
-                            >
-                                <input
-                                    type="hidden"
-                                    name="csrf_token"
-                                    value="{{ csrf_token }}"
+                                <form
+                                    method="post"
+                                    action="/portal/partner/{{ partner.account_id }}/unassign"
+                                    onsubmit="return confirm('Zuordnung wirklich entfernen?');"
                                 >
 
-                                <input
-                                    type="hidden"
-                                    name="facility_id"
-                                    value="{{ assignment.facility_id }}"
-                                >
+                                    <input
+                                        type="hidden"
+                                        name="csrf_token"
+                                        value="{{ csrf_token }}"
+                                    >
 
-                                <button
-                                    type="submit"
-                                    class="action-button action-unpublish"
-                                >
-                                    Entfernen
-                                </button>
-                            </form>
+                                    <input
+                                        type="hidden"
+                                        name="facility_id"
+                                        value="{{ assignment.facility_id }}"
+                                    >
+
+                                    <button
+                                        type="submit"
+                                        class="action-button action-unpublish"
+                                    >
+                                        Entfernen
+                                    </button>
+
+                                </form>
 
                             {% endif %}
+
                         </li>
 
                     {% endfor %}
@@ -98,6 +169,7 @@ YANA – Partnerverwaltung
                 <p>Keine Hilfestellen zugewiesen.</p>
 
             {% endif %}
+
 
             {% if partner.is_active %}
 
@@ -115,10 +187,8 @@ YANA – Partnerverwaltung
                         value="{{ csrf_token }}"
                     >
 
-                    <select
-                        name="facility_id"
-                        required
-                    >
+                    <select name="facility_id" required>
+
                         <option value="">
                             Hilfestelle auswählen
                         </option>
