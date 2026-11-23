@@ -1,13 +1,19 @@
 from pathlib import Path
+import re
+import secrets
 
 from fastapi import APIRouter, Form, HTTPException, Request
 from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
 from psycopg.rows import dict_row
-from psycopg.errors import UniqueViolation, ForeignKeyViolation
 
 from database import get_connection
-from portal import session_account, csrf_token, check_csrf
+from portal import (
+    session_account,
+    csrf_token,
+    check_csrf,
+    password_hash,
+)
 
 
 BASE_DIR = Path(__file__).resolve().parent
@@ -22,9 +28,11 @@ router = APIRouter(
 )
 
 
-def admin_account(request: Request):
-    """Nur das YANA-Team darf Partner verwalten."""
+# ---------------------------------------
+# Administratorberechtigung
+# ---------------------------------------
 
+def admin_account(request: Request):
     account = session_account(request)
 
     if account is None:
@@ -42,9 +50,7 @@ def admin_account(request: Request):
     return account
 
 
-def ensure_partner(cur, account_id):
-    """Prüft, ob der Zielaccount ein Partner ist."""
-
+def ensure_partner(cur, account_id: int):
     cur.execute(
         """
         SELECT account_id
@@ -64,45 +70,30 @@ def ensure_partner(cur, account_id):
         )
 
 
-@router.get(
-    "/partner",
-    response_class=HTMLResponse
-)
-def list_partners(request: Request):
+# ---------------------------------------
+# Partnerverwaltung darstellen
+# ---------------------------------------
 
-    account = session_account(request)
-
-    if account is None:
-        return RedirectResponse(
-            "/portal/login",
-            status_code=303
-        )
-
-    if account["role"] != "admin":
-        raise HTTPException(
-            status_code=403,
-            detail="Keine Berechtigung"
-        )
-
+def render_partner_page(
+    request: Request,
+    account,
+    error=None,
+    new_email="",
+    status_code=200,
+):
     with get_connection() as conn:
         with conn.cursor(row_factory=dict_row) as cur:
 
-            # Vorhandene Partner-Accounts
             cur.execute(
                 """
-                SELECT
-                    account_id,
-                    email,
-                    is_active
+                SELECT account_id, email, is_active
                 FROM public.portal_account
                 WHERE role = 'partner'
                 ORDER BY email
                 """
             )
-
             partners = cur.fetchall()
 
-            # Einrichtungen für die Auswahl
             cur.execute(
                 """
                 SELECT facility_id, name
@@ -110,10 +101,8 @@ def list_partners(request: Request):
                 ORDER BY name, facility_id
                 """
             )
-
             facilities = cur.fetchall()
 
-            # Bestehende Zuordnungen
             cur.execute(
                 """
                 SELECT
@@ -129,7 +118,6 @@ def list_partners(request: Request):
                 ORDER BY h.name, h.facility_id
                 """
             )
-
             assignments = cur.fetchall()
 
     assignments_by_account = {
@@ -137,10 +125,10 @@ def list_partners(request: Request):
         for partner in partners
     }
 
-    for assignment in assignments:
+    for item in assignments:
         assignments_by_account.setdefault(
-            assignment["account_id"], []
-        ).append(assignment)
+            item["account_id"], []
+        ).append(item)
 
     return templates.TemplateResponse(
         request=request,
@@ -151,10 +139,136 @@ def list_partners(request: Request):
             "facilities": facilities,
             "assignments_by_account": assignments_by_account,
             "csrf_token": csrf_token(request),
+            "error": error,
+            "new_email": new_email,
         },
-        headers={"Cache-Control": "no-store"}
+        status_code=status_code,
+        headers={"Cache-Control": "no-store"},
     )
 
+
+@router.get("/partner", response_class=HTMLResponse)
+def list_partners(request: Request):
+    account = session_account(request)
+
+    if account is None:
+        return RedirectResponse(
+            "/portal/login",
+            status_code=303
+        )
+
+    if account["role"] != "admin":
+        raise HTTPException(
+            status_code=403,
+            detail="Keine Berechtigung"
+        )
+
+    return render_partner_page(request, account)
+
+
+# ---------------------------------------
+# NEU: Partner-Account erstellen
+# ---------------------------------------
+
+@router.post(
+    "/partner/create",
+    response_class=HTMLResponse
+)
+def create_partner(
+    request: Request,
+    email: str = Form(...),
+    submitted_csrf: str = Form(
+        ..., alias="csrf_token"
+    ),
+):
+    # Administratorrechte und CSRF prüfen
+    account = admin_account(request)
+    check_csrf(request, submitted_csrf)
+
+    email = email.strip().lower()
+
+    if (
+        len(email) > 254
+        or not re.fullmatch(
+            r"[^@\s]+@[^@\s]+\.[^@\s]+",
+            email
+        )
+    ):
+        return render_partner_page(
+            request,
+            account,
+            error="Bitte eine gültige E-Mail-Adresse eingeben.",
+            new_email=email,
+            status_code=422,
+        )
+
+    # Sicheres zufälliges Startpasswort erzeugen
+    start_password = secrets.token_urlsafe(24)
+
+    # Nur den Passwort-Hash speichern
+    hashed_password = password_hash.hash(
+        start_password
+    )
+
+    with get_connection() as conn:
+        with conn.cursor() as cur:
+
+            cur.execute(
+                """
+                INSERT INTO public.portal_account (
+                    email,
+                    password_hash,
+                    role,
+                    is_active,
+                    failed_attempts,
+                    locked_until,
+                    must_change_password
+                )
+                VALUES (
+                    %s, %s, 'partner', TRUE,
+                    0, NULL, TRUE
+                )
+                ON CONFLICT DO NOTHING
+                RETURNING account_id
+                """,
+                (email, hashed_password)
+            )
+
+            result = cur.fetchone()
+
+    if result is None:
+        return render_partner_page(
+            request,
+            account,
+            error=(
+                "Ein Account mit dieser "
+                "E-Mail-Adresse existiert bereits."
+            ),
+            new_email=email,
+            status_code=409,
+        )
+
+    # Passwort einmalig in der Antwort anzeigen
+    return templates.TemplateResponse(
+        request=request,
+        name="portal/partner_erstellt.html",
+        context={
+            "account": account,
+            "partner_email": email,
+            "start_password": start_password,
+        },
+        headers={
+            "Cache-Control": "no-store, private",
+            "Pragma": "no-cache",
+            "Referrer-Policy": "no-referrer",
+            "X-Content-Type-Options": "nosniff",
+        },
+    )
+
+
+# ---------------------------------------
+# Hilfestelle zuweisen
+# ---------------------------------------
 
 @router.post("/partner/{account_id}/assign")
 def assign_facility(
@@ -162,8 +276,7 @@ def assign_facility(
     account_id: int,
     facility_id: int = Form(...),
     submitted_csrf: str = Form(
-        ...,
-        alias="csrf_token"
+        ..., alias="csrf_token"
     ),
 ):
     admin_account(request)
@@ -208,14 +321,17 @@ def assign_facility(
     )
 
 
+# ---------------------------------------
+# Zuordnung entfernen
+# ---------------------------------------
+
 @router.post("/partner/{account_id}/unassign")
 def unassign_facility(
     request: Request,
     account_id: int,
     facility_id: int = Form(...),
     submitted_csrf: str = Form(
-        ...,
-        alias="csrf_token"
+        ..., alias="csrf_token"
     ),
 ):
     admin_account(request)

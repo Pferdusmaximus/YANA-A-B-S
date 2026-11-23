@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+
+{% block title %}
+YANA – Partner erstellt
+{% endblock %}
+
+{% block content %}
+
+<main class="section">
+
+    <h1>Partner erfolgreich erstellt</h1>
+
+    <p>
+        Der neue Partner-Account wurde angelegt.
+    </p>
+
+    <p>
+        <strong>E-Mail-Adresse:</strong>
+        {{ partner_email }}
+    </p>
+
+    <section class="partner-management-card">
+
+        <h2>Startpasswort</h2>
+
+        <p>
+            Das folgende Passwort wurde automatisch
+            generiert und wird nur bei der Erstellung
+            angezeigt.
+        </p>
+
+        <div
+            style="
+                padding: 16px;
+                background: #edf0f2;
+                border-radius: 8px;
+                overflow-wrap: anywhere;
+                margin: 16px 0;
+            "
+        >
+            <code>{{ start_password }}</code>
+        </div>
+
+        <p>
+            <strong>Wichtig:</strong>
+            Übermittle dieses Passwort dem Partner
+            über einen geeigneten sicheren Weg.
+            Es kann später nicht erneut angezeigt werden.
+        </p>
+
+        <p>
+            Bei der ersten Anmeldung muss der Partner
+            ein eigenes Passwort festlegen.
+        </p>
+
+    </section>
+
+    <a href="/portal/partner">
+        Zurück zur Partnerverwaltung
+    </a>
+
+</main>
+
+{% endblock %}

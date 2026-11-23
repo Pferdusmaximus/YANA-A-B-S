@@ -673,3 +673,22 @@ footer {
         width: 100%;
     }
 }
+
+/* Partner erstellen */
+
+.partner-assign-form input[type="email"] {
+    min-width: 240px;
+    max-width: 100%;
+    padding: 9px;
+    border: 1px solid #ccd4da;
+    border-radius: 6px;
+    font-family: inherit;
+    font-size: 14px;
+}
+
+@media (max-width: 600px) {
+    .partner-assign-form input[type="email"] {
+        width: 100%;
+        min-width: 0;
+    }
+}
