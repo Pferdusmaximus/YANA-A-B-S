@@ -1,3 +1,4 @@
+
 {% extends "base.html" %}
 
 {% block title %}
@@ -8,7 +9,7 @@ YANA – Dashboard
 
 <main class="section">
 
-    <h1>YANA-Teamportal</h1>
+    <h1>YANA-Verwaltungsportal</h1>
 
     <p>
         Willkommen, {{ account.email }}!
@@ -16,54 +17,74 @@ YANA – Dashboard
 
     <p>
         Deine Benutzerrolle:
-        <strong>{{ account.role }}</strong>
+        <strong>
+            {% if account.role == "admin" %}
+                YANA-Administrator
+            {% elif account.role == "partner" %}
+                YANA-Partner
+            {% else %}
+                {{ account.role }}
+            {% endif %}
+        </strong>
     </p>
 
     <h2>Verwaltung</h2>
 
     <div class="cards">
 
+        <!-- Hilfestellenverwaltung -->
+        {% if account.role in ["admin", "partner"] %}
+
         <article class="card">
+
             <h3>Hilfestellen</h3>
 
             <p>
-                Hilfestellen anzeigen,
-                bearbeiten und verwalten.
+                {% if account.role == "admin" %}
+                    Alle Hilfestellen anzeigen,
+                    bearbeiten und verwalten.
+                    Änderungen prüfen und freigeben.
+                {% else %}
+                    Eigene Hilfestellen anzeigen,
+                    bearbeiten und Änderungen
+                    zur Prüfung einreichen.
+                {% endif %}
             </p>
 
-            <p><em>In Vorbereitung</em></p>
+            <a href="/portal/hilfestellen">
+                Hilfestellen verwalten
+            </a>
+
         </article>
+
+        {% endif %}
+
+
+        <!-- Partnerverwaltung: Nur Administratoren -->
+        {% if account.role == "admin" %}
 
         <article class="card">
-            <h3>Hilfestellen</h3>
+
+            <h3>Partnerverwaltung</h3>
 
             <p>
-                Bestehende Hilfestellen aus
-                PostgreSQL anzeigen.
+                YANA-Partner verwalten und
+                Hilfestellen zuweisen oder
+                bestehende Zuordnungen entfernen.
             </p>
 
-            {% if account.role in ["admin", "partner"] %}
-                <a href="/portal/hilfestellen">
-                    Hilfestellen anzeigen
-                </a>
-            {% else %}
-                <p>Keine Berechtigung</p>
-            {% endif %}
+            <a href="/portal/partner">
+                Partner verwalten
+            </a>
+
         </article>
 
-        <article class="card">
-            <h3>Benutzerverwaltung</h3>
-
-            <p>
-                Mitarbeiterkonten und
-                Zugriffsrechte verwalten.
-            </p>
-
-            <p><em>In Vorbereitung</em></p>
-        </article>
+        {% endif %}
 
     </div>
 
+
+    <!-- Abmelden -->
     <form method="post" action="/portal/logout">
 
         <input

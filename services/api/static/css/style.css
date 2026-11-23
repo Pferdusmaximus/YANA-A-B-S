@@ -607,3 +607,69 @@ footer {
 .yana-change-table th, .yana-change-table td { text-align: left; padding: .65rem; border-bottom: 1px solid #d7e0e6; vertical-align: top; overflow-wrap: anywhere; }
 .yana-change-review-actions > form { flex: 1 1 260px; }
 .yana-change-form button:focus-visible, .yana-change-review-actions button:focus-visible { outline: 3px solid #ffbf47; outline-offset: 3px; }
+
+
+
+
+/* ---------------------------------------
+   Partnerverwaltung
+--------------------------------------- */
+
+.partner-management-card {
+    margin: 24px 0;
+    padding: 24px;
+    border: 1px solid #dce2e7;
+    border-radius: 12px;
+}
+
+.partner-management-card h2 {
+    margin-bottom: 12px;
+    overflow-wrap: anywhere;
+}
+
+.partner-management-card h3 {
+    margin-top: 24px;
+    margin-bottom: 12px;
+}
+
+.partner-assignment-list {
+    list-style: none;
+    padding: 0;
+}
+
+.partner-assignment-list li {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+    padding: 12px 0;
+    border-bottom: 1px solid #e5e8eb;
+}
+
+.partner-assign-form {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.partner-assign-form select {
+    min-width: 220px;
+    max-width: 100%;
+    padding: 9px;
+    border: 1px solid #ccd4da;
+    border-radius: 6px;
+    background: #fff;
+    color: #222;
+}
+
+@media (max-width: 600px) {
+    .partner-management-card {
+        padding: 16px;
+    }
+
+    .partner-assign-form select {
+        width: 100%;
+    }
+}
