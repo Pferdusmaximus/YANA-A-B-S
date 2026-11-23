@@ -31,13 +31,41 @@ nav:
       - PostgreSQL & pgAdmin: installation/postgresql-pgadmin.md
       - FastAPI & systemd: installation/fastapi.md
       - Nginx, HTTPS & Certbot: installation/nginx-https.md
+      - Website & Teamportal einrichten: installation/website-teamportal.md
+      - Flutter & Dart einrichten: installation/flutter-setup.md
   - Technische Dokumentation:
-      - Systemarchitektur: technik/architektur.md
-      - Datenmodell: technik/datenmodell.md
-      - API-Referenz: technik/api-referenz.md
-      - Betrieb & Sicherheit: technik/betrieb-sicherheit.md
-      - Architekturentscheidungen: technik/entscheidungen.md
-      - Änderungsfreigabe: technik/teamportal-aenderungsfreigabe.md
-      - Fehlerbehebung: technik/troubleshooting.md
-      - Quellen: technik/quellen.md
-  - Nutzungshandbuch: nutzung/index.md
+      - Überblick: technik/index.md
+      - System & Backend:
+          - Systemarchitektur: technik/architektur.md
+          - Datenmodell: technik/datenmodell.md
+          - Portal-Datenbank: technik/teamportal-datenbank.md
+          - API-Referenz: technik/api-referenz.md
+          - Betrieb & Sicherheit: technik/betrieb-sicherheit.md
+          - Architekturentscheidungen: technik/entscheidungen.md
+      - Website & Verwaltungsportal:
+          - Öffentliche Website: technik/website.md
+          - Portalarchitektur & Rollen: technik/teamportal-architektur.md
+          - Login & Sessions: technik/teamportal-login.md
+          - Partner- & Benutzerverwaltung: technik/teamportal-benutzerverwaltung.md
+          - Hilfestellenverwaltung: technik/teamportal-hilfestellen.md
+          - Änderungsfreigabe: technik/teamportal-aenderungsfreigabe.md
+          - Portal-Tests: technik/teamportal-tests.md
+          - Portal-Deployment: technik/teamportal-deployment.md
+          - Portal-Fehlerbehebung: technik/teamportal-troubleshooting.md
+      - Flutter-App:
+          - Architektur: technik/flutter-architektur.md
+          - API-Anbindung: technik/flutter-api-anbindung.md
+          - Controller: technik/flutter-controller.md
+          - Tests: technik/flutter-tests.md
+          - Team-Workflow: technik/flutter-teamworkflow.md
+          - Fehlerbehebung: technik/flutter-troubleshooting.md
+      - Entwicklung & Ausblick:
+          - GitHub & Deployment: technik/git-deployment.md
+          - Entwicklungsstand: technik/entwicklungsstand.md
+          - Weiterarbeit: technik/weiterarbeit.md
+          - Fehlerbehebung (Server): technik/troubleshooting.md
+          - Quellen: technik/quellen.md
+  - Nutzungshandbuch:
+      - Überblick: nutzung/index.md
+      - Verwaltungsportal bedienen: nutzung/teamportal.md
+      - Partnerkonten verwalten: nutzung/partnerverwaltung.md

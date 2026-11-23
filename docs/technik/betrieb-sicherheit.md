@@ -1,6 +1,6 @@
 # Betrieb, Sicherheit und Datenschutz
 
-**Dokumentationsstand: 18. November 2026.** YANA ist ein funktionsfähiger **Entwicklungsprototyp** mit öffentlicher Informationswebsite, Flutter-GET-API und gemeinsamem Verwaltungsportal. Die erfolgreichen Funktionstests sind **keine Freigabe für echte sensible Hilfedaten**.
+**Dokumentationsstand: 23. November 2026.** YANA ist ein funktionsfähiger **Entwicklungsprototyp** mit öffentlicher Informationswebsite, Flutter-GET-API und gemeinsamem Verwaltungsportal. Die erfolgreichen Funktionstests sind **keine Freigabe für echte sensible Hilfedaten**.
 
 ## 1. Technischer Betriebsstand
 
@@ -10,7 +10,8 @@
 | Nginx/HTTPS, systemd `yana-api` | Produktiv eingerichtet und im Browser geprüft |
 | FastAPI-/Flutter-Schnittstellen | Öffentliche GET-Routen erreichbar; lokale Flutter-Web-CORS-Regel |
 | Gemeinsames Portal | Admin- und Partner-Testaccount können sich anmelden |
-| Rollenrechte | Partner sieht nur explizit zugewiesene Hilfestellen; Admin besitzt Freigaberechte |
+| Rollenrechte | Partner sieht nur explizit zugewiesene Hilfestellen; Admin besitzt Freigabe- und Accountverwaltungsrechte |
+| Account-Lebenszyklus | Partner erstellen, Startpasswort/Pflichtwechsel, deaktivieren, reaktivieren, Reset und Session-Entzug getestet |
 | Neuaufnahmen | Entwurf / Prüfung / Veröffentlichung und Audit für Testdaten implementiert |
 | Änderungsvorschläge | Getrennte gespeicherte Werte; öffentliche Daten erst bei Adminfreigabe verändert |
 | Backup-Agent | Registriert; vollständiger Restore-Test weiterhin offen |
@@ -44,6 +45,7 @@ Datenbankport `5432`, lokaler API-Port `8000` und Nginx-Testport `8080` dürfen 
 - Login, Logout und zustandsändernde Formulare prüfen CSRF-Tokens. Mehrere Fehlversuche lösen eine zeitweilige Kontosperre aus; Nginx begrenzt Login-POSTs zusätzlich.
 - `admin` entspricht dem YANA-Team. `partner` entspricht einer externen Organisation. Partner dürfen nur in `portal_facility_assignment` zugewiesene Einrichtungen sehen und zugehörige Änderungen einreichen.
 - Neue Hilfestellen und Statuswechsel werden mit `portal_facility_audit` protokolliert. Eingereichte Änderungen veröffentlichter Kontaktfelder werden ausschließlich von Administratoren freigegeben oder zurückgewiesen.
+- Der Administrator kann Partnerkonten erstellen, deaktivieren, reaktivieren und Passwörter zurücksetzen. Startpasswörter werden einmalig gezeigt und müssen vor Nutzung der geschützten Portalbereiche geändert werden. Der Account-Lebenszyklus besitzt noch **kein eigenständiges Audit-Protokoll**.
 
 Ein Simulations-/Browser- und End-to-End-Test der Rollen und Freigaben wurde durchgeführt. Eine unabhängige Sicherheitsprüfung, ein vollständiger Penetrationstest und eine Prüfung unter realen Angriffsszenarien stehen noch aus.
 
@@ -55,7 +57,7 @@ Bis zur technischen und organisatorischen Klärung sind nur **fiktive `YANA Test
 
 1. Explizite Trennung zwischen öffentlichen und vertraulichen Standortinformationen, z. B. durch eine eingeschränkte API-Projektion oder getrennte Tabellen/Felder.
 2. Klare Regeln, welche Einrichtungen und Kontaktdaten veröffentlicht werden dürfen, einschließlich Prüfung und Zustimmung der Organisation.
-3. Zugriffskontrollen für echte Partnerkonten sowie Prozesse zum Sperren, Zurücksetzen und Entziehen von Berechtigungen.
+3. Die implementierten Zugriffskontrollen, Sperr-/Reset-Prozesse und Zuordnungsentzüge vor echtem Partnerbetrieb zusätzlich unabhängig prüfen und administrativ protokollieren.
 4. Datenschutz-/Aufbewahrungskonzept für Kontakt- und Auditdaten, Chat-/Nutzerinnendaten und Backups.
 
 Die **Änderungsfreigabe für Kontaktfelder** ist inzwischen implementiert; sie löst das separate Problem der vertraulichen Adressfelder noch nicht.
@@ -90,9 +92,9 @@ Der registrierte IONOS/Acronis-Agent ist kein Beleg für einen erfolgreichen Dat
 
 ## 9. Priorisierte nächste Schritte
 
-- Benutzer- und Partnerverwaltung mit sicheren Account-Lifecycle-Aktionen im bestehenden Portal.
+- **Account-Audit** und sicherer manueller Übergabeprozess für generierte Startpasswörter; MFA für echte Partner prüfen.
 - Datenschutzfilter für sensible Adressen/Koordinaten vor Aufnahme echter Hilfestellen.
 - Getrennte Testdatenbank und automatisierte Regressionstests mit nichtproduktiven Daten.
-- Monitoring, Log-/Audit-Aufbewahrung, MFA/Passwort-Reset und überprüfte Backup-Wiederherstellung.
+- Monitoring, Log-/Audit-Aufbewahrung, MFA (Admin-Passwort-Reset ist vorhanden) und überprüfte Backup-Wiederherstellung.
 
 Siehe [Änderungsvorschläge](teamportal-aenderungsfreigabe.md), [Portal-Datenbank](teamportal-datenbank.md) und [Weiterarbeit](weiterarbeit.md).

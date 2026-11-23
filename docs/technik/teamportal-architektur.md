@@ -1,6 +1,6 @@
 # Verwaltungsportal: Architektur, Rollen und Datenflüsse
 
-**Stand: 18. November 2026 · Gemeinsames Portal für Administratoren und zugeordnete Partner produktiv getestet**
+**Stand: 23. November 2026 · Partner- und Benutzerverwaltung mit Startpasswort und Account-Lebenszyklus ergänzt**
 
 ## 1. Ziel und Grundprinzip
 
@@ -18,7 +18,9 @@ YANA verwendet **ein Verwaltungsportal** unter `/portal/*` mit gemeinsamer Anmel
 | Veröffentlichung / Zurückweisung / Zurücknahme | Ja | Nein |
 | Änderung an veröffentlichtem Eintrag vorschlagen | Ja | Nur zugewiesener Eintrag |
 | Eingereichten Änderungsvorschlag freigeben / ablehnen | Ja | Nein |
-| Accounts verwalten und Hilfestellen zuweisen | Bisher über pgAdmin | Nein |
+| Partner-Accounts erstellen, deaktivieren/reaktivieren, Passwörter zurücksetzen | Ja, über `/portal/partner` | Nein |
+| Hilfestellen zuweisen / Zuordnung entfernen | Ja, über `/portal/partner` | Nein |
+| Eigenes Passwort ändern | Ja | Ja |
 
 Die frühere Rolle `team` wird im neuen Berechtigungsmodell **nicht mehr verwendet**. `facility` ist keine aktuelle operative Rolle. Das YANA-Team ist organisatorisch die Rolle `admin`; externe Organisationen heißen **YANA-Partner** (`partner`).
 
@@ -31,10 +33,14 @@ flowchart TB
     N --> A[FastAPI]
     A --> W[website.py: öffentliche Website]
     A --> P[portal.py: Login / Sessions / Dashboard]
+    A --> PW[portal_password.py: Passwortwechsel]
+    A --> PA[portal_partners.py: Account- und Zuordnungsverwaltung]
     A --> H[portal_facilities*.py: Liste / Neuaufnahme / Status]
     A --> C[portal_facility_changes.py: Änderungsanträge]
     A --> J[main.py: öffentliche JSON-API]
     P --> D[(PostgreSQL: Accounts und Sessions)]
+    PW --> D
+    PA --> D
     H --> D
     C --> D
     J --> D
@@ -50,6 +56,8 @@ services/api/
 ├── database.py                   # get_connection() / PostgreSQL
 ├── website.py                    # Öffentliche Informationswebsite
 ├── portal.py                     # Login, Session, Dashboard, Logout
+├── portal_password.py            # Eigenes Passwort ändern / Pflichtwechsel
+├── portal_partners.py            # Partnerkonten, Zuordnungen, Deaktivieren, Reaktivieren, Reset
 ├── portal_access.py              # require_account / require_admin / Partnerprüfung
 ├── portal_facilities.py          # Rollenabhängige Liste und Bearbeitung von Entwürfen
 ├── portal_facilities_create.py   # Neue Test-Hilfestelle anlegen
@@ -58,6 +66,9 @@ services/api/
 ├── templates/portal/
 │   ├── login.html
 │   ├── dashboard.html
+│   ├── partner.html
+│   ├── partner_erstellt.html
+│   ├── passwort_aendern.html
 │   ├── hilfestellen.html
 │   ├── hilfestellen_neu.html
 │   ├── hilfestellen_bearbeiten.html
@@ -112,4 +123,8 @@ Vor der Freigabe werden die ursprünglichen veröffentlichten Werte nochmals mit
 
 ## 7. Grenzen
 
-Eine Benutzerverwaltungsseite existiert noch nicht; Testpartner und Zuordnung wurden in PostgreSQL eingerichtet. Für echte Schutzstandorte reicht der Einrichtungsstatus nicht, denn veröffentlichte Adressen und Koordinaten werden durch die JSON-API aktuell ausgegeben. Mehr: [Sicherheit](betrieb-sicherheit.md) und [Änderungsfreigabe](teamportal-aenderungsfreigabe.md).
+Die Partner- und Benutzerverwaltung ist unter `/portal/partner` implementiert. Sie verwendet einmalig angezeigte Startpasswörter und eine obligatorische Passwortänderung, aber keinen Mailserver oder öffentlichen Registrierungsprozess. Änderungen am Account-Lebenszyklus werden bislang nicht in einem eigenständigen Account-Audit erfasst. Für echte Schutzstandorte reicht der Einrichtungsstatus nicht, denn veröffentlichte Adressen und Koordinaten werden durch die JSON-API aktuell ausgegeben. Mehr: [Sicherheit](betrieb-sicherheit.md) und [Änderungsfreigabe](teamportal-aenderungsfreigabe.md).
+
+## 8. Account-Lebenszyklus (Ergänzung 23.11.2026)
+
+Die technischen Abläufe für Partner erstellen, Passwort wechseln, zuweisen, deaktivieren, reaktivieren und Passwort zurücksetzen sind ausführlich unter [Partner- und Benutzerverwaltung](teamportal-benutzerverwaltung.md) beschrieben. Die Pflicht-Passwortänderung wird mit `portal_account.must_change_password` umgesetzt und in `session_account()` serverseitig durchgesetzt.

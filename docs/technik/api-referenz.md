@@ -1,6 +1,6 @@
 # HTTP-Schnittstellen: öffentliche API und Verwaltungsportal
 
-**Stand: 18. November 2026 · Freigabe- und Partnerworkflow produktiv bereitgestellt**
+**Stand: 23. November 2026 · Partner- und Accountverwaltung ergänzt**
 
 ## Zugriffswege
 
@@ -34,6 +34,7 @@ Einträge in `draft` oder `pending_review` werden bei `GET /hilfestellen` **nich
 | `GET` | `/portal/dashboard` | Gemeinsames Dashboard (Admin/Partner) |
 | `POST` | `/portal/logout` | Session beenden, CSRF |
 | `GET` | `/portal/hilfestellen` | Rollenabhängige Hilfestellenübersicht |
+| `GET` / `POST` | `/portal/passwort-aendern` | Eigenes Passwort ändern; bei Startpasswort zwingend |
 
 Partner sehen im selben Portal nur zugewiesene Einrichtungen. Fremde IDs sind auch über direkte URLs nicht zugänglich. Für POST-Aktionen werden Login, Rolle, Zuordnung, CSRF und Eingaben geprüft.
 
@@ -63,7 +64,23 @@ Die Statusaktionen validieren Übergänge und protokollieren Entscheidungen. Neu
 
 Nur die vier Kontaktfelder `name`, `phone`, `email`, `opening_hours` gehören zum Änderungsantrag. Die Transaktion prüft, dass die ursprünglich veröffentlichten Werte zwischenzeitlich nicht verändert wurden.
 
-## 5. HTTP-Verhalten
+## 5. Partner- und Accountverwaltung (23.11.2026)
+
+| Methode | Pfad | Zugriff / Aktion |
+|---|---|---|
+| `GET` | `/portal/partner` | Admin: Partnerliste, Zuordnung und Accountverwaltung |
+| `POST` | `/portal/partner/create` | Admin: Partner anlegen, zufälliges Startpasswort einmalig anzeigen |
+| `POST` | `/portal/partner/{account_id}/assign` | Admin: Hilfestelle zuweisen |
+| `POST` | `/portal/partner/{account_id}/unassign` | Admin: Zuordnung entfernen |
+| `POST` | `/portal/partner/{account_id}/deactivate` | Admin: Account deaktivieren, Sessions beenden |
+| `POST` | `/portal/partner/{account_id}/reactivate` | Admin: reaktivieren und neues Startpasswort ausgeben |
+| `POST` | `/portal/partner/{account_id}/reset-password` | Admin: Passwort-Reset und Pflichtwechsel erzwingen |
+
+Alle zustandsändernden Formulare prüfen CSRF. Ein Partner erhält für Administratoraktionen HTTP `403`. Die Startpasswortseite wird unmittelbar durch den POST gerendert und nicht als dauerhaft abrufbare GET-Ressource angelegt. Ein Passwortwechsel des betroffenen Accounts endet mit `303` zum Login.
+
+Siehe [technische Benutzerverwaltung](teamportal-benutzerverwaltung.md).
+
+## 6. HTTP-Verhalten
 
 | Status | Typischer Fall |
 |---|---|
@@ -77,11 +94,11 @@ Nur die vier Kontaktfelder `name`, `phone`, `email`, `opening_hours` gehören zu
 
 Die konkreten Codes hängen von der Route und der Art des Aufrufs ab. Die Browseransicht nutzt Formulare, Cookies und Redirects, die Flutter-API ist davon getrennt.
 
-## 6. Flutter Web und CORS
+## 7. Flutter Web und CORS
 
 `main.py` erlaubt für die lokale Flutter-Web-Entwicklung GET-Anfragen von `http://localhost` bzw. `http://127.0.0.1` mit wechselnden Ports. Die CORS-Regel ist **keine** Authentifizierung und erlaubt keinen Portalzugang.
 
-## 7. Smoke-Tests
+## 8. Smoke-Tests
 
 ```bash
 curl -i https://SERVER_IP/
@@ -93,6 +110,6 @@ curl -i https://SERVER_IP/notfallnummern
 
 Authentifizierte Portalabläufe testet man über Browser oder FastAPI `TestClient` mit HTTPS-Basisadresse und gültiger Session. Informationen zum verifizierten Teststand: [Portal-Tests](teamportal-tests.md).
 
-## 8. Noch nicht umgesetzt
+## 9. Noch nicht umgesetzt
 
-Es gibt noch keine allgemeine Verwaltungsseite für Accounts/Zuweisungen, keine öffentliche Selbstregistrierung, keinen Passwort-Reset bzw. MFA und keinen vollständigen Datenschutzfilter für reale Schutzstandorte. Chat-/Beratungs-API, Standortsuche, Push sowie die veröffentlichte App-Version gehören ebenfalls nicht zu diesem Stand.
+Eine Verwaltungsseite für Accounts/Zuweisungen und ein **Administrator-Passwort-Reset** sind implementiert. Es gibt weiterhin **keine öffentliche Selbstregistrierung**, keinen selbstständigen Passwort-vergessen-Prozess, keine MFA und keinen vollständigen Datenschutzfilter für reale Schutzstandorte. Chat-/Beratungs-API, Standortsuche, Push sowie die veröffentlichte App-Version gehören ebenfalls nicht zu diesem Stand.

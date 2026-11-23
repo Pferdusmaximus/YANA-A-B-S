@@ -1,6 +1,6 @@
 # Nutzungshandbuch – Entwicklungsstand
 
-**Stand: 18. November 2026.** YANA besitzt inzwischen zwei klar getrennte Nutzungsebenen: die öffentliche Informationswebsite mit Download-Hinweis und ein geschütztes Teamportal für die interne Datenpflege. Die Flutter-App selbst befindet sich weiterhin in Entwicklung; eine veröffentlichte Download-Version oder verlässliche echte Notfallberatung ist nicht bestätigt.
+**Stand: 23. November 2026.** YANA besitzt inzwischen zwei klar getrennte Nutzungsebenen: die öffentliche Informationswebsite mit Download-Hinweis und ein geschütztes Teamportal für die interne Datenpflege. Die Flutter-App selbst befindet sich weiterhin in Entwicklung; eine veröffentlichte Download-Version oder verlässliche echte Notfallberatung ist nicht bestätigt.
 
 ## Öffentliche Website
 
@@ -8,9 +8,9 @@
 
 ## Geschütztes Teamportal
 
-Administratoren des YANA-Teams und zugeordnete externe Partner melden sich unter `/portal/login` an. Im selben Dashboard sehen Partner ausschließlich ihre Einrichtungen, Administratoren dagegen alle. Neue Test-Hilfestellen können erstellt, Entwürfe zur Veröffentlichung eingereicht und veröffentlichte Kontaktdaten über getrennte Änderungsvorschläge mit Administratorfreigabe aktualisiert werden. Aktionen werden in PostgreSQL protokolliert.
+Administratoren des YANA-Teams und zugeordnete externe Partner melden sich unter `/portal/login` an. Im selben Dashboard sehen Partner ausschließlich ihre Einrichtungen, Administratoren dagegen alle. Neue Test-Hilfestellen können erstellt, Entwürfe zur Veröffentlichung eingereicht und veröffentlichte Kontaktdaten über getrennte Änderungsvorschläge mit Administratorfreigabe aktualisiert werden. Zudem lassen sich Partner-Accounts direkt im Portal erstellen, Hilfestellen zuweisen, Accounts sperren/reaktivieren und Passwörter zurücksetzen. Hilfestellenaktionen werden in PostgreSQL protokolliert; eine umfassende Account-Auditansicht ist noch offen.
 
-Die vollständige Anleitung steht unter **[Teamportal bedienen](teamportal.md)**. Technische Details: [Hilfestellenverwaltung](../technik/teamportal-hilfestellen.md).
+Die vollständigen Anleitungen stehen unter **[Teamportal bedienen](teamportal.md)** und **[Partner-Accounts verwalten](partnerverwaltung.md)**. Technische Details: [Hilfestellenverwaltung](../technik/teamportal-hilfestellen.md).
 
 ## Geplante mobile App-Funktionen
 

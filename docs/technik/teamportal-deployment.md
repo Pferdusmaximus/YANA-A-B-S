@@ -1,6 +1,6 @@
 # Verwaltungsportal: Deployment auf dem IONOS-VPS
 
-**Stand: 18. November 2026 · Freigabe- und Partnerfunktionen erfolgreich produktiv bereitgestellt**
+**Stand: 23. November 2026 · Partner- und Passwortverwaltung ergänzt und produktiv bereitgestellt**
 
 ## 1. Ziel und Umgebungen
 
@@ -116,3 +116,34 @@ Der vollständige fiktive Änderungsworkflow wurde am 18.11.2026 bereits erfolgr
 Bei Problemen zuerst Logs und Versionsstand prüfen. Sicherungsdateien nicht ungeprüft über `.env` oder `.venv` entpacken. Ein Code-Rollback setzt **keine** Datenbankmigration und keine bereits freigegebenen Einträge zurück. Die alte Version von `main.py` darf nicht wieder eine unfilterte öffentliche Hilfestellenliste aktivieren. Bei Unsicherheit die öffentliche Route absichern oder den Fehler gezielt beheben.
 
 Für zukünftige Releases sind separate Staging-Datenbank, getesteter Restore, fest versionierte Migrationsskripte und reproduzierbare Abhängigkeiten sinnvoll.
+
+## 8. Nachtrag 23.11.2026: Partnerverwaltung deployen
+
+Für die neuen Funktionen wurden im Projektverlauf folgende Dateien nach erfolgreichen TestClient- und Integrationstests gemeinsam übernommen:
+
+```text
+main.py                        # Bindet partners_router und password_router ein
+portal.py                      # Pflicht-Passwortwechsel und Login-Weiterleitung
+portal_partners.py             # Partner-CRUD im eingeschränkten Schulprojekt-Umfang
+portal_password.py             # Eigenes Passwort ändern
+templates/portal/partner.html
+templates/portal/partner_erstellt.html
+templates/portal/passwort_aendern.html
+templates/portal/dashboard.html
+static/css/style.css
+```
+
+**Wichtig:** `portal.py`, `portal_password.py`, `main.py` und die Kontoerstellung müssen als kompatibler Stand bereitgestellt werden. Andernfalls kann ein neu angelegter Account mit `must_change_password=TRUE` nicht regulär arbeiten. Die DB-Spalte `portal_account.must_change_password` muss vor dem Deployment existieren. Die vier Dateien des anschließenden Lifecycle-Updates (`portal_partners.py`, `partner.html`, `partner_erstellt.html`, `style.css`) wurden nach zwölf erfolgreichen Integrationstests separat übernommen.
+
+```bash
+cd ~/yana-backend
+source .venv/bin/activate
+python -m py_compile main.py portal.py portal_partners.py portal_password.py
+python -c "from main import app; print('FastAPI-Import erfolgreich')"
+sudo systemctl restart yana-api
+sudo systemctl status yana-api --no-pager
+```
+
+Für Tests ausschließlich fiktive Accounts verwenden und daran denken, dass Test- und Produktivcode **dieselbe Datenbank** benutzen. Die manuelle Erstellung eines Testpartners muss nach dem Test einschließlich Sessions/Zuordnungen bereinigt werden. Bei einem Code-Rollback ist das bereits migrierte Datenbankschema gesondert zu betrachten; kein blindes Zurückspielen von SQL-Dateien.
+
+Detaillierter Ablauf und Ergebnisse: [Benutzerverwaltung](teamportal-benutzerverwaltung.md) und [Tests](teamportal-tests.md).

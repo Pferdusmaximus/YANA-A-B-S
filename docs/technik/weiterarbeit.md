@@ -1,6 +1,6 @@
 # Wiedereinstieg: aktueller Stand und nächste Aufgaben
 
-**Projekt-Checkpoint: Mittwoch, 18. November 2026.**
+**Projekt-Checkpoint: Montag, 23. November 2026.**
 
 ## 1. Was ist abgeschlossen?
 
@@ -12,18 +12,21 @@
 - Partner sehen nur die ihnen per `portal_facility_assignment` zugewiesenen Einträge; ein Testpartner ist vorhanden.
 - **Änderungsvorschläge bei veröffentlichten Einträgen**: Partner speichert getrennte Werte, reicht ein; Administrator vergleicht und gibt frei oder lehnt ab. Die öffentliche API ändert sich **erst bei Freigabe**.
 - Die Änderungsfreigabe wurde mit fiktiven Testdaten Ende-zu-Ende geprüft und anschließend produktiv bereitgestellt. Die ursprüngliche Telefonnummer wurde nach dem Test wiederhergestellt.
+- **Partnerverwaltung:** Account-Erstellung mit einmaligem Startpasswort, Zuordnen/Entfernen von Hilfestellen, Pflicht-Passwortwechsel, Deaktivieren, Reaktivieren und Administrator-Reset umgesetzt und mit Testpartnern geprüft; nach Projektverlauf produktiv bereitgestellt.
 
 ## 2. Welches Feature kommt als Nächstes?
 
-**Administrator-Benutzerverwaltung im bestehenden Portal**, ohne zweites Partnerportal:
+Die vereinfachte **Administrator-Benutzerverwaltung ist umgesetzt**: Partner werden im Portal erstellt, mit Einrichtungen verknüpft, deaktiviert/reaktiviert und bei Bedarf per neuem Startpasswort zurückgesetzt.
 
-1. Partner-Account mit sicherem Passwort anlegen und aktivieren/deaktivieren.
-2. Eine oder mehrere Hilfestellen zuweisen und Zuweisungen entziehen.
-3. Anzeigen, welche Organisation zu welchem Account gehört.
-4. Rollen- und Zuordnungsprüfungen auf allen neuen Endpunkten ergänzen; CSRF, Audit und Negativtests berücksichtigen.
-5. Bestehenden Admin-Account niemals unkontrolliert sperren oder umstellen.
+Als nächste Entwicklungsschritte sind sinnvoll:
 
-Aktuell werden Partner-Accounts und Zuordnungen noch **manuell über pgAdmin** angelegt. Es existiert eine fiktive Test-Partneridentität, aber noch keine Admin-Verwaltungsseite für Konten.
+1. **Datenschutz vor realem Einsatz:** Vertrauliche Adressen und Koordinaten aus der öffentlichen `/hilfestellen`-Antwort heraushalten; Sichtbarkeit je Einrichtung definieren.
+2. **Isolierte Testdatenbank:** Schreibtests dürfen nicht mehr produktive `app_db` verändern.
+3. **Automatisierte Regressionstests:** Login, CSRF, Zuordnungen, Sperrungen, Freigaben, Session-Entzug und konkurrierende Bearbeitungen.
+4. **Account-Audit:** Änderungen an Partnerkonten und Zuordnungen gezielt protokollieren. Aktuell protokolliert `portal_facility_audit` primär Hilfestellenaktionen.
+5. **Betriebsreife:** Echte Organisationen verifizieren, Startpasswörter sicher übermitteln, MFA und Backup-Wiederherstellung prüfen.
+
+Derzeit wird im Portal als Partneridentifikation eine E-Mail-Adresse verwendet; ein separates Organisationsprofil mit eigenem Datensatz wurde nicht implementiert.
 
 ## 3. Entwicklungsorte und Deployment
 
@@ -50,6 +53,11 @@ VPS-Verwaltung erfolgt über die grafische Ubuntu-/IONOS-Konsole. Der GitHub-Pus
 | `portal_facilities_create.py` | Neue Test-Hilfestellen |
 | `portal_facilities_status.py` | Statuswechsel für Neueinträge |
 | `portal_facility_changes.py` | Änderungsentwürfe und Freigabe veröffentlichter Einträge |
+| `portal_partners.py` | Account-Erstellung, Zuweisungen, Deaktivieren/Reaktivieren, Reset |
+| `portal_password.py` | Eigenes Passwort ändern, Pflichtwechsel |
+| `templates/portal/partner.html` | Partnerverwaltung mit Formularen und CSRF |
+| `templates/portal/partner_erstellt.html` | Startpasswort einmalig anzeigen |
+| `templates/portal/passwort_aendern.html` | Eigenes Passwort festlegen |
 | `templates/portal/hilfestellen.html` | Gemeinsame rollenabhängige Übersicht |
 | `templates/portal/aenderung_bearbeiten.html` | Änderungsformular |
 | `templates/portal/aenderungen_pruefen.html` | Administrations-Warteschlange |
@@ -63,7 +71,7 @@ Die ursprüngliche `hilfestellen_bearbeiten.html`-Datei benötigt weiterhin den 
 - Testdaten-Zwang `YANA Test...` erst nach Datenschutz- und Validierungsprüfung bewusst aufheben.
 - Separates Test-PostgreSQL einrichten: Der aktuelle Testcode verwendet produktive `app_db`.
 - Automatisierte CI-, Rollen-, CSRF- und Regressionstests ergänzen; veraltete Änderungsvorschläge und konkurrierende Partner prüfen.
-- Datenschutz, Account-Lifecycle, Passwort-Reset/MFA, Protokoll-Aufbewahrung, Backups und Wiederherstellung prüfen.
+- Datenschutz, **Account-Audit**, sichere Startpasswortübergabe, MFA, Protokoll-Aufbewahrung, Backups und Wiederherstellung prüfen; Account-Lifecycle und Admin-Reset sind implementiert.
 - Keine Secrets, privaten Accounts, realen Hilfesuchendendaten oder schutzwürdigen Standorte in GitHub bzw. MkDocs dokumentieren.
 
 ## 6. Entwicklungs- und Dokumentationskonvention

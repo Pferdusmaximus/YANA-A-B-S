@@ -1,6 +1,6 @@
 # PostgreSQL: Verwaltungsportal, Partnerzuordnung und Änderungsvorschläge
 
-**Stand: 18. November 2026 · Ergänzung zum ursprünglichen YANA-ER-Modell**
+**Stand: 23. November 2026 · Partner-Accounts und Passwortwechsel ergänzt**
 
 ## 1. Überblick
 
@@ -27,7 +27,7 @@ erDiagram
 
 ## 2. Account und Sessions
 
-**`portal_account`:** `account_id` (Primärschlüssel), `email` (eindeutig, kleingeschrieben), `password_hash`, `role` (`admin` oder `partner`), `is_active`, `failed_attempts`, `locked_until`, `created_at`. Es gibt einen Administratoraccount und einen fiktiven Partner-Testaccount. Neue Partner werden bislang über pgAdmin angelegt; eine Verwaltungsmaske fehlt.
+**`portal_account`:** `account_id` (Primärschlüssel), `email` (normalisiert, eindeutiger Index auf `LOWER(email)`), `password_hash`, `role` (`admin` oder `partner`), `is_active`, `must_change_password` (Boolean, Standard `FALSE`), `failed_attempts`, `locked_until`, `created_at`. Partner werden mittlerweile durch die Administratoroberfläche angelegt; der Account erhält ein zufälliges Startpasswort als Hash und `must_change_password = TRUE`. Ein bestehender Administratoraccount muss dafür nicht geändert werden.
 
 **`portal_session`:** `session_hash` ist der SHA-256-Hash des zufällig generierten Session-Tokens; `account_id` verweist auf den Account; `created_at` und `expires_at` speichern Gültigkeitszeiten. Der Test-/Produktivcode verwendet den gleichen Sessionmechanismus.
 
@@ -131,3 +131,27 @@ ORDER BY change_id DESC LIMIT 10;
 ## 9. Grenzen
 
 Das bisherige Schema enthält noch keine gesonderte Veröffentlichungskontrolle pro **Adress- oder Koordinatenfeld**. Auch bei veröffentlichten Einträgen dürfen daher keine vertraulichen Standorte in den öffentlichen Spalten stehen. Eine gesonderte Testdatenbank, automatische DB-Migrationen, Backups mit Recovery-Probe und definierte Aufbewahrungsfristen bleiben offen.
+
+## 10. Ergänzung 23.11.2026: Account-Lebenszyklus
+
+```sql
+-- Auf der bestehenden Projekt-Datenbank bereits vorgenommen;
+-- nicht ungeprüft in einer laufenden Datenbank erneut ausführen.
+ALTER TABLE public.portal_account
+ADD COLUMN IF NOT EXISTS must_change_password BOOLEAN NOT NULL DEFAULT FALSE;
+
+CREATE UNIQUE INDEX IF NOT EXISTS idx_portal_account_email_lower_unique
+ON public.portal_account (LOWER(email));
+```
+
+Für die Web-Anwendungsrolle `app_user` wurden passend zur neuen Funktion insbesondere **INSERT-Spaltenrechte auf `portal_account`**, **UPDATE-Spaltenrechte für `is_active`, `password_hash`, `must_change_password`, `failed_attempts`, `locked_until`**, **DELETE auf `portal_session`** sowie **SELECT/INSERT/DELETE auf `portal_facility_assignment`** ergänzt. Zur Vergabe automatisch erzeugter `account_id` können Sequenzrechte erforderlich sein; das hängt von der tatsächlichen Serial-/Identity-Definition ab.
+
+| Aktion | Account-Felder | Zugewiesene Hilfestellen |
+|---|---|---|
+| Neuer Partner | `role=partner`, `is_active=TRUE`, `must_change_password=TRUE` | Noch keine; später über Zuordnung |
+| Deaktivieren | `is_active=FALSE` | Bleiben erhalten |
+| Reaktivieren | `is_active=TRUE`, neuer Passwort-Hash, `must_change_password=TRUE` | Bleiben erhalten |
+| Passwort zurücksetzen | Neuer Passwort-Hash, `must_change_password=TRUE` | Unverändert |
+| Eigenes Passwort ändern | Neuer Passwort-Hash, `must_change_password=FALSE` | Unverändert |
+
+Beim Passwortwechsel, Reset und Aktivstatuswechsel werden betroffene `portal_session`-Datensätze gelöscht. Die Nachweise und Grenzen stehen unter [Benutzerverwaltung](teamportal-benutzerverwaltung.md).

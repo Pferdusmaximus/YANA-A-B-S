@@ -90,3 +90,7 @@ Die Git-Arbeitskopie ist vom produktiven Dienst getrennt. Darum darf `~/yana-bac
 ## 6. Versionsnachweise
 
 Für kommende Änderungen sollten ein konkreter Commit-Hash (`git rev-parse HEAD`), Testdatum, Testumgebung, Ausgaben der wichtigsten Tests und eine verantwortliche Person in der Projektdokumentation notiert werden. Die hier dokumentierten Implementierungen beruhen auf den im Projektverlauf erfolgreich durchgeführten Tests; ein aktueller Commit-Hash wurde im Chat nicht gesichert.
+
+## Aktualisierung 23.11.2026: Partnerkonten
+
+Die zuvor manuell gepflegten Partner-Accounts und Hilfestellenzuordnungen lassen sich nun im geschützten YANA-Portal verwalten. Einmalige Startpasswörter, Pflichtwechsel, Deaktivierung, Reaktivierung und Passwort-Reset sind dokumentiert unter [Partner- und Benutzerverwaltung](../technik/teamportal-benutzerverwaltung.md). Diese Erweiterung benötigt keinen Mailserver, wohl aber die bereits vorgenommenen Schema-/Rechteanpassungen in PostgreSQL.

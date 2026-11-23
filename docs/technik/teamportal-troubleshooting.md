@@ -58,3 +58,18 @@ Weiterführend: [Git-Workflow](git-deployment.md), [Portal-Tests](teamportal-tes
 - **Änderungsantrag kann nicht freigegeben werden (HTTP 409):** Veröffentlichungsstatus, aktiven Antrag und Vergleich von `base_data` mit aktuellen Daten prüfen; veraltete Daten nicht blind überschreiben.
 
 Die Testkopie greift auf dieselbe PostgreSQL-Instanz zu. Fehlgeschlagene Schreibtests erst anhand von `facility_id`/`change_id` kontrollieren, bevor erneut ausgeführt wird.
+
+## Nachträge: Partner- und Passwortverwaltung (23.11.2026)
+
+| Beobachtung | Diagnose und Lösung |
+|---|---|
+| `ImportError: cannot import name 'router' from 'portal_partners'` | Datei vorhanden, aber `router = APIRouter(prefix="/portal", include_in_schema=False)` fehlt bzw. falscher Stand kopiert; `grep -nE 'router =|@router' portal_partners.py` prüfen und GitHub-/Testkopie abgleichen. |
+| `GET /portal/partner` gibt `404` | `main.py` muss `partners_router` importieren und `app.include_router(partners_router)` ausführen. Danach echten `TestClient` verwenden. |
+| Test findet auf der Partnerseite keinen CSRF-Token | `grep -n csrf_token templates/portal/partner.html`; jede zustandsändernde `<form>` benötigt ein verstecktes Eingabefeld. Test-/GitHub-Version vergleichen. |
+| Test findet `action="/portal/partner/create"` nicht | Formular fehlt in der übertragenen `partner.html` oder Test prüft zu strenge HTML-Formatierung. Zuerst tatsächliches Formular und korrekte Route prüfen, danach ggf. robuste Pfadprüfung verwenden. |
+| Integrationstest mit `EOFError` bei `input()` | Test mit interaktiven Prompts als lokale `.py`-Datei speichern und `python datei.py` ausführen, nicht über stdin-Heredoc. |
+| Neuer Partner erhält `403` für Hilfestellen | Bei `must_change_password=TRUE` **erwartet**, bis `/portal/passwort-aendern` erfolgreich durchgeführt wurde. Danach erneut anmelden und Zuordnung prüfen. |
+| Nach Reset funktioniert altes Passwort / alte Sitzung nicht | **Erwartet:** Passwort-Hash wurde ersetzt und Sessions wurden gelöscht. Neues Startpasswort einmalig übergeben; Passwortwechsel erzwingen. |
+| Statusänderung erfolgreich, Browser zeigt alte Verwaltung | GitHub-Push allein aktualisiert `~/yana-backend` nicht. Dateien erst nach Tests kopieren und `yana-api` neu starten. Browser ggf. neu laden. |
+
+**Achtung:** Bei fehlgeschlagenen Schreibtests zuerst in PostgreSQL prüfen, ob der fiktive Testaccount bereits angelegt oder deaktiviert wurde. Keine Tests wiederholen, die versehentlich einen realen Account überschreiben könnten. Siehe [Partnerverwaltung](teamportal-benutzerverwaltung.md).

@@ -1,6 +1,6 @@
 # Verwaltungsportal: Tests und bestätigte Ergebnisse
 
-**Stand: 18. November 2026 · API-, Rollen-, Datenbank- und Freigabefunktionstests dokumentiert**
+**Stand: 23. November 2026 · Kontoerstellung, Passwortwechsel und Account-Lebenszyklus geprüft**
 
 ## 1. Testumgebung und wichtige Einschränkung
 
@@ -21,7 +21,8 @@ cd ~/yana-portal-test
 source ~/yana-backend/.venv/bin/activate
 python -m py_compile main.py portal.py portal_access.py \
   portal_facilities.py portal_facilities_create.py \
-  portal_facilities_status.py portal_facility_changes.py
+  portal_facilities_status.py portal_facility_changes.py \
+  portal_partners.py portal_password.py
 python -c "from main import app; print('FastAPI-Import erfolgreich')"
 ```
 
@@ -91,3 +92,22 @@ Für `Secure`-Sessions verwendet der `TestClient` die HTTPS-Basisadresse. Unter 
 - Tests für abgelaufene Sessions, deaktivierte Accounts, Rate-Limiting und manipulierbare Formularwerte.
 - Datenschutz-/Freigabetests für sensible Standortfelder vor Realbetrieb.
 - Reproduzierbare CI-Pipeline und versionierte DB-Migrationen.
+
+## 8. Ergänzung: Partnerverwaltung und Account-Lebenszyklus (23.11.2026)
+
+Die folgenden Testgruppen wurden im Projektverlauf als erfolgreich gemeldet. Die Python-Tests verwendeten `TestClient(app, base_url="https://testserver", follow_redirects=False)` sowie fiktive Accounts und markierte Test-Hilfestellen.
+
+| Testgruppe | Ergebnis |
+|---|---|
+| Partner-/Admin-Zugriff | Sechs Rollen- und Login-Prüfungen bestanden; Partner erhält für Verwaltungsaktionen `403` |
+| Zuweisung und Entzug | Testhilfestelle zugewiesen, Zugriff geprüft, Zuordnung entfernt und bereinigt |
+| Neue Account-Erstellung | Schreibfreie Endpunkttests und **7 E2E-Prüfungen** bestanden: erzeugter Account, Hash, Pflichtwechsel, erneuter Login, Adminsperre |
+| Deaktivieren / Reaktivieren / Reset | **6 schreibfreie Prüfungen**, danach **12 Integrationstests** bestanden |
+| Session-Invalidierung | Nach Deaktivieren und Reset alte Sitzung ungültig; nach Passwortwechsel erneuter Login erforderlich |
+| Produktivprüfung | Nach Nutzerangabe nach erfolgreichem Deployment und Browserkontrolle funktionsfähig |
+
+Die interaktiven Testskripte mit `input()`/`getpass()` müssen **als `.py`-Datei** gestartet werden, nicht per `python - <<'PY'`, da sonst `EOFError` auftreten kann. Temporäre Skripte wie `partner_create_e2e_local.py` und `partner_lifecycle_test_local.py` gehören nicht zum erforderlichen Produktivcode.
+
+**Datenbankgrenze:** Test- und Produktivverzeichnis greifen auf dieselbe `app_db` zu. Vor einem erneuten Schreibtest sicherstellen, dass der eindeutig markierte Testaccount noch nicht existiert. Nach dem Test Accounts und ihre Sessions/Zuordnungen kontrolliert bereinigen. Die automatisierten Testfälle ersetzen keinen unabhängigen Sicherheitstest, keine Konkurrenzlastprüfung und keine isolierte Staging-Umgebung.
+
+Details: [Partner- und Benutzerverwaltung](teamportal-benutzerverwaltung.md).

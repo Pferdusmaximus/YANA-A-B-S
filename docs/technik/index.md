@@ -1,6 +1,6 @@
 # Technische Dokumentation
 
-Diese Seiten dokumentieren den **nachgewiesenen Stand vom 18. November 2026**. Vorhandene Dokumente zur Servereinrichtung und Flutter-Schicht wurden erhalten; die Website, das Teamportal und die Datenpflege sind hinzugekommen. *Geplant* bedeutet ausdrücklich **nicht implementiert**.
+Diese Seiten dokumentieren den **nachgewiesenen Stand vom 23. November 2026**. Vorhandene Dokumente zur Servereinrichtung und Flutter-Schicht wurden erhalten; die Website, das Teamportal und die Datenpflege sind hinzugekommen. *Geplant* bedeutet ausdrücklich **nicht implementiert**.
 
 ## System, Server und Datenbank
 
@@ -15,14 +15,15 @@ Diese Seiten dokumentieren den **nachgewiesenen Stand vom 18. November 2026**. V
 
 - [Öffentliche Website](website.md) – Inhalte, Templates und bisherige Bereitstellung.
 - [Teamportal-Architektur und Rollen](teamportal-architektur.md) – Struktur, URLs und Verantwortlichkeiten.
-- [Login, Sessions und CSRF](teamportal-login.md) – PostgreSQL-Authentifizierung und Cookie-Sicherheit.
+- [Login, Sessions und CSRF](teamportal-login.md) – PostgreSQL-Authentifizierung, Cookie-Sicherheit und Pflicht-Passwortwechsel.
+- [Partner- und Benutzerverwaltung](teamportal-benutzerverwaltung.md) – Admin erstellt und verwaltet Partner inklusive Startpasswort, Zuordnungen und Account-Lebenszyklus.
 - [Hilfestellenverwaltung](teamportal-hilfestellen.md) – Neuaufnahme, Entwürfe und Veröffentlichung.
 - [Änderungsvorschläge und Freigabe](teamportal-aenderungsfreigabe.md) – Änderungen an bereits veröffentlichten Einträgen und Adminprüfung.
 - [Portal-Tests](teamportal-tests.md) – tatsächliche HTTP-Statuscodes und Speichertest.
 - [Portal-Fehlerbehebung](teamportal-troubleshooting.md) – beobachtete Probleme und Korrekturen.
 - [GitHub und Deployment](git-deployment.md) – Entwicklung/Server-Dateikopien, Git-Konflikte und `.gitignore`.
 - [Produktive Bereitstellung](teamportal-deployment.md) – Backup, Testumgebung, Neustart und Rollback.
-- [Wiedereinstieg und nächste Aufgaben](weiterarbeit.md) – **Benutzerverwaltung und Schutz sensibler Daten**.
+- [Wiedereinstieg und nächste Aufgaben](weiterarbeit.md) – **Datenschutz, isolierte Testdatenbank und Qualitätsverbesserungen**.
 
 ## Flutter / Dart
 
@@ -35,7 +36,7 @@ Diese Seiten dokumentieren den **nachgewiesenen Stand vom 18. November 2026**. V
 
 ## Verlauf und Grundlagen
 
-- [Entwicklungsstand und Änderungsprotokoll](entwicklungsstand.md) – Meilensteine bis 18.11.2026.
+- [Entwicklungsstand und Änderungsprotokoll](entwicklungsstand.md) – Meilensteine bis 23.11.2026.
 - [Server-Fehlerbehebung](troubleshooting.md) – Infrastruktur- und Betriebsprobleme.
 - [Quellen](quellen.md) – Offizielle technische Referenzen.
 

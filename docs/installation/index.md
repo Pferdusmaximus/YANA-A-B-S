@@ -37,3 +37,7 @@ Diese Dokumentation beschreibt die schrittweise Einrichtung von Server, Datenban
 **SQL-Tabellen und Portal-Accounts sind bereits angelegt.** Die Befehle in den Kapiteln sind zum Teil historische Reproduktionsbeispiele; vor wiederholter Ausführung Zustand prüfen. Die VPS-Testkopie verwendet dieselbe DB wie der produktive Dienst. `.env`/`.venv` und echte Zugangsdaten niemals aus GitHub überschreiben oder veröffentlichen.
 
 Der nächste Entwicklungsstand ist als [Wiedereinstieg](../technik/weiterarbeit.md) dokumentiert. Ein funktionsfähiger Prototyp ist noch keine datenschutzrechtlich und sicherheitstechnisch freigegebene Beratungsanwendung.
+
+## Aktualisierung 23.11.2026: Partnerkonten
+
+Die zuvor manuell gepflegten Partner-Accounts und Hilfestellenzuordnungen lassen sich nun im geschützten YANA-Portal verwalten. Einmalige Startpasswörter, Pflichtwechsel, Deaktivierung, Reaktivierung und Passwort-Reset sind dokumentiert unter [Partner- und Benutzerverwaltung](../technik/teamportal-benutzerverwaltung.md). Diese Erweiterung benötigt keinen Mailserver, wohl aber die bereits vorgenommenen Schema-/Rechteanpassungen in PostgreSQL.

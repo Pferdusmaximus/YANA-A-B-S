@@ -1,6 +1,6 @@
 # Technische Systemarchitektur
 
-**Stand: 18.11.2026**
+**Stand: 23.11.2026**
 
 ## 1. Architekturprinzip
 
@@ -101,3 +101,7 @@ Es wurde bewusst **nicht** für jede Weboberfläche ein neues Backend oder eine 
 - Es gibt noch keinen isolierten Staging-Datenbankbetrieb und keinen automatisierten CI-/Deployment-Prozess.
 
 Verweise: [Teamportal-Architektur](teamportal-architektur.md), [Entscheidungen](entscheidungen.md), [Betrieb und Sicherheit](betrieb-sicherheit.md) und [Wiedereinstieg](weiterarbeit.md).
+
+## Ergänzung 23.11.2026: Accountverwaltung
+
+Der gemeinsame Portalbereich unter `/portal/*` enthält inzwischen neben Hilfestellen und Freigaben auch die **Partnerverwaltung** (`portal_partners.py`) und den **eigenen Passwortwechsel** (`portal_password.py`). Partnerkonten verwenden die Rolle `partner`, eine serverseitige Einrichtungszuordnung und `must_change_password` für den Erstlogin. Ein Mailserver oder zweites Partnerportal ist nicht Bestandteil der Architektur. [Technische Details](teamportal-benutzerverwaltung.md).

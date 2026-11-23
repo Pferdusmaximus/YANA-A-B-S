@@ -1,19 +1,19 @@
 # YANA-Verwaltungsportal verwenden
 
-**Stand: 18. November 2026 · Gemeinsames Portal für YANA-Administratoren und externe Partner**
+**Stand: 23. November 2026 · Gemeinsames Portal für YANA-Administratoren und externe Partner**
 
 Die Rollen nutzen **denselben Login, dasselbe Dashboard und dieselbe Hilfestellenübersicht**. Das Backend filtert die Daten und erlaubt je nach Rolle unterschiedliche Aktionen. Es gibt weiterhin **keine öffentliche Registrierung**.
 
 ## Zugang und Rollen
 
 1. HTTPS-Website öffnen und `/portal/login` aufrufen (`https://SERVER_IP/portal/login`).
-2. Mit dem bereitgestellten Account anmelden.
-3. Im Dashboard die Hilfestellenverwaltung öffnen.
+2. Mit dem bereitgestellten Account anmelden. Bei einem neuen oder zurückgesetzten Startpasswort zunächst das **eigene Passwort ändern** und erneut anmelden.
+3. Im Dashboard die Hilfestellenverwaltung öffnen. Administratoren finden zusätzlich die **Partnerverwaltung**.
 4. Nach der Arbeit über **Abmelden** die Session beenden.
 
 | Rolle | In der Übersicht sichtbar | Wichtige Aktionen |
 |---|---|---|
-| `admin` – YANA-Team | Alle Hilfestellen (aktuell auf 100 pro Aufruf begrenzt) | Testeinträge anlegen, Entwürfe bearbeiten, Freigaben/Zurückweisungen, Partnerzuordnung bisher per Datenbank |
+| `admin` – YANA-Team | Alle Hilfestellen (aktuell auf 100 pro Aufruf begrenzt) | Testeinträge anlegen, Entwürfe bearbeiten, Freigaben/Zurückweisungen, Partner- und Accountverwaltung im Browser |
 | `partner` – externe Einrichtung/Kanzlei | Nur ausdrücklich zugewiesene Hilfestellen | Eigene Entwürfe bearbeiten und einreichen; veröffentlichte Kontaktdaten als Änderungsvorschlag einreichen |
 
 Ein Partner erhält **keinen** allgemeinen Zugriff auf fremde Einträge. Die Zuordnung erfolgt über `portal_facility_assignment`. Zugriffsschutz wird serverseitig geprüft; bloß ausgeblendete Schaltflächen reichen nicht aus. Ein fremder Eintrag ist für Partner auch bei direkter URL nicht abrufbar (typischerweise HTTP 404).
@@ -61,7 +61,7 @@ Pro Einrichtung ist maximal ein aktiver Änderungsentwurf oder Prüfantrag gleic
 
 - Nur fiktive Daten verwenden; keine realen Schutzunterkunft-Adressen speichern. **Der Veröffentlichungsfilter schützt nicht einzelne Adressfelder.**
 - Name, Telefon, E-Mail und Öffnungszeiten sind die vier Felder des Änderungsworkflows. Standortdaten, Leistungen, Kapazität und Kategorie sind damit noch nicht nachträglich bearbeitbar.
-- Die Administrator- und Partnerkonten werden noch über pgAdmin eingerichtet und zugeordnet. Eine Benutzerverwaltungsoberfläche, Passwort-Reset und MFA fehlen.
+- **Partner-Accounts und Zuordnungen werden inzwischen im Verwaltungsportal bearbeitet.** Startpasswörter werden einmalig generiert; Passwortwechsel, Deaktivieren, Reaktivieren und Admin-Reset sind implementiert. Ein Mailserver, öffentliche Selbstregistrierung und MFA fehlen weiterhin.
 - Die öffentliche API ist kein Login-geschützter Dienst. Vor echten Einträgen sind Datenfreigabe und Datenschutzkonzept erforderlich.
 
-Weitere Informationen: [Technischer Ablauf der Änderungsfreigabe](../technik/teamportal-aenderungsfreigabe.md), [Hilfestellenverwaltung](../technik/teamportal-hilfestellen.md), [Portal-Sicherheit](../technik/teamportal-login.md).
+Weitere Informationen: [Partner-Accounts verwalten](partnerverwaltung.md), [Technischer Ablauf der Änderungsfreigabe](../technik/teamportal-aenderungsfreigabe.md), [Hilfestellenverwaltung](../technik/teamportal-hilfestellen.md), [Portal-Sicherheit](../technik/teamportal-login.md).

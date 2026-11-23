@@ -1,6 +1,6 @@
 # Entwicklungsstand und Projektmeilensteine
 
-**Dokumentationsstand: 18. November 2026 · Beschrieben ist der im Projektverlauf bestätigte Stand.**
+**Dokumentationsstand: 23. November 2026 · Beschrieben ist der im Projektverlauf bestätigte Stand.**
 
 ## 1. Zeitlicher Verlauf
 
@@ -16,6 +16,8 @@
 | **18.11.2026** | Freigabeaktionen für Neuaufnahmen | Einreichen, Freigeben, Zurückweisen und Zurücknehmen getestet; produktiv |
 | **18.11.2026** | Partnerrolle und Einrichtungszuordnung | `admin`/`partner`, `portal_facility_assignment`; Testpartner kann eigene Einrichtung sehen |
 | **18.11.2026** | Änderungen an veröffentlichten Einträgen | Getrennter Entwurf, Admin-Freigabe, öffentliche API erst danach aktualisiert; E2E-Test und Produktivprüfung bestanden |
+| **23.11.2026** | Partnerverwaltung im Portal | Account-Erstellung mit Startpasswort, Zuweisen/Entfernen, eigener Pflicht-Passwortwechsel |
+| **23.11.2026** | Account-Lebenszyklus | Deaktivieren, Reaktivieren und Admin-Reset; 12 Integrationstests nach Nutzerangabe bestanden, produktiv bereitgestellt |
 
 ## 2. Aktueller Funktionsstatus
 
@@ -31,7 +33,9 @@
 | Änderungsvorschläge veröffentlichter Einträge | **Implementiert**, Name/Telefon/E-Mail/Öffnungszeiten |
 | Administrator prüft Änderungsvorschläge | **Implementiert**, alt/neu, Freigabe/Zurückweisung |
 | Audit-Protokollierung | **Implementiert**; noch keine allgemeine Audit-Webansicht |
-| Partnerkonten über Website erstellen / zuordnen | **Offen** – derzeit nur per pgAdmin |
+| Partnerkonten über Website erstellen / zuordnen | **Implementiert**; Accountverwaltung unter `/portal/partner` |
+| Startpasswort, Pflichtwechsel und eigenes Passwort ändern | **Implementiert und mit Testpartner geprüft** |
+| Account deaktivieren, reaktivieren, Passwort-Reset | **Implementiert und E2E-getestet** |
 | Reale Einrichtungen und vertrauliche Adressen schützen | **Offen; zwingend vor Realbetrieb** |
 | Hilfestellen komplett löschen | **Offen** |
 | App-Download und vollständige mobile UI | **Noch nicht veröffentlicht / nicht vollständig nachgewiesen** |
@@ -51,4 +55,8 @@ Entwickelt wird unter Windows/VS Code, versioniert über GitHub, geprüft in `~/
 
 ## 5. Nächste Meilensteine
 
-Priorität haben die **Administrator-Benutzerverwaltung mit Partnerzuordnung**, der Schutz sensibler Standortinformationen, die Bereinigung der Testdaten-Zwangsregel vor einem echten Pilotbetrieb sowie eine isolierte Testdatenbank. Siehe [Weiterarbeit](weiterarbeit.md).
+Die **Administrator-Benutzerverwaltung mit Partnerzuordnung** ist umgesetzt. Priorität haben nun der Schutz sensibler Standortinformationen, eine isolierte Testdatenbank, automatisierte Regressionstests, Account-Audit und sichere Abläufe für den Umgang mit realen Partnern. Siehe [Weiterarbeit](weiterarbeit.md).
+
+## 6. Nachtrag 23.11.2026: Partner- und Passwortverwaltung
+
+Hinzugekommen sind `portal_partners.py`, `portal_password.py`, die Vorlagen `partner.html`, `partner_erstellt.html` und `passwort_aendern.html` sowie die Datenbankspalte `must_change_password`. Die Endpunkte unterstützen Account-Erstellung, Partner-/Einrichtungszuordnung, verpflichtenden Startpasswortwechsel, Deaktivierung, Reaktivierung und Passwort-Reset. Die schreibfreien Prüfungen und der vollständige Lifecycle-Test (12 Prüfschritte) wurden erfolgreich abgeschlossen; die anschließende produktive Bereitstellung wurde im Gespräch als erfolgreich bestätigt. Näheres unter [Benutzerverwaltung](teamportal-benutzerverwaltung.md).

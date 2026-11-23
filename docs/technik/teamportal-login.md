@@ -1,6 +1,6 @@
 # Teamportal: Authentifizierung, Sessions und Zugriffsrechte
 
-**Stand: 18. November 2026 · Administrator- und Partner-Testlogin im gemeinsamen Portal geprüft**
+**Stand: 23. November 2026 · Startpasswort, Pflichtwechsel und Admin-Reset ergänzt**
 
 ## 1. Login-Ablauf
 
@@ -18,7 +18,7 @@ sequenceDiagram
     API->>DB: portal_account nach E-Mail suchen
     API->>API: Argon2-Passwort-Hash prüfen
     API->>DB: Zufällige Session-ID gehasht speichern
-    API-->>U: HTTP 303 -> /portal/dashboard
+    API-->>U: HTTP 303 -> /portal/dashboard oder /portal/passwort-aendern
     U->>API: GET /portal/dashboard + Session-Cookie
     API->>DB: Session gültig, Account aktiv?
     API-->>U: Dashboard oder Redirect auf Login
@@ -38,6 +38,9 @@ sequenceDiagram
 | Nginx-Rate-Limit | Separat konfiguriert für `POST /portal/login` über HTTPS |
 | Logout | `POST /portal/logout` prüft CSRF und löscht die DB-Session |
 | Rollen | `admin` besitzt Gesamtrechte; `partner` nur Rechte an zugewiesenen Einrichtungen |
+| Startpasswort | `secrets.token_urlsafe(24)`; nur einmalige Anzeige im Admin-Portal und Argon2-Hash in DB |
+| Pflichtwechsel | `must_change_password=TRUE` sperrt reguläre Portalrouten bis zum eigenen Passwortwechsel |
+| Account-Lebenszyklus | Admin kann deaktivieren/reaktivieren/zurücksetzen; betroffene Sessions werden gelöscht |
 
 **Wichtige Einschränkung:** Das signierte Cookie ist nicht verschlüsselt; deshalb enthält es keine Passwörter oder sonstige sensiblen Profildaten. Der Session-Schlüssel steht in der serverseitigen `.env` und darf nicht in GitHub gelangen. Tests haben Basis-Login, Logout, CSRF und ohne Login geschützte Seiten bestätigt; eine unabhängige Sicherheitsprüfung/Penetrationstest wurde **nicht** durchgeführt.
 
@@ -85,7 +88,7 @@ app.add_middleware(
 
 `portal.py` enthält `session_account(request)` und `check_csrf(request, token)`. Die Hilfestellen-Routen prüfen zusätzlich Rolle und Einrichtungszuordnung, u. a. mit `portal_access.py`. Für Partner reicht eine Anmeldung allein nicht aus: Einrichtungsrechte werden bei jeder relevanten Route serverseitig geprüft. Das Dashboard allein schützt keine Bearbeitungsroute; jede Datenänderung muss separat prüfen, ob das Konto berechtigt ist.
 
-**Inzwischen umgesetzt:** Externe Accounts mit Rolle `partner` können sich anmelden und erhalten serverseitig nur Zugriff auf ihre in `portal_facility_assignment` verknüpften Einrichtungen. Veröffentlichung und Änderungsvorschläge werden durch Administratoren geprüft. **Offen:** Selbstregistrierung (derzeit nicht vorgesehen), Passwortzurücksetzung, MFA und eine Verwaltungsoberfläche für Accounts und Zuweisungen. Ein Testpartner wurde über pgAdmin erstellt.
+**Inzwischen umgesetzt:** Externe Accounts mit Rolle `partner` können sich anmelden und erhalten serverseitig nur Zugriff auf ihre in `portal_facility_assignment` verknüpften Einrichtungen. Veröffentlichung und Änderungsvorschläge werden durch Administratoren geprüft. **Inzwischen ebenfalls umgesetzt:** Admin-Oberfläche für Account-Erstellung, Zuordnungen, Deaktivierung, Reaktivierung und Passwort-Reset ohne Mailserver. Neue bzw. zurückgesetzte Startpasswörter müssen über `/portal/passwort-aendern` ersetzt werden. **Weiter offen:** Öffentliche Selbstregistrierung (nicht vorgesehen), MFA, sicherer automatischer Passwortversand, separates Account-Audit und Sicherheitsprüfung für den Realbetrieb.
 
 ## 6. Nginx-Schutz gegen Login-Fluten
 
@@ -111,9 +114,15 @@ Der Projektverlauf dokumentiert diese Tests als bestanden. Für einen neuen Depl
 ## 8. Sicherheitsaufgaben vor echtem Partnerbetrieb
 
 - Keine Veröffentlichung echter vertraulicher Adressen / personenbezogener Daten über die öffentliche `/hilfestellen`-API.
-- Bestehende Partnerzuordnung und Berechtigungsprüfung mit weiteren Accounts, abgelaufenen Sessions und parallelen Anträgen regressionsprüfen; Benutzerverwaltung mit Entzug von Zuweisungen ergänzen.
-- Sitzungs-/Cookie-/CSRF-Integration in realistischen Browsern prüfen, Passwort-Reset und MFA-Konzept definieren.
+- Bestehende Partnerzuordnung und Berechtigungsprüfung mit weiteren Accounts, abgelaufenen Sessions und parallelen Anträgen regressionsprüfen; Zuordnungsentzug und Account-Lebenszyklus unter konkurrierenden Zugriffen prüfen.
+- Sitzungs-/Cookie-/CSRF-Integration in realistischen Browsern prüfen; Passwort-Reset ist implementiert, MFA und sichere Verifikation bei Passwortübergabe bleiben offen.
 - Nginx-Rate-Limit unter kontrollierten Bedingungen prüfen; Proxy-IP-Vertrauen korrekt konfigurieren.
 - Secret-Rotation, Audit- und Löschkonzept; zuverlässige DB-Backups und Recovery-Test.
 
 Siehe [Betrieb und Sicherheit](betrieb-sicherheit.md).
+
+## 9. Startpasswort und eigener Passwortwechsel (23.11.2026)
+
+Nach dem erfolgreichen Login prüft `portal.py` das Feld `must_change_password`. Bei `TRUE` erfolgt die Weiterleitung nach `/portal/passwort-aendern`; geschützte Verwaltungsrouten bleiben bis zum Wechsel mit HTTP `403` gesperrt. Der neue Wert muss 14 bis 128 Zeichen lang sein, mit der Wiederholung übereinstimmen und darf nicht identisch mit dem bisherigen Passwort sein. Danach werden die Sessions des Accounts gelöscht, sodass eine **erneute Anmeldung mit dem neuen Passwort** erforderlich ist.
+
+Passwörter lassen sich nur durch eigenen Passwortwechsel oder einen **Administrator-Reset** neu setzen; es existiert kein Mailversand und keine öffentliche Wiederherstellungsseite. Ausführliche technische Darstellung: [Benutzerverwaltung](teamportal-benutzerverwaltung.md).
