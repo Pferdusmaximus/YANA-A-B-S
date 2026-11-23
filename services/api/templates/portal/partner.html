@@ -1,0 +1,154 @@
+{% extends "base.html" %}
+
+{% block title %}
+YANA – Partnerverwaltung
+{% endblock %}
+
+{% block content %}
+
+<main class="section portal-facilities">
+
+    <a href="/portal/dashboard" class="back-link">
+        Zurück zum Dashboard
+    </a>
+
+    <h1>Partnerverwaltung</h1>
+
+    <p>
+        Hier verwaltet das YANA-Team die Zuordnung
+        von Partner-Accounts zu Hilfestellen.
+    </p>
+
+    {% if not partners %}
+
+        <p>
+            Es sind noch keine Partner-Accounts vorhanden.
+        </p>
+
+    {% endif %}
+
+    {% for partner in partners %}
+
+        <section class="partner-management-card">
+
+            <h2>{{ partner.email }}</h2>
+
+            <p>
+                {% if partner.is_active %}
+                    <span class="status-published">Aktiv</span>
+                {% else %}
+                    <span class="status-draft">Deaktiviert</span>
+                {% endif %}
+            </p>
+
+            <h3>Zugewiesene Hilfestellen</h3>
+
+            {% set assigned =
+                assignments_by_account.get(partner.account_id, [])
+            %}
+
+            {% if assigned %}
+
+                <ul class="partner-assignment-list">
+
+                    {% for assignment in assigned %}
+
+                        <li>
+                            <span>
+                                {{ assignment.facility_name }}
+                                (ID {{ assignment.facility_id }})
+                            </span>
+
+                            {% if partner.is_active %}
+
+                            <form
+                                method="post"
+                                action="/portal/partner/{{ partner.account_id }}/unassign"
+                                onsubmit="return confirm('Zuordnung wirklich entfernen?');"
+                            >
+                                <input
+                                    type="hidden"
+                                    name="csrf_token"
+                                    value="{{ csrf_token }}"
+                                >
+
+                                <input
+                                    type="hidden"
+                                    name="facility_id"
+                                    value="{{ assignment.facility_id }}"
+                                >
+
+                                <button
+                                    type="submit"
+                                    class="action-button action-unpublish"
+                                >
+                                    Entfernen
+                                </button>
+                            </form>
+
+                            {% endif %}
+                        </li>
+
+                    {% endfor %}
+
+                </ul>
+
+            {% else %}
+
+                <p>Keine Hilfestellen zugewiesen.</p>
+
+            {% endif %}
+
+            {% if partner.is_active %}
+
+                <h3>Weitere Hilfestelle zuweisen</h3>
+
+                <form
+                    method="post"
+                    action="/portal/partner/{{ partner.account_id }}/assign"
+                    class="partner-assign-form"
+                >
+
+                    <input
+                        type="hidden"
+                        name="csrf_token"
+                        value="{{ csrf_token }}"
+                    >
+
+                    <select
+                        name="facility_id"
+                        required
+                    >
+                        <option value="">
+                            Hilfestelle auswählen
+                        </option>
+
+                        {% for facility in facilities %}
+
+                            <option value="{{ facility.facility_id }}">
+                                {{ facility.name }}
+                                (ID {{ facility.facility_id }})
+                            </option>
+
+                        {% endfor %}
+
+                    </select>
+
+                    <button
+                        type="submit"
+                        class="action-button action-submit"
+                    >
+                        Zuweisen
+                    </button>
+
+                </form>
+
+            {% endif %}
+
+        </section>
+
+    {% endfor %}
+
+</main>
+
+{% endblock %}
