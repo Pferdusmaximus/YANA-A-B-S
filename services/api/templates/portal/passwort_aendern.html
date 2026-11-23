@@ -1,0 +1,120 @@
+{% extends "base.html" %}
+
+{% block title %}
+YANA – Passwort ändern
+{% endblock %}
+
+{% block content %}
+
+<main class="section">
+
+    <h1>Passwort ändern</h1>
+
+    {% if account.must_change_password %}
+
+        <p>
+            Du verwendest aktuell ein Startpasswort.
+            Bitte lege ein eigenes Passwort fest,
+            bevor du das YANA-Portal verwendest.
+        </p>
+
+    {% else %}
+
+        <p>
+            Hier kannst du dein Passwort
+            jederzeit ändern.
+        </p>
+
+    {% endif %}
+
+    {% if error %}
+
+        <p
+            role="alert"
+            style="color: #a32626; font-weight: 600;"
+        >
+            {{ error }}
+        </p>
+
+    {% endif %}
+
+    <form
+        method="post"
+        action="/portal/passwort-aendern"
+        class="edit-form"
+        autocomplete="on"
+    >
+
+        <input
+            type="hidden"
+            name="csrf_token"
+            value="{{ csrf_token }}"
+        >
+
+        <label for="current_password">
+            Bisheriges Passwort
+        </label>
+
+        <input
+            type="password"
+            id="current_password"
+            name="current_password"
+            autocomplete="current-password"
+            required
+        >
+
+        <label for="new_password">
+            Neues Passwort
+        </label>
+
+        <input
+            type="password"
+            id="new_password"
+            name="new_password"
+            autocomplete="new-password"
+            minlength="14"
+            maxlength="128"
+            required
+        >
+
+        <label for="new_password_repeat">
+            Neues Passwort wiederholen
+        </label>
+
+        <input
+            type="password"
+            id="new_password_repeat"
+            name="new_password_repeat"
+            autocomplete="new-password"
+            minlength="14"
+            maxlength="128"
+            required
+        >
+
+        <p>
+            Das neue Passwort muss mindestens
+            14 Zeichen enthalten.
+        </p>
+
+        <button
+            type="submit"
+            class="login-button"
+        >
+            Passwort speichern
+        </button>
+
+    </form>
+
+    {% if not account.must_change_password %}
+
+        <p style="margin-top: 20px;">
+            <a href="/portal/dashboard">
+                Zurück zum Dashboard
+            </a>
+        </p>
+
+    {% endif %}
+
+</main>
+
+{% endblock %}

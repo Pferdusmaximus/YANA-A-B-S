@@ -92,28 +92,55 @@ def session_account(request: Request):
                 SELECT
                     a.account_id,
                     a.email,
-                    a.role
+                    a.role,
+                    a.must_change_password
                 FROM public.portal_session s
                 JOIN public.portal_account a
                     ON a.account_id = s.account_id
                 WHERE s.session_hash = %s
                   AND s.expires_at > NOW()
                   AND a.is_active = TRUE
-                  AND a.role IN ('admin', 'partner')
                 """,
                 (session_hash,)
             )
 
-            return cur.fetchone()
+            account = cur.fetchone()
+
+    # Ein Benutzer mit Startpasswort darf noch
+    # keine regulären Portalfunktionen verwenden.
+    if (
+        account is not None
+        and account["must_change_password"]
+        and request.url.path not in (
+            "/portal/login",
+            "/portal/passwort-aendern",
+            "/portal/logout",
+        )
+    ):
+        raise HTTPException(
+            status_code=403,
+            detail=(
+                "Bitte zuerst das Startpasswort ändern."
+            )
+        )
+
+    return account
 
 
 # Login-Seite aufrufen
 @router.get("/login", response_class=HTMLResponse)
 def login_page(request: Request):
 
-    if session_account(request):
+    account = session_account(request)
+
+    if account is not None:
+        if account["must_change_password"]:
+            target = "/portal/passwort-aendern"
+        else:
+            target = "/portal/dashboard"
+
         return RedirectResponse(
-            "/portal/dashboard",
+            target,
             status_code=303
         )
 
@@ -148,7 +175,8 @@ def login(
                     role,
                     is_active,
                     failed_attempts,
-                    locked_until
+                    locked_until,
+                    must_change_password
                 FROM public.portal_account
                 WHERE email = %s
                 FOR UPDATE
@@ -247,8 +275,14 @@ def login(
     request.session["sid"] = sid
     request.session["csrf"] = secrets.token_urlsafe(32)
 
+    target = (
+    "/portal/passwort-aendern"
+    if account["must_change_password"]
+    else "/portal/dashboard"
+    )
+
     return RedirectResponse(
-        "/portal/dashboard",
+        target,
         status_code=303
     )
 
