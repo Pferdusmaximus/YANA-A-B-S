@@ -1,63 +1,80 @@
 {% extends "base.html" %}
 
 {% block title %}
-YANA – Partner erstellt
+YANA – Startpasswort
 {% endblock %}
 
 {% block content %}
 
 <main class="section">
 
-    <h1>Partner erfolgreich erstellt</h1>
+    {% set action = operation | default("created") %}
+
+    {% if action == "reactivated" %}
+
+        <h1>Partner erfolgreich reaktiviert</h1>
+
+        <p>
+            Der Partner-Account wurde wieder aktiviert.
+            Ein neues Startpasswort wurde erstellt.
+        </p>
+
+    {% elif action == "reset" %}
+
+        <h1>Passwort erfolgreich zurückgesetzt</h1>
+
+        <p>
+            Das bisherige Passwort wurde ungültig gemacht.
+            Ein neues Startpasswort wurde erstellt.
+        </p>
+
+    {% else %}
+
+        <h1>Partner erfolgreich erstellt</h1>
+
+        <p>
+            Der neue Partner-Account wurde angelegt.
+        </p>
+
+    {% endif %}
 
     <p>
-        Der neue Partner-Account wurde angelegt.
-    </p>
-
-    <p>
-        <strong>E-Mail-Adresse:</strong>
+        <strong>Partner:</strong>
         {{ partner_email }}
     </p>
 
     <section class="partner-management-card">
 
-        <h2>Startpasswort</h2>
+        <h2>Neues Startpasswort</h2>
 
         <p>
-            Das folgende Passwort wurde automatisch
-            generiert und wird nur bei der Erstellung
-            angezeigt.
+            Dieses Passwort wird nur einmal angezeigt.
+            Kopiere es jetzt und übermittle es dem Partner
+            über einen geeigneten sicheren Weg.
         </p>
 
-        <div
-            style="
-                padding: 16px;
-                background: #edf0f2;
-                border-radius: 8px;
-                overflow-wrap: anywhere;
-                margin: 16px 0;
-            "
-        >
+        <div class="partner-password-display">
             <code>{{ start_password }}</code>
         </div>
 
         <p>
             <strong>Wichtig:</strong>
-            Übermittle dieses Passwort dem Partner
-            über einen geeigneten sicheren Weg.
-            Es kann später nicht erneut angezeigt werden.
+            Nach dem Verlassen dieser Seite kann
+            das Passwort nicht erneut angezeigt werden.
         </p>
 
         <p>
-            Bei der ersten Anmeldung muss der Partner
-            ein eigenes Passwort festlegen.
+            Bei seiner nächsten Anmeldung muss der
+            Partner ein eigenes Passwort festlegen.
         </p>
 
     </section>
 
-    <a href="/portal/partner">
-        Zurück zur Partnerverwaltung
-    </a>
+    <p style="margin-top: 24px;">
+        <a href="/portal/partner">
+            Zurück zur Partnerverwaltung
+        </a>
+    </p>
 
 </main>
 

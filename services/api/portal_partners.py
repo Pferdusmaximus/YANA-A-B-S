@@ -355,3 +355,268 @@ def unassign_facility(
         "/portal/partner",
         status_code=303
     )
+
+
+# ---------------------------------------
+# Partner deaktivieren
+# ---------------------------------------
+
+@router.post("/partner/{account_id}/deactivate")
+def deactivate_partner(
+    request: Request,
+    account_id: int,
+    submitted_csrf: str = Form(
+        ..., alias="csrf_token"
+    ),
+):
+    admin_account(request)
+    check_csrf(request, submitted_csrf)
+
+    with get_connection() as conn:
+        with conn.cursor() as cur:
+
+            # Ausschließlich aktive Partner erlauben
+            cur.execute(
+                """
+                SELECT account_id
+                FROM public.portal_account
+                WHERE account_id = %s
+                  AND role = 'partner'
+                  AND is_active = TRUE
+                FOR UPDATE
+                """,
+                (account_id,)
+            )
+
+            if cur.fetchone() is None:
+                raise HTTPException(
+                    status_code=404,
+                    detail="Aktiver Partner nicht gefunden"
+                )
+
+            # Partner deaktivieren
+            cur.execute(
+                """
+                UPDATE public.portal_account
+                SET is_active = FALSE
+                WHERE account_id = %s
+                """,
+                (account_id,)
+            )
+
+            # Alle bestehenden Sitzungen beenden
+            cur.execute(
+                """
+                DELETE FROM public.portal_session
+                WHERE account_id = %s
+                """,
+                (account_id,)
+            )
+
+    return RedirectResponse(
+        "/portal/partner",
+        status_code=303
+    )
+
+
+# ---------------------------------------
+# Hilfsfunktion:
+# Neues Startpasswort festlegen
+# ---------------------------------------
+
+def generate_new_start_password(cur, account_id: int):
+
+    # Kryptografisch zufälliges Passwort
+    start_password = secrets.token_urlsafe(24)
+
+    # Ausschließlich den Hash speichern
+    hashed_password = password_hash.hash(
+        start_password
+    )
+
+    cur.execute(
+        """
+        UPDATE public.portal_account
+        SET
+            password_hash = %s,
+            must_change_password = TRUE,
+            failed_attempts = 0,
+            locked_until = NULL
+        WHERE account_id = %s
+          AND role = 'partner'
+        """,
+        (hashed_password, account_id)
+    )
+
+    # Bisherige Sitzungen ungültig machen
+    cur.execute(
+        """
+        DELETE FROM public.portal_session
+        WHERE account_id = %s
+        """,
+        (account_id,)
+    )
+
+    return start_password
+
+
+# ---------------------------------------
+# Einmalige Passwortanzeige
+# ---------------------------------------
+
+def show_start_password(
+    request: Request,
+    account,
+    partner_email: str,
+    start_password: str,
+    operation: str,
+):
+    return templates.TemplateResponse(
+        request=request,
+        name="portal/partner_erstellt.html",
+        context={
+            "account": account,
+            "partner_email": partner_email,
+            "start_password": start_password,
+            "operation": operation,
+        },
+        headers={
+            "Cache-Control": "no-store, private",
+            "Pragma": "no-cache",
+            "Referrer-Policy": "no-referrer",
+            "X-Content-Type-Options": "nosniff",
+        },
+    )
+
+
+# ---------------------------------------
+# Partner reaktivieren
+# ---------------------------------------
+
+@router.post(
+    "/partner/{account_id}/reactivate",
+    response_class=HTMLResponse
+)
+def reactivate_partner(
+    request: Request,
+    account_id: int,
+    submitted_csrf: str = Form(
+        ..., alias="csrf_token"
+    ),
+):
+    account = admin_account(request)
+    check_csrf(request, submitted_csrf)
+
+    with get_connection() as conn:
+        with conn.cursor(row_factory=dict_row) as cur:
+
+            cur.execute(
+                """
+                SELECT email, is_active
+                FROM public.portal_account
+                WHERE account_id = %s
+                  AND role = 'partner'
+                FOR UPDATE
+                """,
+                (account_id,)
+            )
+
+            partner = cur.fetchone()
+
+            if partner is None:
+                raise HTTPException(
+                    status_code=404,
+                    detail="Partner nicht gefunden"
+                )
+
+            if partner["is_active"]:
+                raise HTTPException(
+                    status_code=409,
+                    detail="Partner ist bereits aktiv"
+                )
+
+            # Bei Reaktivierung automatisch ein
+            # neues Startpasswort festlegen.
+            start_password = generate_new_start_password(
+                cur, account_id
+            )
+
+            cur.execute(
+                """
+                UPDATE public.portal_account
+                SET is_active = TRUE
+                WHERE account_id = %s
+                """,
+                (account_id,)
+            )
+
+    return show_start_password(
+        request=request,
+        account=account,
+        partner_email=partner["email"],
+        start_password=start_password,
+        operation="reactivated",
+    )
+
+
+# ---------------------------------------
+# Passwort eines aktiven Partners
+# zurücksetzen
+# ---------------------------------------
+
+@router.post(
+    "/partner/{account_id}/reset-password",
+    response_class=HTMLResponse
+)
+def reset_partner_password(
+    request: Request,
+    account_id: int,
+    submitted_csrf: str = Form(
+        ..., alias="csrf_token"
+    ),
+):
+    account = admin_account(request)
+    check_csrf(request, submitted_csrf)
+
+    with get_connection() as conn:
+        with conn.cursor(row_factory=dict_row) as cur:
+
+            cur.execute(
+                """
+                SELECT email, is_active
+                FROM public.portal_account
+                WHERE account_id = %s
+                  AND role = 'partner'
+                FOR UPDATE
+                """,
+                (account_id,)
+            )
+
+            partner = cur.fetchone()
+
+            if partner is None:
+                raise HTTPException(
+                    status_code=404,
+                    detail="Partner nicht gefunden"
+                )
+
+            if not partner["is_active"]:
+                raise HTTPException(
+                    status_code=409,
+                    detail=(
+                        "Deaktivierten Partner zuerst "
+                        "reaktivieren"
+                    )
+                )
+
+            start_password = generate_new_start_password(
+                cur, account_id
+            )
+
+    return show_start_password(
+        request=request,
+        account=account,
+        partner_email=partner["email"],
+        start_password=start_password,
+        operation="reset",
+    )
