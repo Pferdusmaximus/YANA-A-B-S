@@ -2,67 +2,65 @@ import 'package:flutter/material.dart';
 
 import 'app/app_theme.dart';
 import 'core/utils/phone_launcher.dart';
-import 'features/category/presentation/info_list_screen.dart';
-import 'hilfestellen.dart';
 import 'menu_ansicht.dart';
 
 class HomeView extends StatelessWidget {
   const HomeView({super.key});
 
-  /// Öffnet dieselbe Listenansicht wie der passende Eintrag im Startmenü
-  /// (inkl. Dropdown „Allgemeine Informationen“).
-  void _openList(BuildContext context, (String, String, String) entry) {
-    final (title, endpoint, info) = entry;
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (_) =>
-            InfoListScreen(title: title, endpoint: endpoint, info: info),
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 32),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          // Notfall
-          SizedBox(
-            width: 110,
-            height: 110,
-            child: FilledButton(
-              style: FilledButton.styleFrom(
-                backgroundColor: Colors.grey.shade600,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8),
+    return SingleChildScrollView(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 24),
+        child: Column(
+          children: [
+            SizedBox(
+              width: 110,
+              height: 110,
+              child: FilledButton(
+                style: FilledButton.styleFrom(
+                  backgroundColor: Colors.grey.shade600,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
                 ),
-              ),
-              onPressed: () => _showEmergencyDialog(context),
-              child: const Text('Notfall'),
-            ),
-          ),
-          const SizedBox(height: 56),
-          _WideButton(
-            label: 'Hilfsnummern',
-            onPressed: () => _openList(context, StartMenu.hilfenummern),
-          ),
-          const SizedBox(height: 20),
-          _WideButton(
-            label: 'Anonyme Hilfestellen',
-            onPressed: () => Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (_) => HelpFacilityScreen(
-                  title: StartMenu.anonymeHilfestellen.$1,
-                  info: StartMenu.anonymeHilfestellen.$3,
-                ),
+                onPressed: () => _showEmergencyDialog(context),
+                child: const Text('Notfall'),
               ),
             ),
-          ),
-        ],
+            const SizedBox(height: 32),
+            _WideButton(
+              label: 'Hilfsnummern',
+              onPressed: () =>
+                  Navigator.pushNamed(context, StartMenu.hilfenummern.$2),
+            ),
+            const SizedBox(height: 12),
+            _WideButton(
+              label: 'Frauenhäuser',
+              onPressed: () => Navigator.pushNamed(context, '/frauenhaeuser'),
+            ),
+            const SizedBox(height: 12),
+            _WideButton(
+              label: 'Psychische Unterstützung',
+              onPressed: () =>
+                  Navigator.pushNamed(context, '/psychische-unterstuetzung'),
+            ),
+            const SizedBox(height: 12),
+            _WideButton(
+              label: 'Rechtliche Hilfe',
+              onPressed: () =>
+                  Navigator.pushNamed(context, '/rechtliche-hilfe'),
+            ),
+            const SizedBox(height: 12),
+            _WideButton(
+              label: 'Anonyme Hilfestellen',
+              onPressed: () => Navigator.pushNamed(
+                context,
+                StartMenu.anonymeHilfestellen.$2,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

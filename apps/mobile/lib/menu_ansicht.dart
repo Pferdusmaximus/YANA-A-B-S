@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 
 import 'app/profile_settings.dart';
-import 'features/category/presentation/info_list_screen.dart';
-import 'hilfestellen.dart';
 
 class StartMenu extends StatelessWidget {
   const StartMenu({super.key});
@@ -92,7 +90,7 @@ class StartMenu extends StatelessWidget {
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 16),
-              for (final (title, endpoint, info) in _entries)
+              for (final entry in _entries)
                 Padding(
                   padding: const EdgeInsets.only(bottom: 12),
                   child: Material(
@@ -102,20 +100,7 @@ class StartMenu extends StatelessWidget {
                       borderRadius: BorderRadius.circular(6),
                       onTap: () {
                         Navigator.pop(context); // Drawer schließen
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            // Anonyme Hilfestellen nutzen die Hilfestellen-
-                            // Ansicht mit Suche und Filter.
-                            builder: (_) => endpoint == anonymeHilfestellen.$2
-                                ? HelpFacilityScreen(title: title, info: info)
-                                : InfoListScreen(
-                                    title: title,
-                                    endpoint: endpoint,
-                                    info: info,
-                                  ),
-                          ),
-                        );
+                        Navigator.pushNamed(context, entry.$2);
                       },
                       child: Container(
                         width: double.infinity,
@@ -123,7 +108,7 @@ class StartMenu extends StatelessWidget {
                           horizontal: 12,
                           vertical: 14,
                         ),
-                        child: Text(title),
+                        child: Text(entry.$1),
                       ),
                     ),
                   ),
