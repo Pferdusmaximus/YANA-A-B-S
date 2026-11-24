@@ -61,10 +61,19 @@ Für die öffentliche Website und das Portal wurde **FastAPI mit serverseitigen 
 
 Die Anmeldung wurde auf PostgreSQL-eigene Portal-Tabellen aufgebaut und **getrennt vom Chat-Modell `nutzerin`** gehalten. Passwörter werden mit Argon2 gehasht, Sessions haben einen serverseitig prüfbaren Hash. Das Backend verwendet `admin` (YANA-Team) und `partner` (externe Organisation) und beschränkt Partnerdaten über `portal_facility_assignment`. Es protokolliert Neuaufnahmen, Statuswechsel und Änderungsfreigaben. Für veröffentlichte Kontaktdaten werden Änderungsvorschläge getrennt gespeichert und erst nach Administratorentscheidung übernommen.
 
-Der frühere Abschnitt „Offene Entscheidungen“ stammt aus der Flutter-/Serverphase. **Login- und Basis-Rollenmodell für das interne Teamportal sind inzwischen umgesetzt**; inzwischen sind eingeschränkte Partnerrechte und Freigabeprozesse für fiktive Einträge vorhanden. Offen bleiben insbesondere eine grafische Benutzerverwaltung, der Schutz vertraulicher Standortfelder und die vollständige Chat-/Nutzerinnen-Authentifizierung. Siehe [Wiedereinstieg](weiterarbeit.md).
+Der frühere Abschnitt „Offene Entscheidungen“ stammt aus der Flutter-/Serverphase. **Login- und Basis-Rollenmodell für das interne Teamportal sind inzwischen umgesetzt**; inzwischen sind eingeschränkte Partnerrechte und Freigabeprozesse für fiktive Einträge vorhanden. Inzwischen sind auch die grafische Partnerverwaltung und der **zweistufige Schutz für Adressen und Koordinaten** umgesetzt. Offen bleiben weitere vertrauliche Felder, vollständige Chat-/Nutzerinnen-Authentifizierung und die Prüfung echter Einrichtungen. Siehe [Wiedereinstieg](weiterarbeit.md).
 
 ## Entscheidung vom 23.11.2026: Benutzerverwaltung ohne Mailserver
 
 Für den Schulprojekt-Prototyp wurde bewusst die Variante **„Automatisch generiertes Startpasswort“** gewählt. Der YANA-Administrator erstellt Partner im bestehenden Portal; `secrets.token_urlsafe(24)` erzeugt ein nur einmalig angezeigtes Passwort. Bei der ersten Anmeldung erzwingt das Backend die Änderung des Passworts. Deaktivierung, Reaktivierung und Admin-Reset setzen/entziehen die Berechtigungen serverseitig und beenden Sessions.
 
 **Begründung:** Kein zusätzlicher Mailserver, keine öffentlichen Registrierungs- oder Einladungsendpunkte, überschaubarer Funktionsumfang und klare Rollenverteilung. **Nachteil:** Die sichere manuelle Passwortübergabe ist organisatorisch zu regeln; echte Partner erfordern weitere Verifikation, MFA und Audit. [Vollständiges Konzept](teamportal-benutzerverwaltung.md).
+
+## Ergänzung 24.11.2026: Design und externer Geocoding-Dienst
+
+- **Einheitliches weiß-lila Designsystem** statt mehrerer blau/türkiser Akzentvarianten: zentralisierte CSS-Regeln, gemeinsames Layout und kompakte Verwaltungslisten.
+- **Geoapify als externes Geocoding** für ausdrücklich nicht vertrauliche öffentliche Anschriften. Die Anfrage erfolgt auf Knopfdruck über FastAPI statt als lokaler Geodatenindex auf dem 2-vCore-/4-GB-VPS. Der API-Schlüssel bleibt serverseitig.
+- **Nullable Koordinaten** erlauben Entwürfe ohne erfolgreiches Geocoding. Eine positive Standortermittlung bedeutet noch keine öffentliche Standortfreigabe.
+- **Sicherheitsgrenze:** Schutzunterkünfte dürfen nicht über den externen Dienst geocodiert werden; die Prüfung erfolgt im Backend.
+
+Die Verbindung, Manipulationsprüfung und das Speichern wurden im Testverzeichnis erfolgreich geprüft; das neue Produktivdeployment ist zum Checkpoint noch nicht bestätigt. Siehe [Geocoding](geocoding.md) und [Wiedereinstieg](weiterarbeit.md).

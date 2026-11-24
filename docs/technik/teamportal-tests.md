@@ -1,6 +1,6 @@
 # Verwaltungsportal: Tests und bestätigte Ergebnisse
 
-**Stand: 23. November 2026 · Kontoerstellung, Passwortwechsel und Account-Lebenszyklus geprüft**
+**Stand: 24. November 2026 · Standortschutz und Geoapify-Integration getestet**
 
 ## 1. Testumgebung und wichtige Einschränkung
 
@@ -22,7 +22,8 @@ source ~/yana-backend/.venv/bin/activate
 python -m py_compile main.py portal.py portal_access.py \
   portal_facilities.py portal_facilities_create.py \
   portal_facilities_status.py portal_facility_changes.py \
-  portal_partners.py portal_password.py
+  portal_partners.py portal_password.py portal_locations.py \
+  geocoding_service.py
 python -c "from main import app; print('FastAPI-Import erfolgreich')"
 ```
 
@@ -111,3 +112,33 @@ Die interaktiven Testskripte mit `input()`/`getpass()` müssen **als `.py`-Datei
 **Datenbankgrenze:** Test- und Produktivverzeichnis greifen auf dieselbe `app_db` zu. Vor einem erneuten Schreibtest sicherstellen, dass der eindeutig markierte Testaccount noch nicht existiert. Nach dem Test Accounts und ihre Sessions/Zuordnungen kontrolliert bereinigen. Die automatisierten Testfälle ersetzen keinen unabhängigen Sicherheitstest, keine Konkurrenzlastprüfung und keine isolierte Staging-Umgebung.
 
 Details: [Partner- und Benutzerverwaltung](teamportal-benutzerverwaltung.md).
+
+## 9. Ergänzung 24.11.2026: Standortschutz und Administratorseite
+
+| Prüfung | Ergebnis laut durchgeführtem Projektverlauf |
+|---|---|
+| `GET /hilfestellen` gegen DB-Status und Freigaben | Bestanden: nur veröffentlichte Hilfestellen; nicht freigegebene Adresse/Koordinaten `null` |
+| Einrichtungsarten-Positivliste | Bestanden: nur `Beratungsstelle`; Schutzunterkunft ausgeschlossen |
+| Anonyme Freigabe / Partnerrecht | Nicht angemeldete POSTs gesperrt; Administratorberechtigung erforderlich |
+| Schutzunterkunft per direktem Admin-POST freigeben | HTTP 409, keine Änderung |
+| Standortdaten ändern | PostgreSQL-Trigger hat die Standortfreigabe zurückgesetzt; `ROLLBACK` |
+| Fiktive öffentliche Beratungsstelle freigeben/sperren | Freigabe in DB und API sichtbar, Sperre danach wieder `null`; `ROLLBACK` |
+| Produktiver Browser | Standortfreigabeseite als funktionsfähig bestätigt |
+
+## 10. Ergänzung 24.11.2026: Geoapify-Testabdeckung
+
+**Wichtig: Die folgenden Tests wurden in `~/yana-portal-test` durchgeführt. Die neue Adresseingabe wurde bei diesem Dokumentations-Checkpoint noch nicht als produktiv bereitgestellt bestätigt.**
+
+| Testgruppe | Ergebnis |
+|---|---|
+| `.env` und API-Schlüssel | Mit explizitem Dateipfad geladen; Schlüssel nicht ausgegeben |
+| Externer Geoapify-Aufruf | Öffentlich bekannte Testadresse in Regensburg erfolgreich auf Koordinaten aufgelöst |
+| FastAPI-Endpunkt | Admin-Login, Adresseingabefelder, JavaScript, Zustimmung, Geheimtyp-Sperre, Bestätigungscode und öffentliche API erfolgreich |
+| Entwurf mit Koordinaten | Bestätigter Standort gespeichert; `draft`, `is_location_public=FALSE`, Audit geprüft |
+| Entwurf ohne Koordinaten | Mit beiden Koordinaten `NULL` gespeichert, ohne Veröffentlichung |
+| Manipulationsschutz | Geänderte Hausnummer mit altem Bestätigungscode: HTTP `422` |
+| Testdatenisolation im Einzeltest | Offene Testtransaktion, `ROLLBACK`, Datensätze für andere DB-Verbindungen nicht sichtbar |
+
+Die Speichertests wurden vom Projektverantwortlichen als **vollständig erfolgreich** bestätigt. Nach dem `ROLLBACK` bleiben keine neuen Test-Hilfestellen dauerhaft bestehen; Sequenzen können dennoch höhere ID-Werte haben. Die gemeinsame Test-/Produktivdatenbank bleibt ein Grund, die Tests künftig auf eine isolierte DB zu verlagern.
+
+**Ausstehend:** Produktive Geoapify-Konfiguration und Browserprüfung, Flutter-Verhalten bei `null`-Koordinaten sowie vollständige End-to-End-Regressionstests aller Website-/Portalabläufe.

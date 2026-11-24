@@ -1,6 +1,6 @@
 # Verwaltungsportal: Deployment auf dem IONOS-VPS
 
-**Stand: 23. November 2026 · Partner- und Passwortverwaltung ergänzt und produktiv bereitgestellt**
+**Stand: 24. November 2026 · Standortverwaltung/Design produktiv; Geoapify-Neuanlage in Testumgebung geprüft, Deployment ausstehend**
 
 ## 1. Ziel und Umgebungen
 
@@ -147,3 +147,22 @@ sudo systemctl status yana-api --no-pager
 Für Tests ausschließlich fiktive Accounts verwenden und daran denken, dass Test- und Produktivcode **dieselbe Datenbank** benutzen. Die manuelle Erstellung eines Testpartners muss nach dem Test einschließlich Sessions/Zuordnungen bereinigt werden. Bei einem Code-Rollback ist das bereits migrierte Datenbankschema gesondert zu betrachten; kein blindes Zurückspielen von SQL-Dateien.
 
 Detaillierter Ablauf und Ergebnisse: [Benutzerverwaltung](teamportal-benutzerverwaltung.md) und [Tests](teamportal-tests.md).
+
+## Ergänzung: Geoapify-Neuanlage produktiv schalten (noch NICHT bestätigt)
+
+**Checkpoint 24.11.2026:** Die neue Adressmaske, echte Geoapify-Abfrage, signierte Standortbestätigung, Entwurf mit/ohne Koordinaten, Audit und Manipulationsschutz wurden erfolgreich unter `~/yana-portal-test` getestet. Die **Bereitstellung auf `~/yana-backend` wurde danach nur angeleitet, nicht als ausgeführt bestätigt**.
+
+Zum nächsten Termin, nach einem Backup und der Prüfung der systemd-Konfiguration, diese **sechs** zusammengehörigen Dateien aus dem getesteten Verzeichnis übernehmen:
+
+```text
+geocoding_service.py
+portal_facilities_create.py
+templates/portal/hilfestellen_neu.html
+static/js/yana-geocoding.js
+static/css/style.css
+templates/base.html
+```
+
+Den Schlüssel nur als `GEOAPIFY_API_KEY` in der geschützten produktiven `.env` konfigurieren; vorher den für `yana-api` verwendeten Ladepfad verifizieren. **Nicht** `.env` aus der Testkopie kopieren. Danach Syntax/Import prüfen, schreibfreie Smoke-Tests durchführen, `yana-api` neu starten und das Formular `/portal/hilfestellen/neu` im Browser mit einer bekannten **öffentlichen** Testadresse kontrollieren. Bei Fehlern Logdateien prüfen und nicht blind Migrationen oder den gesamten API-Ordner überschreiben.
+
+Die PostgreSQL-Schemaänderung für nullable Koordinaten und die Freigabetabelle sind bereits durchgeführt. Die API für die **öffentliche Anzeige** bleibt unabhängig von Geoapify durch den eigenen [Standortschutz](standort-datenschutz.md) abgesichert. Für volle Schritte: [Wiedereinstieg](weiterarbeit.md) und [Geocoding](geocoding.md).

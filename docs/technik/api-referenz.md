@@ -1,6 +1,6 @@
 # HTTP-Schnittstellen: öffentliche API und Verwaltungsportal
 
-**Stand: 23. November 2026 · Partner- und Accountverwaltung ergänzt**
+**Stand: 24. November 2026 · Standortschutz und Geoapify-Testintegration ergänzt**
 
 ## Zugriffswege
 
@@ -24,7 +24,7 @@
 | `GET` | `/static/css/style.css` | Website-/Portal-CSS |
 | `GET` | `/docs` | FastAPI-Swagger-Ansicht der sichtbaren API-Routen |
 
-Einträge in `draft` oder `pending_review` werden bei `GET /hilfestellen` **nicht** ausgegeben. Für veröffentlichte Einträge gehören Adresse und Koordinaten weiterhin zum öffentlichen Datensatz; dies ist für echte Schutzstandorte **nicht geeignet**. Die Portal-Routen sind in Swagger ausgeblendet (`include_in_schema=False`), aber dadurch nicht sicherheitsgeschützt.
+Einträge in `draft` oder `pending_review` werden bei `GET /hilfestellen` **nicht** ausgegeben. Bei `published` werden `address`, `latitude` und `longitude` **nur dann mit Werten** ausgegeben, wenn `is_location_public = TRUE` und die Einrichtungsart in `portal_public_location_type` freigegeben ist; andernfalls stehen diese Felder auf **`null`**. Andere Felder erfordern vor echtem Einsatz eine zusätzliche fachliche Datenschutzprüfung. Die Portal-Routen sind in Swagger ausgeblendet (`include_in_schema=False`); diese Ausblendung **ersetzt keine Authentifizierung**. Siehe [Standortschutz](standort-datenschutz.md).
 
 ## 2. Anmeldung und Portal
 
@@ -42,7 +42,8 @@ Partner sehen im selben Portal nur zugewiesene Einrichtungen. Fremde IDs sind au
 
 | Methode | Pfad | Erlaubter Nutzer / Funktion |
 |---|---|---|
-| `GET` / `POST` | `/portal/hilfestellen/neu` | Nur Admin; fiktiven Entwurf anlegen |
+| `GET` / `POST` | `/portal/hilfestellen/neu` | Nur Admin; fiktiven Entwurf anlegen. Neue Geoapify-Formularversion in Testumgebung geprüft, Produktivübernahme noch offen |
+| `POST` | `/portal/hilfestellen/neu/standort-pruefen` | Nur Admin, CSRF; prüft öffentliche Adresse extern mit Geoapify (in Testumgebung erfolgreich geprüft) |
 | `GET` / `POST` | `/portal/hilfestellen/{id}/edit` | Admin / zugeordneter Partner; nur bei `draft` |
 | `POST` | `/portal/hilfestellen/{id}/status/submit` | Admin / zugeordneter Partner; Entwurf einreichen |
 | `POST` | `/portal/hilfestellen/{id}/status/approve` | Nur Admin; `pending_review → published` |
@@ -80,6 +81,16 @@ Alle zustandsändernden Formulare prüfen CSRF. Ein Partner erhält für Adminis
 
 Siehe [technische Benutzerverwaltung](teamportal-benutzerverwaltung.md).
 
+## 5a. Standortfreigaben (produktiv)
+
+| Methode | Pfad | Zugriff / Aktion |
+|---|---|---|
+| `GET` | `/portal/standorte` | Admin: filterbare Tabelle aller Standortfreigaben |
+| `POST` | `/portal/standorte/{facility_id}/freigeben` | Admin + CSRF: Typ, Veröffentlichungsstatus und Standort prüfen; Freigabe speichern |
+| `POST` | `/portal/standorte/{facility_id}/sperren` | Admin + CSRF: Freigabe zurücknehmen |
+
+Die Standortfreigabe ist unabhängig vom Veröffentlichungstatus. Der DB-Trigger setzt die Freigabe bei geändertem Typ, Adresse oder Koordinaten zurück. Details: [Standortdatenschutz](standort-datenschutz.md) und [Geoapify-Anbindung](geocoding.md).
+
 ## 6. HTTP-Verhalten
 
 | Status | Typischer Fall |
@@ -112,4 +123,4 @@ Authentifizierte Portalabläufe testet man über Browser oder FastAPI `TestClien
 
 ## 9. Noch nicht umgesetzt
 
-Eine Verwaltungsseite für Accounts/Zuweisungen und ein **Administrator-Passwort-Reset** sind implementiert. Es gibt weiterhin **keine öffentliche Selbstregistrierung**, keinen selbstständigen Passwort-vergessen-Prozess, keine MFA und keinen vollständigen Datenschutzfilter für reale Schutzstandorte. Chat-/Beratungs-API, Standortsuche, Push sowie die veröffentlichte App-Version gehören ebenfalls nicht zu diesem Stand.
+Die Verwaltungsseite für Accounts/Zuweisungen und der **Administrator-Passwort-Reset sind implementiert**. Ein **serverseitiger Filter für öffentliche Adress- und Koordinatenfelder** ist ebenfalls produktiv umgesetzt; die Prüfung weiterer sensibler Felder und eine Freigabe für reale Schutzstandorte stehen dagegen noch aus. Es gibt weiterhin **keine öffentliche Selbstregistrierung**, keinen selbstständigen Passwort-vergessen-Prozess und keine MFA. Chat-/Beratungs-API, Standortsuche, Push sowie die veröffentlichte App-Version gehören ebenfalls nicht zu diesem Stand.

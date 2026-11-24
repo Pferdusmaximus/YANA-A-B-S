@@ -1,6 +1,6 @@
 # YANA-Verwaltungsportal verwenden
 
-**Stand: 23. November 2026 · Gemeinsames Portal für YANA-Administratoren und externe Partner**
+**Stand: 24. November 2026 · Standortfreigaben und lila Design ergänzt**
 
 Die Rollen nutzen **denselben Login, dasselbe Dashboard und dieselbe Hilfestellenübersicht**. Das Backend filtert die Daten und erlaubt je nach Rolle unterschiedliche Aktionen. Es gibt weiterhin **keine öffentliche Registrierung**.
 
@@ -8,7 +8,7 @@ Die Rollen nutzen **denselben Login, dasselbe Dashboard und dieselbe Hilfestelle
 
 1. HTTPS-Website öffnen und `/portal/login` aufrufen (`https://SERVER_IP/portal/login`).
 2. Mit dem bereitgestellten Account anmelden. Bei einem neuen oder zurückgesetzten Startpasswort zunächst das **eigene Passwort ändern** und erneut anmelden.
-3. Im Dashboard die Hilfestellenverwaltung öffnen. Administratoren finden zusätzlich die **Partnerverwaltung**.
+3. Im Dashboard die Hilfestellenverwaltung öffnen. Administratoren finden zusätzlich **Partnerverwaltung** und **Standortfreigaben**.
 4. Nach der Arbeit über **Abmelden** die Session beenden.
 
 | Rolle | In der Übersicht sichtbar | Wichtige Aktionen |
@@ -21,7 +21,7 @@ Ein Partner erhält **keinen** allgemeinen Zugriff auf fremde Einträge. Die Zuo
 ## Neue Hilfestelle erfassen (Administrator)
 
 1. Unter `/portal/hilfestellen` **Neue Hilfestelle** auswählen.
-2. Name, Einrichtungstyp, Adresse, Breiten-/Längengrad und Kapazität eingeben; Kategorie und Kontaktdaten nach Bedarf ergänzen.
+2. **Aktuell bestätigter Produktivstand:** Die bisherige Erfassungsmaske verwenden. **Bereits erfolgreich in der Testumgebung vorbereitet:** die neue Eingabe von Straße, Hausnummer, PLZ und Ort mit Knopf „Standort ermitteln“ statt manueller Koordinaten. Das produktive Deployment der neuen Maske steht noch aus. [Geocoding-Details](../technik/geocoding.md).
 3. Formular speichern. Das Backend validiert die Eingaben, vergibt die `facility_id` automatisch und erstellt einen Audit-Eintrag `created`.
 4. Der neue Eintrag beginnt grundsätzlich als **`draft` (Entwurf)** und erscheint **noch nicht** in der öffentlichen Flutter-API.
 
@@ -59,9 +59,15 @@ Pro Einrichtung ist maximal ein aktiver Änderungsentwurf oder Prüfantrag gleic
 
 ## Sicherheit und Grenzen
 
-- Nur fiktive Daten verwenden; keine realen Schutzunterkunft-Adressen speichern. **Der Veröffentlichungsfilter schützt nicht einzelne Adressfelder.**
+- Nur fiktive Daten verwenden; keine realen Schutzunterkunft-Adressen speichern. Die öffentliche API **schützt inzwischen Adresse und Koordinaten** über separate Einzel- und Typfreigabe; für reale Standorte bleiben weitere datenschutzrechtliche Prüfungen offen.
 - Name, Telefon, E-Mail und Öffnungszeiten sind die vier Felder des Änderungsworkflows. Standortdaten, Leistungen, Kapazität und Kategorie sind damit noch nicht nachträglich bearbeitbar.
 - **Partner-Accounts und Zuordnungen werden inzwischen im Verwaltungsportal bearbeitet.** Startpasswörter werden einmalig generiert; Passwortwechsel, Deaktivieren, Reaktivieren und Admin-Reset sind implementiert. Ein Mailserver, öffentliche Selbstregistrierung und MFA fehlen weiterhin.
 - Die öffentliche API ist kein Login-geschützter Dienst. Vor echten Einträgen sind Datenfreigabe und Datenschutzkonzept erforderlich.
 
 Weitere Informationen: [Partner-Accounts verwalten](partnerverwaltung.md), [Technischer Ablauf der Änderungsfreigabe](../technik/teamportal-aenderungsfreigabe.md), [Hilfestellenverwaltung](../technik/teamportal-hilfestellen.md), [Portal-Sicherheit](../technik/teamportal-login.md).
+
+## Standortfreigaben für Administratoren
+
+Das Dashboard enthält die Kachel **Standortfreigaben**. Die Seite zeigt eine kompakte Tabelle mit **Suche, Statusfilter und aufklappbaren Details**. Nur Administratoren dürfen einen öffentlichen Standort freigeben oder wieder sperren; Schutzunterkünfte können nicht freigegeben werden. Freigabe von Adresse und Koordinaten ist **unabhängig** von der Veröffentlichung der Hilfestelle.
+
+Schrittfolge und Grenzen: [Standortfreigaben bedienen](standortfreigaben.md). Die neue Geoapify-Adresseingabe für die **Neuanlage** ist am vorliegenden Checkpoint erfolgreich getestet, aber noch nicht produktiv bestätigt.

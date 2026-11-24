@@ -1,10 +1,10 @@
 # PostgreSQL: Verwaltungsportal, Partnerzuordnung und Änderungsvorschläge
 
-**Stand: 23. November 2026 · Partner-Accounts und Passwortwechsel ergänzt**
+**Stand: 24. November 2026 · Account-Lebenszyklus, Standortschutz und nullable Koordinaten ergänzt**
 
 ## 1. Überblick
 
-Das ursprüngliche [ER-Modell](datenmodell.md) enthält acht Fach- und Chat-Tabellen. Für das Verwaltungsportal wurden zusätzlich fünf Tabellen eingerichtet. Bei vollständig vorhandenem Ursprungsschema sind damit **13 Tabellen** dokumentiert. Die ursprüngliche ER-Abbildung zeigt die Portal-Erweiterungen nicht.
+Das ursprüngliche [ER-Modell](datenmodell.md) enthält acht Fach- und Chat-Tabellen. Für das Verwaltungsportal wurden zusätzlich fünf Tabellen eingerichtet. Hinzu kommt die Standort-Positivliste `portal_public_location_type`; bei vollständig vorhandenem Ursprungsschema sind damit **14 Tabellen** dokumentiert (acht Fach-/Chat-Tabellen, fünf Portal-Tabellen, eine Standortfreigabe-Tabelle). Die ursprüngliche ER-Abbildung zeigt die Portal-Erweiterungen nicht.
 
 | Tabelle | Aufgabe |
 |---|---|
@@ -130,7 +130,7 @@ ORDER BY change_id DESC LIMIT 10;
 
 ## 9. Grenzen
 
-Das bisherige Schema enthält noch keine gesonderte Veröffentlichungskontrolle pro **Adress- oder Koordinatenfeld**. Auch bei veröffentlichten Einträgen dürfen daher keine vertraulichen Standorte in den öffentlichen Spalten stehen. Eine gesonderte Testdatenbank, automatische DB-Migrationen, Backups mit Recovery-Probe und definierte Aufbewahrungsfristen bleiben offen.
+Die zusätzliche Veröffentlichungskontrolle für **Adresse und Koordinaten** ist inzwischen umgesetzt: `is_location_public` und eine freigegebene Einrichtungsart müssen gemeinsam vorliegen; sonst gibt die öffentliche API `null` zurück. **Andere sensible öffentliche Felder** (z. B. Name, Telefonnummer oder Kapazität) sind damit noch nicht automatisch geschützt. Eine gesonderte Testdatenbank, automatische DB-Migrationen, Backups mit Recovery-Probe und definierte Aufbewahrungsfristen bleiben offen.
 
 ## 10. Ergänzung 23.11.2026: Account-Lebenszyklus
 
@@ -155,3 +155,17 @@ Für die Web-Anwendungsrolle `app_user` wurden passend zur neuen Funktion insbes
 | Eigenes Passwort ändern | Neuer Passwort-Hash, `must_change_password=FALSE` | Unverändert |
 
 Beim Passwortwechsel, Reset und Aktivstatuswechsel werden betroffene `portal_session`-Datensätze gelöscht. Die Nachweise und Grenzen stehen unter [Benutzerverwaltung](teamportal-benutzerverwaltung.md).
+
+## 11. Ergänzung 24.11.2026: Standortfreigabe und Geocoding
+
+| Schemaobjekt | Zweck |
+|---|---|
+| `hilfestelle.is_location_public BOOLEAN NOT NULL DEFAULT FALSE` | Einzelgenehmigung für öffentliche Standortangaben |
+| `portal_public_location_type(facility_type TEXT PRIMARY KEY)` | Erlaubte Einrichtungstypen; aktuell **nur `Beratungsstelle`** |
+| `trg_yana_reset_location_approval` | Freigabe bei Änderung von Typ, Adresse oder Koordinaten zurücksetzen |
+| `hilfestelle.latitude`, `hilfestelle.longitude` | In der Test-/Produktivdatenbank als **nullable** migriert |
+| `chk_yana_coordinates_complete` | `latitude` und `longitude` entweder beide `NULL` oder beide vorhanden |
+
+`app_user` kann die Positivliste lesen, aber **nicht** über die normale Anwendungsrolle freigegebene Typen ergänzen. Die Standortfreigabe selbst wird ausschließlich über geschützte Administratoraktionen gesetzt oder zurückgenommen. Bestehende Veröffentlichungsvorgänge mit `published` werden dadurch **nicht** mit einer Standortgenehmigung gleichgesetzt.
+
+**Achtung:** Die Migrationen sind in der laufenden Projektdatenbank bereits ausgeführt worden. Vor einem weiteren Lauf zuerst tatsächliche Constraints, Trigger, GRANTs und Datentypen kontrollieren. Das getestete Geoapify-Feature verwendet die nullable Koordinatenspalten; sein **Produktiv-Deployment** steht zum Dokumentations-Checkpoint noch aus. Siehe [Standortschutz](standort-datenschutz.md) und [Geocoding](geocoding.md).

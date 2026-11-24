@@ -94,3 +94,7 @@ Für kommende Änderungen sollten ein konkreter Commit-Hash (`git rev-parse HEAD
 ## Aktualisierung 23.11.2026: Partnerkonten
 
 Die zuvor manuell gepflegten Partner-Accounts und Hilfestellenzuordnungen lassen sich nun im geschützten YANA-Portal verwalten. Einmalige Startpasswörter, Pflichtwechsel, Deaktivierung, Reaktivierung und Passwort-Reset sind dokumentiert unter [Partner- und Benutzerverwaltung](../technik/teamportal-benutzerverwaltung.md). Diese Erweiterung benötigt keinen Mailserver, wohl aber die bereits vorgenommenen Schema-/Rechteanpassungen in PostgreSQL.
+
+## Ergänzung 24.11.2026: Geocoding als nächster Release
+
+Das neue Design und die Standortverwaltung sind produktiv. Bei der Geoapify-Neuanlage sind dagegen nur die **erfolgreichen Tests** bestätigt. Die sechs neuen bzw. geänderten Dateien aus der Testumgebung müssen noch kontrolliert übernommen und der API-Schlüssel über die **geschützte produktive `.env`** verfügbar gemacht werden. Der Push nach GitHub oder das Kopieren in `~/yana-portal-test` ist **kein** Produktionsdeployment. Siehe [Wiedereinstieg](weiterarbeit.md) und [Portal-Deployment](teamportal-deployment.md).

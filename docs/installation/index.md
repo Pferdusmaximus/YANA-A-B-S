@@ -41,3 +41,7 @@ Der nächste Entwicklungsstand ist als [Wiedereinstieg](../technik/weiterarbeit.
 ## Aktualisierung 23.11.2026: Partnerkonten
 
 Die zuvor manuell gepflegten Partner-Accounts und Hilfestellenzuordnungen lassen sich nun im geschützten YANA-Portal verwalten. Einmalige Startpasswörter, Pflichtwechsel, Deaktivierung, Reaktivierung und Passwort-Reset sind dokumentiert unter [Partner- und Benutzerverwaltung](../technik/teamportal-benutzerverwaltung.md). Diese Erweiterung benötigt keinen Mailserver, wohl aber die bereits vorgenommenen Schema-/Rechteanpassungen in PostgreSQL.
+
+## Aktualisierung 24.11.2026: Standortverwaltung und Geoapify
+
+Die zweistufige [Standortfreigabe](../technik/standort-datenschutz.md) und das [weiß-lila Design](../technik/designsystem.md) sind produktiv umgesetzt. Die [Geoapify-Anbindung](../technik/geocoding.md) einschließlich Speichertest ist im **Testverzeichnis** abgeschlossen; deren **Produktivdeployment ist noch offen**. Für den nächsten Termin direkt die [Wiedereinstiegsanleitung](../technik/weiterarbeit.md) verwenden.

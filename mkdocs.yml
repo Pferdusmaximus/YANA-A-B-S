@@ -48,6 +48,9 @@ nav:
           - Login & Sessions: technik/teamportal-login.md
           - Partner- & Benutzerverwaltung: technik/teamportal-benutzerverwaltung.md
           - Hilfestellenverwaltung: technik/teamportal-hilfestellen.md
+          - Standortschutz & Freigaben: technik/standort-datenschutz.md
+          - Adresseingabe & Geoapify: technik/geocoding.md
+          - YANA-Designsystem: technik/designsystem.md
           - Änderungsfreigabe: technik/teamportal-aenderungsfreigabe.md
           - Portal-Tests: technik/teamportal-tests.md
           - Portal-Deployment: technik/teamportal-deployment.md
@@ -69,3 +72,4 @@ nav:
       - Überblick: nutzung/index.md
       - Verwaltungsportal bedienen: nutzung/teamportal.md
       - Partnerkonten verwalten: nutzung/partnerverwaltung.md
+      - Standortfreigaben bedienen: nutzung/standortfreigaben.md

@@ -1,12 +1,12 @@
 # Betrieb, Sicherheit und Datenschutz
 
-**Dokumentationsstand: 23. November 2026.** YANA ist ein funktionsfähiger **Entwicklungsprototyp** mit öffentlicher Informationswebsite, Flutter-GET-API und gemeinsamem Verwaltungsportal. Die erfolgreichen Funktionstests sind **keine Freigabe für echte sensible Hilfedaten**.
+**Dokumentationsstand: 24. November 2026.** YANA ist ein funktionsfähiger **Entwicklungsprototyp** mit öffentlicher Informationswebsite, Flutter-GET-API und gemeinsamem Verwaltungsportal. Die erfolgreichen Funktionstests sind **keine Freigabe für echte sensible Hilfedaten**.
 
 ## 1. Technischer Betriebsstand
 
 | Bereich | Bestätigter Stand / Grenze |
 |---|---|
-| IONOS-VPS, Ubuntu, PostgreSQL `app_db` | Eingerichtet; acht Fach-/Chat- und fünf Portal-Tabellen dokumentiert |
+| IONOS-VPS, Ubuntu, PostgreSQL `app_db` | Eingerichtet; acht Fach-/Chat-, fünf Portal- sowie eine Standort-Positivlisten-Tabelle dokumentiert |
 | Nginx/HTTPS, systemd `yana-api` | Produktiv eingerichtet und im Browser geprüft |
 | FastAPI-/Flutter-Schnittstellen | Öffentliche GET-Routen erreichbar; lokale Flutter-Web-CORS-Regel |
 | Gemeinsames Portal | Admin- und Partner-Testaccount können sich anmelden |
@@ -14,6 +14,9 @@
 | Account-Lebenszyklus | Partner erstellen, Startpasswort/Pflichtwechsel, deaktivieren, reaktivieren, Reset und Session-Entzug getestet |
 | Neuaufnahmen | Entwurf / Prüfung / Veröffentlichung und Audit für Testdaten implementiert |
 | Änderungsvorschläge | Getrennte gespeicherte Werte; öffentliche Daten erst bei Adminfreigabe verändert |
+| Öffentliche Standorte | Zweistufiger Filter für Adresse/Koordinaten, Admin-Freigabe und DB-Trigger produktiv geprüft |
+| Geoapify | Echte externe Abfrage und vollständige Speichertests in der Testumgebung bestanden; produktive Einbindung des neuen Formulars noch nicht bestätigt |
+| Website-Design | Weiß-lila Redesign mit kompakten Partner- und Standorttabellen produktiv bestätigt |
 | Backup-Agent | Registriert; vollständiger Restore-Test weiterhin offen |
 | Login-Rate-Limit | Nginx-Konfiguration aktiv; kontrollierter Lasttest weiterhin offen |
 | Reale Hilfsangebote / geheime Schutzadressen | Nicht für den Realbetrieb freigegeben |
@@ -32,7 +35,8 @@ Internet (HTTPS)
                    ├── portal_account, portal_session
                    ├── portal_facility_assignment
                    ├── portal_facility_change
-                   └── portal_facility_audit
+                   ├── portal_facility_audit
+                   └── portal_public_location_type
 ```
 
 Datenbankport `5432`, lokaler API-Port `8000` und Nginx-Testport `8080` dürfen nicht offen veröffentlicht werden. Die Portal-Links richten sich nach der Rolle, die **eigentliche Zugriffskontrolle erfolgt aber im Backend**, auch bei direkt aufgerufenen IDs.
@@ -51,16 +55,18 @@ Ein Simulations-/Browser- und End-to-End-Test der Rollen und Freigaben wurde dur
 
 ## 4. Zentrales Datenschutzrisiko: öffentliche Standortdaten
 
-Der Endpunkt `/hilfestellen` ist **ohne Portal-Login** erreichbar. Er liefert zwar ausschließlich `publication_status='published'`, enthält für solche Einträge aber weiterhin **Adress- und Koordinatenfelder**. Eine als „veröffentlicht“ markierte Schutzunterkunft könnte damit einen geheimen Standort preisgeben.
+Der Endpunkt `/hilfestellen` ist **ohne Portal-Login** erreichbar. Inzwischen schützt er drei sensible Felder über eine **zweistufige Freigabe**: Nur `published`-Hilfestellen erscheinen überhaupt; `address`, `latitude` und `longitude` enthalten nur dann Werte, wenn `is_location_public=TRUE` **und** `facility_type` in der Positivliste steht. Ohne diese Bedingungen liefert die API `null`.
 
-Bis zur technischen und organisatorischen Klärung sind nur **fiktive `YANA Test`-Einträge** erlaubt. Vor realen Daten müssen insbesondere umgesetzt werden:
+Die Positivliste enthält im bestätigten Stand ausschließlich **`Beratungsstelle`**. Schutzunterkünfte sind nicht zugelassen. Die gesonderte Administratorseite `/portal/standorte` steuert die Einzelgenehmigung; bei Änderung von Art, Adresse oder Koordinaten widerruft ein PostgreSQL-Trigger eine bisherige Freigabe. Mit fiktiven Daten wurde sowohl die Freigabe als auch die Rücknahme bis zur API-Antwort geprüft.
 
-1. Explizite Trennung zwischen öffentlichen und vertraulichen Standortinformationen, z. B. durch eine eingeschränkte API-Projektion oder getrennte Tabellen/Felder.
-2. Klare Regeln, welche Einrichtungen und Kontaktdaten veröffentlicht werden dürfen, einschließlich Prüfung und Zustimmung der Organisation.
-3. Die implementierten Zugriffskontrollen, Sperr-/Reset-Prozesse und Zuordnungsentzüge vor echtem Partnerbetrieb zusätzlich unabhängig prüfen und administrativ protokollieren.
-4. Datenschutz-/Aufbewahrungskonzept für Kontakt- und Auditdaten, Chat-/Nutzerinnendaten und Backups.
+**Weiterhin offen für den Realbetrieb** sind:
 
-Die **Änderungsfreigabe für Kontaktfelder** ist inzwischen implementiert; sie löst das separate Problem der vertraulichen Adressfelder noch nicht.
+1. Andere sensible Felder (z. B. **Name, Telefon, E-Mail, Öffnungszeiten, Kapazität**) fachlich klassifizieren; auch diese können Rückschlüsse auf Schutzstandorte zulassen.
+2. Falsche Einrichtungsklassifizierung verhindern, öffentliche Adressen mit der Organisation verifizieren und Veröffentlichungsberechtigungen dokumentieren.
+3. **Externe Geocoding-Anfragen** nur für öffentliche, nicht vertrauliche Adressen zulassen. Für Schutzunterkünfte keine automatische Übermittlung an Drittanbieter.
+4. Datenschutz-/Aufbewahrungskonzept für Kontakte, Audit, mögliche Chatdaten und Backups; unabhängige Sicherheitstests.
+
+Die neuen Filter sind deshalb **kein Freibrief für echte Schutzunterkunftsdaten**. Siehe [Standortdatenschutz](standort-datenschutz.md) und [Geocoding](geocoding.md).
 
 ## 5. Entwicklungs- und Testdaten
 
@@ -72,7 +78,7 @@ Eine separate Staging-Datenbank, automatisierte Test-Rollbacks und reproduzierba
 
 **Niemals in GitHub oder öffentliches MkDocs übernehmen:** `.env`, `PORTAL_SESSION_SECRET`, DB-Passwort, Klartextpasswörter, Session-Cookies, Private Keys, personenbezogene Datensätze und geheime Schutzstandorte.
 
-Die produktive `.env` bleibt auf dem VPS; `.gitignore` umfasst `.env`, `.venv`, `__pycache__` und `*.pyc`. Eine `.gitignore` entfernt keine früher in Git veröffentlichten Geheimnisse; in einem solchen Fall Zugänge rotieren und Git-Historie gesondert behandeln.
+Der Geoapify-Schlüssel `GEOAPIFY_API_KEY` gehört ebenfalls **nur in die geschützte VPS-Konfiguration**, nicht in GitHub. Seine produktive Einbindung in den laufenden Dienst ist am Checkpoint noch nicht bestätigt. Die produktive `.env` bleibt auf dem VPS; `.gitignore` umfasst `.env`, `.venv`, `__pycache__` und `*.pyc`. Eine `.gitignore` entfernt keine früher in Git veröffentlichten Geheimnisse; in einem solchen Fall Zugänge rotieren und Git-Historie gesondert behandeln.
 
 ## 7. Betriebsdiagnose
 
@@ -93,7 +99,7 @@ Der registrierte IONOS/Acronis-Agent ist kein Beleg für einen erfolgreichen Dat
 ## 9. Priorisierte nächste Schritte
 
 - **Account-Audit** und sicherer manueller Übergabeprozess für generierte Startpasswörter; MFA für echte Partner prüfen.
-- Datenschutzfilter für sensible Adressen/Koordinaten vor Aufnahme echter Hilfestellen.
+- Bestehenden Standortfilter auf weitere sensible öffentliche Felder ausweiten und fachliche Freigabe für reale Hilfestellen prüfen.
 - Getrennte Testdatenbank und automatisierte Regressionstests mit nichtproduktiven Daten.
 - Monitoring, Log-/Audit-Aufbewahrung, MFA (Admin-Passwort-Reset ist vorhanden) und überprüfte Backup-Wiederherstellung.
 

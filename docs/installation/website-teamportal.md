@@ -1,6 +1,6 @@
 # Website und Teamportal einrichten (Entwicklungsablauf)
 
-**Stand: 23. November 2026 · Das gemeinsame Verwaltungsportal wurde zusätzlich um Partner- und Passwortverwaltung erweitert.** Die Seite dokumentiert die Vorgehensweise zur Wiederholung auf einem neuen Server. Sie ist keine Aufforderung, SQL oder Installationsbefehle unüberprüft noch einmal auf dem laufenden Produktionsserver auszuführen.
+**Stand: 24. November 2026 · Zusätzlich Standortschutz, Standortverwaltungsseite und neues Design; Geoapify-Neuanlage in der Testumgebung erfolgreich geprüft.** Die Seite dokumentiert die Vorgehensweise zur Wiederholung auf einem neuen Server. Sie ist keine Aufforderung, SQL oder Installationsbefehle unüberprüft noch einmal auf dem laufenden Produktionsserver auszuführen.
 
 ## Voraussetzungen
 
@@ -68,7 +68,7 @@ In der **serverlokalen** `.env` wurde `PORTAL_SESSION_SECRET` als kryptografisch
 
 ## 5. FastAPI konfigurieren
 
-In `main.py` werden die Website, `portal_router`, die Router für Hilfestellen, Neuaufnahme, Statusfreigabe, Änderungsvorschläge, Partnerverwaltung (`partners_router`) und Passwortwechsel (`password_router`) sowie `StaticFiles` eingebunden. Hinzu kommen `SessionMiddleware` (geschützte Cookie-Konfiguration) und eine lokale CORS-Freigabe für Flutter Web. **Nicht** den gesamten ursprünglichen API-Code löschen: Die GET-Endpunkte `/health`, `/hilfestellen`, `/kategorien`, `/notfallnummern` müssen erhalten bleiben.
+In `main.py` werden die Website, `portal_router`, die Router für Hilfestellen, Neuaufnahme, Statusfreigabe, Änderungsvorschläge, Partnerverwaltung (`partners_router`), Passwortwechsel (`password_router`) und Standortfreigaben (`locations_router`) sowie `StaticFiles` eingebunden. Hinzu kommen `SessionMiddleware` (geschützte Cookie-Konfiguration) und eine lokale CORS-Freigabe für Flutter Web. **Nicht** den gesamten ursprünglichen API-Code löschen: Die GET-Endpunkte `/health`, `/hilfestellen`, `/kategorien`, `/notfallnummern` müssen erhalten bleiben.
 
 Unter `/` wird inzwischen eine HTML-Seite statt der ursprünglichen JSON-Willkommensmeldung angezeigt. Routen und Schutzregeln stehen unter [API-Referenz](../technik/api-referenz.md).
 
@@ -91,4 +91,8 @@ curl -sS -o /dev/null -w '%{http_code}\n' https://SERVER_IP/
 curl -sS -o /dev/null -w '%{http_code}\n' https://SERVER_IP/hilfestellen
 ```
 
-Danach im Browser `/portal/login` und `/portal/hilfestellen` testen, Anmeldung und Abmeldung prüfen. Die externen Partnerberechtigungen und Freigaben sind inzwischen für fiktive Daten implementiert. Vor der Freigabe echter Daten fehlen insbesondere Datenschutzregeln für öffentliche Standortinformationen, ein eigenständiges Account-Audit, MFA und ein separates Testsystem. Die vereinfachte Admin-Accountverwaltung ist jetzt implementiert: [Partner- und Benutzerverwaltung](../technik/teamportal-benutzerverwaltung.md).
+Danach im Browser `/portal/login` und `/portal/hilfestellen` testen, Anmeldung und Abmeldung prüfen. Die externen Partnerberechtigungen und Freigaben sind inzwischen für fiktive Daten implementiert. Vor der Freigabe echter Daten fehlen weiterhin die **fachliche Prüfung weiterer sensibler öffentlicher Felder**, ein eigenständiges Account-Audit, MFA und ein separates Testsystem. Der zweistufige Schutz von Adresse/Koordinaten ist inzwischen umgesetzt. Die vereinfachte Admin-Accountverwaltung ist jetzt implementiert: [Partner- und Benutzerverwaltung](../technik/teamportal-benutzerverwaltung.md).
+
+## Ergänzung 24.11.2026: Geoapify-Deployment noch ausstehend
+
+Die Datenbankspalten `latitude` und `longitude` sind nach Migration optional; eine CHECK-Regel verlangt vollständige Koordinatenpaare. Der Geoapify-Client wurde zusammen mit dem neuen Adressformular, JavaScript und den erforderlichen CSS-/Layoutanpassungen **in der Testumgebung erfolgreich geprüft**. Die Produktivübernahme ist **noch nicht** als erfolgt bestätigt. Dazu [Wiedereinstieg](../technik/weiterarbeit.md) und [Geocoding-Dokumentation](../technik/geocoding.md) beachten.

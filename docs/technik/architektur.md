@@ -1,6 +1,6 @@
 # Technische Systemarchitektur
 
-**Stand: 23.11.2026**
+**Stand: 24.11.2026**
 
 ## 1. Architekturprinzip
 
@@ -94,7 +94,7 @@ Es wurde bewusst **nicht** für jede Weboberfläche ein neues Backend oder eine 
 
 ## 5. Technologische und fachliche Grenzen
 
-- Die öffentliche `/hilfestellen`-API kann weiterhin Standortangaben enthalten; Schutzunterkünfte vor Aufnahme realer Datensätze besonders behandeln.
+- Die öffentliche `/hilfestellen`-API gibt Adresse/Koordinaten nur nach **zweistufiger Freigabe** heraus; nicht freigegebene Felder sind `null`. Vor echten Schutzstandorten sind weitere Felder zu prüfen.
 - Für Partner sind Einrichtungen inzwischen über `portal_facility_assignment` zugeordnet und serverseitig gefiltert.
 - Neuaufnahme, Veröffentlichungsstatus und Änderungsvorschläge mit Freigabe sind für **fiktive Testdaten** implementiert; reale Notfallangebote sind noch nicht verifiziert.
 - Technische Logik in Flutter ist getestet, vollständige sichtbare App-Screens noch nicht als fertig nachgewiesen.
@@ -105,3 +105,10 @@ Verweise: [Teamportal-Architektur](teamportal-architektur.md), [Entscheidungen](
 ## Ergänzung 23.11.2026: Accountverwaltung
 
 Der gemeinsame Portalbereich unter `/portal/*` enthält inzwischen neben Hilfestellen und Freigaben auch die **Partnerverwaltung** (`portal_partners.py`) und den **eigenen Passwortwechsel** (`portal_password.py`). Partnerkonten verwenden die Rolle `partner`, eine serverseitige Einrichtungszuordnung und `must_change_password` für den Erstlogin. Ein Mailserver oder zweites Partnerportal ist nicht Bestandteil der Architektur. [Technische Details](teamportal-benutzerverwaltung.md).
+
+## Ergänzung 24.11.2026: Standortverwaltung, Design und Geoapify
+
+- Das einheitliche [YANA-Design](designsystem.md) verwendet ein gemeinsames `base.html` und zentrales `style.css` für Landingpage und Portal. Partner- und Standortverwaltung sind kompakte, filterbare Tabellen.
+- Das Modul `portal_locations.py` stellt unter `/portal/standorte` eine Administratoransicht für [Standortfreigaben](standort-datenschutz.md) bereit. Die Freigabelogik liegt auch im öffentlichen SQL-Select von `GET /hilfestellen`.
+- Die neue [Geoapify-Integration](geocoding.md) liegt in `geocoding_service.py` und `portal_facilities_create.py`; die JavaScript-Schaltfläche sendet eine autorisierte Anfrage bei Bedarf. Geoapify verarbeitet die Adresse **extern**, der VPS speichert nur das Ergebnis nach bestätigtem Formularschritt.
+- Die Geocoding-Integration wurde erfolgreich **in der Testkopie** geprüft. Die Produktivübernahme der sechs neuen/geänderten Dateien ist am Checkpoint **noch nicht bestätigt**.

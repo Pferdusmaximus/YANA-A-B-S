@@ -182,7 +182,7 @@ Dies ist eine **empfohlene Nacharbeit**, nicht bereits bestätigter Einrichtungs
 
 ## Ergänzung November 2026: Verwaltungsportal
 
-Das oben eingebundene ER-Bild zeigt weiterhin nur die **ursprünglichen acht Fach- und Chat-Tabellen**. Für das Verwaltungsportal wurden zusätzlich **fünf Tabellen** eingerichtet: `portal_account`, `portal_session`, `portal_facility_audit`, `portal_facility_assignment` und `portal_facility_change`. Wenn das Ursprungsschema vollständig vorhanden ist, umfasst die Datenbank damit **13 Tabellen**.
+Das oben eingebundene ER-Bild zeigt weiterhin nur die **ursprünglichen acht Fach- und Chat-Tabellen**. Für das Verwaltungsportal wurden zusätzlich **fünf Tabellen** eingerichtet: `portal_account`, `portal_session`, `portal_facility_audit`, `portal_facility_assignment` und `portal_facility_change`. Seit dem Standortschutz existiert außerdem `portal_public_location_type`. Wenn das Ursprungsschema vollständig vorhanden ist, umfasst die Datenbank damit **14 Tabellen**.
 
 Zusätzlich besitzt `hilfestelle` jetzt `publication_status VARCHAR(20) NOT NULL DEFAULT 'draft'` mit den erlaubten Werten `draft`, `pending_review` und `published`. Der öffentliche GET-Endpunkt `/hilfestellen` gibt nur `published` zurück.
 
@@ -190,4 +190,10 @@ Die neue Zuordnungstabelle `portal_facility_assignment` erlaubt Partner-Accounts
 
 Die erste automatische ID-Vergabe für die Neuerstellung wurde inzwischen getestet; der frühere Hinweis zur Identity-Sequenz dokumentiert nur die damalige Ausgangssituation. **Für ein erneutes Initialisieren der Datenbank sind ursprüngliches Basisschema und spätere Migrationen getrennt auszuführen.** Einzelheiten unter [Portal-Datenbank](teamportal-datenbank.md) und [Änderungsfreigabe](teamportal-aenderungsfreigabe.md).
 
-> Die **Testdatenbeschränkung `YANA Test`** bleibt aktiv. Ein Veröffentlichungsstatus ist kein Schutz gegen die öffentliche Übertragung von Adresse und Koordinaten; für echte Schutzstandorte ist eine zusätzliche Datensicht erforderlich.
+> Die **Testdatenbeschränkung `YANA Test`** bleibt aktiv. Die API schützt inzwischen Adresse/Koordinaten separat anhand von `is_location_public` und `portal_public_location_type`; auch bei veröffentlichten Einträgen können jedoch andere Felder sensible Informationen preisgeben. Vor echten Schutzstandorten sind zusätzliche fachliche und technische Regeln notwendig.
+
+## Ergänzung 24.11.2026: Standortfelder und nullable Koordinaten
+
+Das bisherige Schema für `hilfestelle` wurde um `is_location_public BOOLEAN NOT NULL DEFAULT FALSE` ergänzt. Die Positivlisten-Tabelle `portal_public_location_type` legt erlaubte Einrichtungstypen fest. Der Trigger `trg_yana_reset_location_approval` widerruft bei Änderung von Typ, Adresse oder Koordinaten bestehende Standortfreigaben.
+
+Für die neue Adresseingabe wurden die `NOT NULL`-Constraints von `latitude` und `longitude` entfernt und die CHECK-Bedingung `chk_yana_coordinates_complete` eingeführt: Beide Koordinaten müssen gleichzeitig vorhanden oder beide `NULL` sein. Das verhindert halbfertige Koordinatenpaare; ein Entwurf ohne Geocoding ist erlaubt. Die **Testumgebung** verwendet dieses Schema bereits erfolgreich. Die neue Formularversion ist noch nicht als produktiv übernommen bestätigt. [Standortschutz](standort-datenschutz.md) · [Geoapify](geocoding.md).

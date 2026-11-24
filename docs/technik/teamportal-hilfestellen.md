@@ -1,6 +1,6 @@
 # Hilfestellenverwaltung: Anlegen, Bearbeiten und Status
 
-**Stand: 18. November 2026 · Neueintrag und Statusfreigabe produktiv, Änderungsvorschläge separat dokumentiert**
+**Stand: 24. November 2026 · Neueintrag und Statusfreigabe produktiv; Geoapify-Neuanlage in der Testumgebung geprüft, Produktionsübernahme noch offen**
 
 ## 1. Funktionen und Zuständigkeiten
 
@@ -18,7 +18,7 @@ Die Freigabe für neue Einträge ist vom **Änderungsantrag für bereits veröff
 
 ## 2. Neue Hilfestelle anlegen
 
-Die Routen `GET/POST /portal/hilfestellen/neu` liegen in `portal_facilities_create.py`. Das Formular `hilfestellen_neu.html` fragt Name, Typ, Adresse, Koordinaten, Kapazität sowie optional Kategorie und Kontaktdaten ab. Validiert werden u. a. Pflichtfelder, Feldlängen, E-Mail-Format, Koordinatenbereiche und maximal sieben Nachkommastellen. Für die aktuelle Testphase muss der Name mit **`YANA Test`** beginnen.
+Die Routen `GET/POST /portal/hilfestellen/neu` liegen in `portal_facilities_create.py`. Im bisherigen Produktivstand werden für die Neuerstellung die Standortdaten noch über den ursprünglichen Formularablauf erfasst. **Die neue, erfolgreich getestete Version von `hilfestellen_neu.html` fragt Straße, Hausnummer, PLZ und Ort statt manuell einzugebender Koordinaten ab.** Ein Klick auf „Standort ermitteln“ startet für ausdrücklich als nicht vertraulich gekennzeichnete Beratungsstellen eine Geoapify-Abfrage. Ein signierter Bestätigungscode bindet den Treffer an die geprüfte Adresse; ohne gültigen Treffer kann die Hilfestelle als Entwurf ohne Koordinaten gespeichert werden. Die neue Eingabe ist **am aktuellen Checkpoint noch nicht als produktiv veröffentlicht bestätigt**. Details: [Geocoding](geocoding.md). Für die aktuelle Testphase muss der Name mit **`YANA Test`** beginnen.
 
 Das Datenbank-`INSERT` nutzt parametrisierte SQL-Werte und `RETURNING facility_id`. Ein `created`-Ereignis wird in `portal_facility_audit` protokolliert. Durch `publication_status DEFAULT 'draft'` erscheint der neue Datensatz nicht automatisch über `/hilfestellen`.
 
@@ -61,3 +61,7 @@ Details, SQL-Transaktionen und Grenzen: [Änderungs- und Freigabeprozess](teampo
 Die Erstellung wurde durch zehn Funktionstests und einen echten fiktiven Speichertest mit ID-/Audit-/API-Kontrolle geprüft. Der Statusworkflow und die Partner-Zugriffsbeschränkung wurden einschließlich negativer Berechtigungstests erprobt; die Browserbedienung wurde produktiv geprüft. Tests auf dem VPS greifen **auf die gemeinsame produktive Datenbank** zu, daher nur mit fiktiven Testdaten.
 
 Veröffentlichung ist **keine** sichere Freigabe vertraulicher Standortdaten. Bei Status `published` enthält die öffentliche API weiterhin Adressen und Koordinaten; vor einer echten Schutzunterkunft muss eine getrennte Sichtbarkeits-/Datenschutzregel implementiert werden.
+
+## 7. Standortfelder und nächste Erweiterung (24.11.2026)
+
+Die Spalten `latitude` und `longitude` sind nach Datenbankmigration **nullable**; ein CHECK-Constraint erlaubt nur ein vollständiges Paar oder beide Werte `NULL`. Das ermöglicht das Speichern eines Entwurfs bei fehlendem Geoapify-Treffer. Die öffentliche Sichtbarkeit hängt **nicht** von der bloßen Speicherung ab, sondern von der [zweistufigen Standortfreigabe](standort-datenschutz.md). Die bestehende Bearbeitungsseite für bereits angelegte Hilfestellen enthält noch **keine neue Adresse-/Geocoding-Funktion**; dies ist der nächste fachliche Schritt **nach** dem Deployment der Neuanlage.

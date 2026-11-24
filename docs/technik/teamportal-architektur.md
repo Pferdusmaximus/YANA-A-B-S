@@ -1,6 +1,6 @@
 # Verwaltungsportal: Architektur, Rollen und Datenflüsse
 
-**Stand: 23. November 2026 · Partner- und Benutzerverwaltung mit Startpasswort und Account-Lebenszyklus ergänzt**
+**Stand: 24. November 2026 · Standortverwaltung und lila Design ergänzt; Geoapify-Neuanlage in Testumgebung**
 
 ## 1. Ziel und Grundprinzip
 
@@ -123,8 +123,14 @@ Vor der Freigabe werden die ursprünglichen veröffentlichten Werte nochmals mit
 
 ## 7. Grenzen
 
-Die Partner- und Benutzerverwaltung ist unter `/portal/partner` implementiert. Sie verwendet einmalig angezeigte Startpasswörter und eine obligatorische Passwortänderung, aber keinen Mailserver oder öffentlichen Registrierungsprozess. Änderungen am Account-Lebenszyklus werden bislang nicht in einem eigenständigen Account-Audit erfasst. Für echte Schutzstandorte reicht der Einrichtungsstatus nicht, denn veröffentlichte Adressen und Koordinaten werden durch die JSON-API aktuell ausgegeben. Mehr: [Sicherheit](betrieb-sicherheit.md) und [Änderungsfreigabe](teamportal-aenderungsfreigabe.md).
+Die Partner- und Benutzerverwaltung ist unter `/portal/partner` implementiert. Sie verwendet einmalig angezeigte Startpasswörter und eine obligatorische Passwortänderung, aber keinen Mailserver oder öffentlichen Registrierungsprozess. Änderungen am Account-Lebenszyklus werden bislang nicht in einem eigenständigen Account-Audit erfasst. Für echte Schutzstandorte reicht der Einrichtungsstatus nicht, denn trotz des inzwischen implementierten zweistufigen Standortfilters können weitere Felder (Name, Telefonnummer, Kapazität usw.) sensible Informationen offenbaren. Mehr: [Sicherheit](betrieb-sicherheit.md) und [Änderungsfreigabe](teamportal-aenderungsfreigabe.md).
 
 ## 8. Account-Lebenszyklus (Ergänzung 23.11.2026)
 
 Die technischen Abläufe für Partner erstellen, Passwort wechseln, zuweisen, deaktivieren, reaktivieren und Passwort zurücksetzen sind ausführlich unter [Partner- und Benutzerverwaltung](teamportal-benutzerverwaltung.md) beschrieben. Die Pflicht-Passwortänderung wird mit `portal_account.must_change_password` umgesetzt und in `session_account()` serverseitig durchgesetzt.
+
+## Ergänzung 24.11.2026: Standortfreigaben und Erscheinungsbild
+
+Zur vorhandenen Rollen-/Einrichtungsverwaltung gehört nun die ausschließlich für Administratoren zugängliche Route `/portal/standorte` aus `portal_locations.py`. Ein eigener **Veröffentlichungsstatus** entscheidet über den Datensatz und eine eigene **Standortfreigabe** über die sichtbaren Adress- und Koordinatenfelder. Ein PostgreSQL-Trigger widerruft die Standortfreigabe bei Datenänderung. Der öffentliche `GET /hilfestellen`-Endpunkt gibt nur freigegebene Standorte zurück; ansonsten `null`.
+
+Das **weiß-lila Designsystem** wurde für die Startseite und das Portal produktiv übernommen. Die Partner- und Standortübersicht verwenden Tabellen mit Suche, Filtern und aufklappbaren Details. Neue Seiten sollten dieselben Design- und Sicherheitskonventionen einhalten. Die Geoapify-Neuanlage ist als getestete, aber noch nicht produktiv bestätigte Erweiterung dokumentiert: [Geocoding](geocoding.md).

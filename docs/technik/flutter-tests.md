@@ -189,3 +189,7 @@ flutter.bat test
 In Linux-basierten CI-Runnern heißen die Befehle ohne `.bat`: `flutter pub get`, `flutter analyze`, `flutter test`. Die `tool/`-Live-Checks sollten **nicht** ungefragt bei jedem öffentlichen Pull Request gegen den realen VPS laufen; diese bleiben manuell oder werden später gegen eine eigens freigegebene Testumgebung betrieben.
 
 Siehe [Flutter-Fehlerprotokoll](flutter-troubleshooting.md) und [offizielle Flutter-Testübersicht](https://docs.flutter.dev/testing/overview).
+
+## Nachtrag 24.11.2026: nullable Standortfelder
+
+Der öffentliche Endpunkt `/hilfestellen` setzt bei nicht öffentlich freigegebenen Standorten `address`, `latitude` und `longitude` auf `null`. Die neue Geoapify-Neuanlage erlaubt zudem Entwürfe ohne Koordinaten. Für die Flutter-App müssen deshalb **JSON-Decoding, Markerbildung und Navigationsaktionen** mit beiden Koordinaten `null` gesondert geprüft werden. Diese Flutter-Gesamtprüfung ist bislang **nicht als abgeschlossen** dokumentiert. [Standortschutz](standort-datenschutz.md), [Geocoding](geocoding.md).

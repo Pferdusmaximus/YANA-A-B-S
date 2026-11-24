@@ -36,8 +36,15 @@ Diese Seiten dokumentieren den **nachgewiesenen Stand vom 23. November 2026**. V
 
 ## Verlauf und Grundlagen
 
-- [Entwicklungsstand und Änderungsprotokoll](entwicklungsstand.md) – Meilensteine bis 23.11.2026.
+- [Entwicklungsstand und Änderungsprotokoll](entwicklungsstand.md) – Meilensteine bis 24.11.2026.
 - [Server-Fehlerbehebung](troubleshooting.md) – Infrastruktur- und Betriebsprobleme.
 - [Quellen](quellen.md) – Offizielle technische Referenzen.
 
 Für eine Reproduktion mit Testdaten siehe [Installation und Quick Start](../installation/index.md). Für die Portalbedienung siehe [Benutzung des Teamportals](../nutzung/teamportal.md).
+
+## Aktualisierung 24.11.2026
+
+- **Öffentliche Standortfelder:** [zweistufige Datenschutzfreigabe](standort-datenschutz.md) produktiv geprüft, inklusive Administratorseite `/portal/standorte` und automatischem Widerruf bei Standortänderung.
+- **Website-Oberfläche:** [weiß-lila YANA-Designsystem](designsystem.md) für Landingpage und Teamportal, mit kompakter Partner- und Standorttabelle.
+- **Geocoding:** [Geoapify-Adresseingabe](geocoding.md) mit echter externer Anfrage, signiertem Bestätigungscode und Tests für Entwürfe mit/ohne Koordinaten **in der Testumgebung erfolgreich**. Die produktive Bereitstellung der neuen Adressmaske ist noch nicht bestätigt.
+- **Wiedereinstieg:** [Nächste Schritte nach der Pause](weiterarbeit.md) – ab dem produktiven Geoapify-Deployment fortsetzen.

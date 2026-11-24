@@ -1,6 +1,6 @@
 # Nutzungshandbuch – Entwicklungsstand
 
-**Stand: 23. November 2026.** YANA besitzt inzwischen zwei klar getrennte Nutzungsebenen: die öffentliche Informationswebsite mit Download-Hinweis und ein geschütztes Teamportal für die interne Datenpflege. Die Flutter-App selbst befindet sich weiterhin in Entwicklung; eine veröffentlichte Download-Version oder verlässliche echte Notfallberatung ist nicht bestätigt.
+**Stand: 24. November 2026.** YANA besitzt inzwischen zwei klar getrennte Nutzungsebenen: die öffentliche Informationswebsite mit Download-Hinweis und ein geschütztes Teamportal für die interne Datenpflege. Die Flutter-App selbst befindet sich weiterhin in Entwicklung; eine veröffentlichte Download-Version oder verlässliche echte Notfallberatung ist nicht bestätigt.
 
 ## Öffentliche Website
 
@@ -8,7 +8,7 @@
 
 ## Geschütztes Teamportal
 
-Administratoren des YANA-Teams und zugeordnete externe Partner melden sich unter `/portal/login` an. Im selben Dashboard sehen Partner ausschließlich ihre Einrichtungen, Administratoren dagegen alle. Neue Test-Hilfestellen können erstellt, Entwürfe zur Veröffentlichung eingereicht und veröffentlichte Kontaktdaten über getrennte Änderungsvorschläge mit Administratorfreigabe aktualisiert werden. Zudem lassen sich Partner-Accounts direkt im Portal erstellen, Hilfestellen zuweisen, Accounts sperren/reaktivieren und Passwörter zurücksetzen. Hilfestellenaktionen werden in PostgreSQL protokolliert; eine umfassende Account-Auditansicht ist noch offen.
+Administratoren des YANA-Teams und zugeordnete externe Partner melden sich unter `/portal/login` an. Im selben Dashboard sehen Partner ausschließlich ihre Einrichtungen, Administratoren dagegen alle. Neue Test-Hilfestellen können erstellt, Entwürfe zur Veröffentlichung eingereicht und veröffentlichte Kontaktdaten über getrennte Änderungsvorschläge mit Administratorfreigabe aktualisiert werden. Zudem lassen sich Partner-Accounts direkt im Portal erstellen, Hilfestellen zuweisen, Accounts sperren/reaktivieren und Passwörter zurücksetzen. Hilfestellenaktionen werden in PostgreSQL protokolliert; eine umfassende Account-Auditansicht ist noch offen. Die **Standortfreigaben** sind im Administratorportal als filterbare Tabelle verfügbar. Die neue **Geoapify-Adresseingabe** wurde in der Testumgebung erfolgreich geprüft, ist aber zum Checkpoint noch nicht als produktiv veröffentlicht bestätigt.
 
 Die vollständigen Anleitungen stehen unter **[Teamportal bedienen](teamportal.md)** und **[Partner-Accounts verwalten](partnerverwaltung.md)**. Technische Details: [Hilfestellenverwaltung](../technik/teamportal-hilfestellen.md).
 
@@ -24,3 +24,5 @@ Die Netzwerk- und Logikschicht ist für drei Datenbereiche implementiert; der Ab
 ## Hinweis zu echten Notfällen
 
 Die bestehenden Hilfestellen, Telefonnummern und Standorte sind fiktive Entwicklungsdaten. YANA ersetzt aktuell **keinen** offiziellen Notruf und keine geprüfte Beratungsstelle. Für akute Hilfe sind die offiziellen zuständigen Dienste zu verwenden.
+
+Weiterführend: [Standortfreigaben verwalten](standortfreigaben.md), [Adresseingabe und Geoapify](../technik/geocoding.md), [YANA-Design](../technik/designsystem.md).

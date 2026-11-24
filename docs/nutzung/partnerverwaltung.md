@@ -54,3 +54,7 @@ Es gibt **keine automatische E-Mail**, keine Funktion „Passwort vergessen“ z
 - Die Funktionen sind technisch getestet, ersetzen aber keine unabhängige Sicherheits- und Datenschutzprüfung für den Realbetrieb.
 
 Für Hintergrund und verwendete Dateien siehe [technische Benutzerverwaltung](../technik/teamportal-benutzerverwaltung.md) und [Portal-Login](../technik/teamportal-login.md).
+
+## Designstand 24.11.2026
+
+Die Partnerverwaltung wird inzwischen im einheitlichen [weiß-lila YANA-Design](../technik/designsystem.md) als kompakte Liste/Tabelle mit Suche, Statusfilter und aufklappbaren Detailaktionen dargestellt. Account-Erstellung, Zuordnung, Sperren/Reaktivieren und Passwort-Reset bleiben serverseitig und mit CSRF abgesichert. Die optische Änderung führt **keine** neuen Rollenrechte ein.

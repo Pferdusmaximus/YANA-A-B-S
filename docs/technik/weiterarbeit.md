@@ -1,79 +1,66 @@
 # Wiedereinstieg: aktueller Stand und nächste Aufgaben
 
-**Projekt-Checkpoint: Montag, 23. November 2026.**
+**Projekt-Checkpoint: Dienstag, 24. November 2026 · Bewusste Pause nach erfolgreich abgeschlossenem Geoapify-Speichertest.**
 
-## 1. Was ist abgeschlossen?
+!!! success "Wo wir weitermachen"
+    **Die Geoapify-Erweiterung wurde in `~/yana-portal-test` vollständig getestet.** Der letzte bestätigte Schritt ist der Speichertest mit und ohne Koordinaten, manipulierter Bestätigung und anschließendem `ROLLBACK`. **Die Veröffentlichung der neuen Adresseingabe in `~/yana-backend` ist noch nicht als durchgeführt bestätigt.** Beim nächsten Termin beginnen wir daher mit **Produktivkonfiguration, Backup, Übernahme der sechs Dateien, Restart und Browserprüfung** – nicht mit erneuter Implementierung oder Tests von Grund auf.
 
-- Öffentliche Website und JSON-GET-API laufen über HTTPS auf dem IONOS-VPS.
-- Gemeinsames Portal für `admin` (YANA-Team) und `partner` (externe, zugeordnete Organisation).
-- Admin kann fiktive neue Hilfestellen anlegen; automatisch `draft`, `created`-Audit und neue ID.
-- Entwürfe lassen sich bearbeiten, einreichen, veröffentlichen, zurückweisen oder wieder zurücknehmen.
-- Öffentliche API liefert ausschließlich `published`-Hilfestellen.
-- Partner sehen nur die ihnen per `portal_facility_assignment` zugewiesenen Einträge; ein Testpartner ist vorhanden.
-- **Änderungsvorschläge bei veröffentlichten Einträgen**: Partner speichert getrennte Werte, reicht ein; Administrator vergleicht und gibt frei oder lehnt ab. Die öffentliche API ändert sich **erst bei Freigabe**.
-- Die Änderungsfreigabe wurde mit fiktiven Testdaten Ende-zu-Ende geprüft und anschließend produktiv bereitgestellt. Die ursprüngliche Telefonnummer wurde nach dem Test wiederhergestellt.
-- **Partnerverwaltung:** Account-Erstellung mit einmaligem Startpasswort, Zuordnen/Entfernen von Hilfestellen, Pflicht-Passwortwechsel, Deaktivieren, Reaktivieren und Administrator-Reset umgesetzt und mit Testpartnern geprüft; nach Projektverlauf produktiv bereitgestellt.
+## 1. Was ist bis zur Pause abgeschlossen?
 
-## 2. Welches Feature kommt als Nächstes?
+| Bereich | Verifizierter Stand |
+|---|---|
+| Server, Website, API | IONOS-VPS mit FastAPI, PostgreSQL, Nginx/HTTPS; erreichbar |
+| Website-Design | **Weiß-lila YANA-Design** inklusive Navigation/Logout im Browser produktiv bestätigt |
+| Verwaltungsportal | Gemeinsames Login; `admin` und `partner`, CSRF, Argon2, Sessions |
+| Hilfestellen und Freigaben | Entwurf/Prüfung/Veröffentlichung, getrennte Änderungsvorschläge, Audit |
+| Partnerverwaltung | Account-Erstellung, Zuordnungen, Pflicht-Passwortwechsel, Deaktivierung/Reaktivierung, Reset produktiv |
+| Standortdatenschutz | Öffentliche API schützt Adresse/Koordinaten über Einzel- und Typfreigabe; Admin-Tabelle `/portal/standorte` und DB-Trigger getestet und produktiv |
+| Geoapify-Anbindung | **Echte externe API-Abfrage und vollständige FastAPI-/Speichertests bestanden** |
+| Geoapify-Deployment | **Offen / noch nicht bestätigt** |
+| Flutter-App | Daten-/API-Schicht getestet, vollständige UI und Nullable-Koordinaten-Verhalten noch nicht abschließend bestätigt |
 
-Die vereinfachte **Administrator-Benutzerverwaltung ist umgesetzt**: Partner werden im Portal erstellt, mit Einrichtungen verknüpft, deaktiviert/reaktiviert und bei Bedarf per neuem Startpasswort zurückgesetzt.
+## 2. Nächster Termin: genau diese Schritte
 
-Als nächste Entwicklungsschritte sind sinnvoll:
+1. **Produktivcode sichern**: `~/yana-backend` vor dem Austausch der bestehenden Dateien mit einem Zeitstempel-Backup schützen. Das schützt Dateien, nicht die Datenbank.
+2. **Dienstkonfiguration prüfen**: `sudo systemctl show yana-api -p WorkingDirectory`; die geschützte Konfiguration in `~/yana-backend/.env` vorbereiten, insbesondere `GEOAPIFY_API_KEY`. **Keinen Schlüssel in GitHub oder MkDocs eintragen.**
+3. **Sechs getestete Dateien übernehmen** (nicht den ganzen API-Ordner überschreiben):
+   - `geocoding_service.py`
+   - `portal_facilities_create.py`
+   - `templates/portal/hilfestellen_neu.html`
+   - `static/js/yana-geocoding.js`
+   - `static/css/style.css`
+   - `templates/base.html`
+4. **Import/Smoke-Test**: Syntax, `from main import app`, `GET /`, `GET /hilfestellen`, Login, geschütztes Anlegeformular, JS/CSS prüfen.
+5. **Dienst neu starten und kontrollieren**: `sudo systemctl restart yana-api`, `sudo systemctl status yana-api --no-pager`, bei Fehlern `sudo journalctl -u yana-api -n 50 --no-pager`.
+6. **Browserprüfung** unter `/portal/hilfestellen/neu`: strukturierte Adresse, Button „Standort ermitteln“, bestätigte Geoapify-Antwort; hierfür ausschließlich eine **öffentlich bekannte Testadresse** verwenden. Nicht ohne Not weitere Datensätze anlegen.
+7. **Produktivdeployment in dieser Doku nachtragen**, nachdem es im Browser tatsächlich geprüft wurde.
 
-1. **Datenschutz vor realem Einsatz:** Vertrauliche Adressen und Koordinaten aus der öffentlichen `/hilfestellen`-Antwort heraushalten; Sichtbarkeit je Einrichtung definieren.
-2. **Isolierte Testdatenbank:** Schreibtests dürfen nicht mehr produktive `app_db` verändern.
-3. **Automatisierte Regressionstests:** Login, CSRF, Zuordnungen, Sperrungen, Freigaben, Session-Entzug und konkurrierende Bearbeitungen.
-4. **Account-Audit:** Änderungen an Partnerkonten und Zuordnungen gezielt protokollieren. Aktuell protokolliert `portal_facility_audit` primär Hilfestellenaktionen.
-5. **Betriebsreife:** Echte Organisationen verifizieren, Startpasswörter sicher übermitteln, MFA und Backup-Wiederherstellung prüfen.
+Die vollständige Architektur, Sicherheitsgrenzen und Testnachweise stehen unter [Geoapify-Geocoding](geocoding.md). Weitere Betriebsdetails unter [Portal-Deployment](teamportal-deployment.md).
 
-Derzeit wird im Portal als Partneridentifikation eine E-Mail-Adresse verwendet; ein separates Organisationsprofil mit eigenem Datensatz wurde nicht implementiert.
+## 3. Anschließend geplante Verbesserungen
 
-## 3. Entwicklungsorte und Deployment
+- Bestehende Hilfestellen ebenfalls per Adresse/Geocoding bearbeiten können; derzeit ist nur **Neuanlage** auf die neue Eingabe vorbereitet.
+- Flutter-Kartenmarker und Navigation auf `null`-Koordinaten prüfen und anpassen.
+- Vollständiges Website- und Portal-Regressionstestprotokoll ausführen.
+- Separates PostgreSQL-Testsystem einrichten: `~/yana-portal-test` und `~/yana-backend` greifen bislang auf **dieselbe** `app_db` zu.
+- Vertrauliche Einrichtungen fachlich prüfen: neben Adresse/Koordinaten auch Name, Telefonnummer, E-Mail und Kapazität auf Rückschlüsse untersuchen.
+- Audit der Partner-/Accountaktionen, Backup-Restore-Probe, sichere Startpasswortübergabe und ggf. MFA ergänzen.
+- Mobile App-Oberfläche und reale Hilfsangebote erst nach fachlicher und rechtlicher Freigabe veröffentlichen.
+
+## 4. Entwicklungsorte
 
 | Zweck | Ort |
 |---|---|
-| Quellcode | Windows / VS Code / `YANA-A-B-S/services/api/` |
-| Remote-Repository | GitHub |
-| VPS-Git-Arbeitskopie | `~/yana-deploy-source/` |
-| VPS-Testcode | `~/yana-portal-test/` |
-| Produktivcode | `~/yana-backend/` |
-| Systemdienst | `yana-api` |
-| PostgreSQL | `app_db`, pgAdmin 4 |
-| Loginseite | `https://SERVER_IP/portal/login` |
+| Windows-/VS-Code-Quellordner | `YANA-A-B-S/services/api/` |
+| GitHub-Kopie auf VPS | `~/yana-deploy-source/` |
+| Getestete Backend-Dateien | `~/yana-portal-test/` |
+| Produktiver FastAPI-Code | `~/yana-backend/` |
+| Produktive Konfiguration | `~/yana-backend/.env` |
+| Produktiver Dienst | `yana-api` |
+| Datenbank | `app_db` in PostgreSQL, auch von der Testkopie verwendet |
 
-VPS-Verwaltung erfolgt über die grafische Ubuntu-/IONOS-Konsole. Der GitHub-Push allein aktualisiert nicht die produktive Anwendung.
+Es wird über die **grafische IONOS-/Ubuntu-Konsole** gearbeitet. GitHub-Push allein führt noch **kein** produktives Deployment durch.
 
-## 4. Wichtige technische Dateien
+## 5. Dokumentationskonvention
 
-| Datei | Aufgabe |
-|---|---|
-| `portal.py` | Anmeldung, Sessions, Dashboard |
-| `portal_access.py` | Rollen-/Partnerberechtigungen |
-| `portal_facilities.py` | Übersicht und Bearbeitung von Entwürfen |
-| `portal_facilities_create.py` | Neue Test-Hilfestellen |
-| `portal_facilities_status.py` | Statuswechsel für Neueinträge |
-| `portal_facility_changes.py` | Änderungsentwürfe und Freigabe veröffentlichter Einträge |
-| `portal_partners.py` | Account-Erstellung, Zuweisungen, Deaktivieren/Reaktivieren, Reset |
-| `portal_password.py` | Eigenes Passwort ändern, Pflichtwechsel |
-| `templates/portal/partner.html` | Partnerverwaltung mit Formularen und CSRF |
-| `templates/portal/partner_erstellt.html` | Startpasswort einmalig anzeigen |
-| `templates/portal/passwort_aendern.html` | Eigenes Passwort festlegen |
-| `templates/portal/hilfestellen.html` | Gemeinsame rollenabhängige Übersicht |
-| `templates/portal/aenderung_bearbeiten.html` | Änderungsformular |
-| `templates/portal/aenderungen_pruefen.html` | Administrations-Warteschlange |
-| `sql/01_change_requests.sql` | Dokumentierte Änderungsvorschlags-Migration |
-
-Die ursprüngliche `hilfestellen_bearbeiten.html`-Datei benötigt weiterhin den **Plural** im Namen.
-
-## 5. Sicherheits- und Qualitätsaufgaben
-
-- **Vor realen Hilfestellen:** Adressen/Koordinaten und ggf. weitere sensible Felder aus der öffentlichen API für bestimmte Kategorien ausschließen; echte Veröffentlichungskriterien fachlich definieren. Der Filter `published` allein reicht dafür nicht.
-- Testdaten-Zwang `YANA Test...` erst nach Datenschutz- und Validierungsprüfung bewusst aufheben.
-- Separates Test-PostgreSQL einrichten: Der aktuelle Testcode verwendet produktive `app_db`.
-- Automatisierte CI-, Rollen-, CSRF- und Regressionstests ergänzen; veraltete Änderungsvorschläge und konkurrierende Partner prüfen.
-- Datenschutz, **Account-Audit**, sichere Startpasswortübergabe, MFA, Protokoll-Aufbewahrung, Backups und Wiederherstellung prüfen; Account-Lifecycle und Admin-Reset sind implementiert.
-- Keine Secrets, privaten Accounts, realen Hilfesuchendendaten oder schutzwürdigen Standorte in GitHub bzw. MkDocs dokumentieren.
-
-## 6. Entwicklungs- und Dokumentationskonvention
-
-Der Projektverantwortliche möchte Code **Datei für Datei in VS Code** nachvollziehen. Temporäre ZIP-/Installationsskripte sind keine notwendigen Bestandteile des Repositories. Sinnvolle Tests und SQL-Migrationen können als Nachweis einer nachvollziehbaren Entwicklung erhalten bleiben. Nach jedem Feature: Code/SQL, Testbelege, Deploymentdatum und offene Risiken in MkDocs aktualisieren.
+Neue Dateien und Änderungen in VS Code sind für das Schulprojekt nachvollziehbar zu halten. Vor produktiven Änderungen Backup und Tests; danach Ergebnis, Datum und ggf. Commit dokumentieren. ZIP-Dateien dienen nur zum Transport; `.env`, Passwort, API-Schlüssel oder sensible Standorte dürfen nicht in GitHub bzw. MkDocs geraten.

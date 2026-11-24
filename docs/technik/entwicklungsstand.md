@@ -1,6 +1,6 @@
 # Entwicklungsstand und Projektmeilensteine
 
-**Dokumentationsstand: 23. November 2026 · Beschrieben ist der im Projektverlauf bestätigte Stand.**
+**Dokumentationsstand: 24. November 2026 · Der bewusst gesetzte Pause-Punkt liegt nach dem bestandenen Geoapify-Speichertest und vor dem noch unbestätigten Produktivdeployment.**
 
 ## 1. Zeitlicher Verlauf
 
@@ -18,6 +18,9 @@
 | **18.11.2026** | Änderungen an veröffentlichten Einträgen | Getrennter Entwurf, Admin-Freigabe, öffentliche API erst danach aktualisiert; E2E-Test und Produktivprüfung bestanden |
 | **23.11.2026** | Partnerverwaltung im Portal | Account-Erstellung mit Startpasswort, Zuweisen/Entfernen, eigener Pflicht-Passwortwechsel |
 | **23.11.2026** | Account-Lebenszyklus | Deaktivieren, Reaktivieren und Admin-Reset; 12 Integrationstests nach Nutzerangabe bestanden, produktiv bereitgestellt |
+| **24.11.2026** | Öffentlicher Datenschutzfilter für Standorte | Einzel- und Typfreigabe für Adresse/Koordinaten, DB-Trigger, Administratorverwaltung; Test und Produktivprüfung bestanden |
+| **24.11.2026** | Website-Design | Einheitliche weiß-lila Farbpalette, Navigation/Logout, kompakte Partner- und Standorttabellen; produktiv bestätigt |
+| **24.11.2026** | Geoapify-Geocoding | Adresseingabe, echte externe Suche, Bestätigungscode und Speicherung mit/ohne Koordinaten in Testumgebung erfolgreich geprüft; Produktivdeployment noch nicht bestätigt |
 
 ## 2. Aktueller Funktionsstatus
 
@@ -36,7 +39,10 @@
 | Partnerkonten über Website erstellen / zuordnen | **Implementiert**; Accountverwaltung unter `/portal/partner` |
 | Startpasswort, Pflichtwechsel und eigenes Passwort ändern | **Implementiert und mit Testpartner geprüft** |
 | Account deaktivieren, reaktivieren, Passwort-Reset | **Implementiert und E2E-getestet** |
-| Reale Einrichtungen und vertrauliche Adressen schützen | **Offen; zwingend vor Realbetrieb** |
+| Standortdaten öffentlich schützen | **Implementiert und produktiv** für `address`, `latitude`, `longitude` mit separater Standortfreigabe; weitere sensible Daten offen |
+| Administratorseite Standortfreigaben | **Implementiert und produktiv**, Tabelle/Suche/Filter/Detailaktionen |
+| Automatische Adresseingabe bei Neuanlage | **Testumgebung erfolgreich**, Geoapify-Speichertest bestanden; Deployment noch offen |
+| Reale Einrichtungen umfassend datenschutzrechtlich freigeben | **Noch offen**; weitere Felder und fachliche Prüfung |
 | Hilfestellen komplett löschen | **Offen** |
 | App-Download und vollständige mobile UI | **Noch nicht veröffentlicht / nicht vollständig nachgewiesen** |
 | Reale anonyme Beratung und verifizierte Notfallhilfe | **Nicht als produktiver Dienst verfügbar** |
@@ -55,7 +61,7 @@ Entwickelt wird unter Windows/VS Code, versioniert über GitHub, geprüft in `~/
 
 ## 5. Nächste Meilensteine
 
-Die **Administrator-Benutzerverwaltung mit Partnerzuordnung** ist umgesetzt. Priorität haben nun der Schutz sensibler Standortinformationen, eine isolierte Testdatenbank, automatisierte Regressionstests, Account-Audit und sichere Abläufe für den Umgang mit realen Partnern. Siehe [Weiterarbeit](weiterarbeit.md).
+Die **Administrator-Benutzerverwaltung**, der **zweistufige Standortschutz** und das **weiß-lila Webdesign** sind produktiv umgesetzt. Als **nächster unmittelbarer Arbeitsschritt** folgt die Produktivbereitstellung der bereits erfolgreich getesteten **Geoapify-Neuanlage** (sechs Dateien + `.env`/Dienst/Browserprüfung). Danach: bestehende Hilfestellen mit der gleichen Adresseingabe bearbeiten, Flutter mit nullable Koordinaten prüfen, isolierte Testdatenbank, umfassende Regressionstests und Account-Audit. Siehe [Wiedereinstieg](weiterarbeit.md).
 
 ## 6. Nachtrag 23.11.2026: Partner- und Passwortverwaltung
 

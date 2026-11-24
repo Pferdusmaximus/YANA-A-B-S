@@ -73,3 +73,17 @@ Die Testkopie greift auf dieselbe PostgreSQL-Instanz zu. Fehlgeschlagene Schreib
 | Statusänderung erfolgreich, Browser zeigt alte Verwaltung | GitHub-Push allein aktualisiert `~/yana-backend` nicht. Dateien erst nach Tests kopieren und `yana-api` neu starten. Browser ggf. neu laden. |
 
 **Achtung:** Bei fehlgeschlagenen Schreibtests zuerst in PostgreSQL prüfen, ob der fiktive Testaccount bereits angelegt oder deaktiviert wurde. Keine Tests wiederholen, die versehentlich einen realen Account überschreiben könnten. Siehe [Partnerverwaltung](teamportal-benutzerverwaltung.md).
+
+## Ergänzung 24.11.2026: Geoapify- und Standortdiagnose
+
+| Beobachtung | Prüfansatz |
+|---|---|
+| `load_dotenv()` wirft im mit `python - <<'PY'` gestarteten Test eine Ausnahme | Expliziten Pfad zur `~/yana-portal-test/.env` übergeben; keine Secrets ausgeben |
+| Geocoding-Key nicht gefunden | `GEOAPIFY_API_KEY` in der richtigen Umgebung prüfen; Produktiv- und Test-`.env` sind getrennt |
+| `latitude`/`longitude` verletzen `NOT NULL` | Schema prüfen: Die Spalten wurden für Entwürfe ohne Koordinaten nullable migriert; **keine** fiktiven Nullpunkt-Koordinaten einsetzen |
+| Geoapify liefert keinen hausnummerngenauen Treffer | Öffentliche Adresse und Trefferqualität prüfen; Entwurf ohne Koordinaten ist zulässig |
+| Schutzunterkunft lässt sich nicht geocodieren | **Gewollter Schutz**: vertrauliche Adressen dürfen nicht extern übertragen werden |
+| Standort erscheint trotz `published` nicht in API | `is_location_public`, `portal_public_location_type` und den Trigger prüfen; `null` kann das erwartete Ergebnis sein |
+| Neue Adresseingabe im Produktivportal nicht sichtbar | Das Geoapify-Deployment ist am letzten Checkpoint noch offen; [Wiedereinstieg](weiterarbeit.md) |
+
+Nicht ohne Schema-/Versionsprüfung frühere Migrationen erneut ausführen.
