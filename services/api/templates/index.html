@@ -1,95 +1,80 @@
 {% extends "base.html" %}
-
 {% block title %}YANA – You Are Not Alone{% endblock %}
-
 {% block content %}
-
-<header class="navbar">
-    <div class="logo">YANA</div>
-
-    <nav>
-        <a href="#funktionen">Funktionen</a>
-        <a href="#download">Download</a>
-        <span class="portal-link">
-            Teamportal – in Vorbereitung
-        </span>
-    </nav>
-</header>
-
 <main>
-    <section class="hero">
-        <div class="hero-content">
-            <h1>You Are Not Alone.</h1>
-
-            <p>
-                YANA unterstützt Menschen dabei,
-                passende Hilfsangebote, wichtige
-                Informationen und Anlaufstellen
-                schnell und unkompliziert zu finden.
-            </p>
-
-            <a href="#download" class="button">
-                YANA entdecken
-            </a>
+    <section class="hero" aria-labelledby="hero-title">
+        <div class="hero-inner">
+            <div class="hero-content">
+                <span class="hero-kicker"><span class="hero-kicker-dot" aria-hidden="true"></span> YOU ARE NOT ALONE</span>
+                <h1 id="hero-title">Hilfe finden.<br><span class="hero-title-accent">Nicht allein bleiben.</span></h1>
+                <p>
+                    YANA hilft Menschen, passende Hilfsangebote, wichtige Informationen
+                    und Anlaufstellen schnell und unkompliziert zu finden.
+                </p>
+                <div class="hero-actions">
+                    <a href="#funktionen" class="button button-primary">YANA entdecken <span aria-hidden="true">↗</span></a>
+                    <a href="#download" class="button button-secondary">Mehr zur App</a>
+                </div>
+                <p class="hero-caption">Orientierung und Unterstützung – einfach zugänglich.</p>
+            </div>
+            <div class="hero-visual" aria-hidden="true">
+                <div class="hero-orb hero-orb-back"></div>
+                <div class="hero-orb hero-orb-front"></div>
+                <div class="hero-visual-card">
+                    <div class="hero-visual-top"><span class="hero-visual-mark">Y</span><span class="hero-visual-tag">YANA</span></div>
+                    <div class="hero-visual-heart">♥</div>
+                    <div class="hero-visual-title">Du bist nicht allein.</div>
+                    <div class="hero-visual-bars"><span></span><span></span><span></span></div>
+                    <div class="hero-visual-bottom">Hilfsangebote. Orientierung. Vertrauen.</div>
+                </div>
+                <span class="hero-spark hero-spark-one">✦</span>
+                <span class="hero-spark hero-spark-two">✦</span>
+            </div>
         </div>
     </section>
 
-    <section id="funktionen" class="section">
-        <h2>Was bietet YANA?</h2>
-
-        <div class="cards">
-            <article class="card">
+    <section id="funktionen" class="section landing-section">
+        <div class="section-intro">
+            <span class="eyebrow">UNSER ANSATZ</span>
+            <h2>Unterstützung, wenn sie gebraucht wird.</h2>
+            <p>Wichtige Informationen und Kontaktmöglichkeiten übersichtlich an einem Ort.</p>
+        </div>
+        <div class="cards landing-feature-cards">
+            <article class="card feature-card">
+                <span class="feature-icon" aria-hidden="true">⌖</span>
+                <span class="feature-number">01</span>
                 <h3>Hilfestellen finden</h3>
-                <p>
-                    Informationen zu Beratungsstellen,
-                    Hilfsorganisationen und weiteren
-                    Unterstützungsangeboten.
-                </p>
+                <p>Informationen zu Beratungsstellen, Hilfsorganisationen und weiteren Unterstützungsangeboten.</p>
             </article>
-
-            <article class="card">
+            <article class="card feature-card">
+                <span class="feature-icon" aria-hidden="true">✳</span>
+                <span class="feature-number">02</span>
                 <h3>Notfallkontakte</h3>
-                <p>
-                    Wichtige Telefonnummern und
-                    Anlaufstellen übersichtlich
-                    an einem Ort.
-                </p>
+                <p>Wichtige Telefonnummern und Anlaufstellen übersichtlich an einem Ort.</p>
             </article>
-
-            <article class="card">
+            <article class="card feature-card">
+                <span class="feature-icon" aria-hidden="true">♡</span>
+                <span class="feature-number">03</span>
                 <h3>Information und Beratung</h3>
-                <p>
-                    Hilfreiche Informationen und
-                    perspektivisch Möglichkeiten
-                    zur ersten Kontaktaufnahme.
-                </p>
+                <p>Hilfreiche Informationen und perspektivisch Möglichkeiten zur ersten Kontaktaufnahme.</p>
             </article>
         </div>
     </section>
 
     <section id="download" class="section download">
-        <h2>YANA herunterladen</h2>
-
-        <p>
-            Die mobile Anwendung befindet
-            sich aktuell in Entwicklung.
-        </p>
-
-        <span class="button disabled">
-            Download folgt
-        </span>
+        <div class="download-inner">
+            <span class="eyebrow">DIE YANA-APP</span>
+            <h2>Unterstützung für unterwegs.</h2>
+            <p>Die mobile Anwendung befindet sich aktuell in Entwicklung.</p>
+            <span class="button button-disabled" aria-disabled="true">Download folgt</span>
+        </div>
     </section>
 </main>
-
-<footer>
-    <p>YANA – You Are Not Alone</p>
-    <p>
-        Ein Softwareprojekt zur Unterstützung
-        bei der Suche nach Hilfsangeboten.
-    </p>
-    <p>
-        YANA ersetzt keinen offiziellen Notrufdienst.
-    </p>
+<footer class="site-footer">
+    <div class="footer-inner">
+        <div><strong>YANA<span class="site-brand-dot">.</span></strong><span> You Are Not Alone</span></div>
+        <p>Ein Softwareprojekt zur Unterstützung bei der Suche nach Hilfsangeboten.</p>
+        <p class="footer-disclaimer">YANA ersetzt keinen offiziellen Notrufdienst.</p>
+    </div>
 </footer>
-
 {% endblock %}

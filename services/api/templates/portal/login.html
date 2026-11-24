@@ -1,135 +1,40 @@
 {% extends "base.html" %}
-
 {% block title %}YANA – Teamportal Login{% endblock %}
-
 {% block content %}
+<main class="login-page">
+    <div class="login-layout">
+        <section class="login-container" aria-labelledby="login-heading">
+            <span class="eyebrow">GESCHÜTZTER BEREICH</span>
+            <h1 id="login-heading">Willkommen zurück.</h1>
+            <p class="login-subtitle">Melde dich im YANA-Teamportal an.</p>
 
+            {% if error %}
+                <p class="login-error" role="alert">{{ error }}</p>
+            {% endif %}
 
-<!-- Hinweis zum YANA-Teamportal -->
+            <div class="login-form">
+                <form id="login-form" method="post" action="/portal/login">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+                    <label for="email">E-Mail-Adresse</label>
+                    <input type="email" id="email" name="email" placeholder="name@organisation.de"
+                           autocomplete="username" maxlength="254" required autofocus>
+                    <label for="password">Passwort</label>
+                    <input type="password" id="password" name="password" placeholder="Passwort eingeben"
+                           autocomplete="current-password" required>
+                    <button type="submit" class="login-button">Anmelden <span aria-hidden="true">→</span></button>
+                </form>
+            </div>
+            <p class="login-information">Kein Benutzerkonto? Kontaktiere das YANA-Team.</p>
+        </section>
 
-<div class="portal-login-notice" role="note">
-
-    <div class="portal-login-notice-heading">
-        <span class="portal-login-notice-icon" aria-hidden="true">
-            i
-        </span>
-
-        <strong>Hinweis zum Teamportal</strong>
+        <aside class="portal-login-notice" aria-labelledby="portal-notice-heading">
+            <div class="portal-login-notice-icon" aria-hidden="true">i</div>
+            <span class="eyebrow">TEAMPORTAL</span>
+            <h2 id="portal-notice-heading">Für Menschen, die helfen.</h2>
+            <p>Dieser Bereich ist für registrierte Hilfestellen, Beratungsstellen, Kanzleien und autorisierte YANA-Mitarbeitende vorgesehen.</p>
+            <p>Zur Anmeldung benötigst du einen vom YANA-Team bereitgestellten Zugang.</p>
+            <a class="portal-login-notice-footer" href="/">Du suchst Hilfe? Zur YANA-Startseite <span aria-hidden="true">↗</span></a>
+        </aside>
     </div>
-
-    <p>
-        Dieser Bereich ist ausschließlich für
-        registrierte Hilfestellen, Beratungsstellen,
-        Kanzleien und autorisierte YANA-Mitarbeitende
-        vorgesehen.
-    </p>
-
-    <p>
-        Für die Anmeldung benötigst du einen
-        vom YANA-Team bereitgestellten Benutzerzugang.
-    </p>
-
-    <p class="portal-login-notice-footer">
-        Du suchst Hilfe?
-        <a href="/">Zur öffentlichen YANA-Website</a>
-    </p>
-
-</div>
-
-<div class="login-page">
-
-    <div class="login-container">
-
-        <!-- YANA Logo -->
-        <a href="/" class="login-logo">
-            YANA
-        </a>
-
-        <h1>Teamportal</h1>
-
-        <p class="login-subtitle">
-            Melde dich mit deinem Mitarbeiterkonto an,
-            um auf die YANA-Verwaltung zuzugreifen.
-        </p>
-
-        <!-- Fehlermeldung bei ungültigem Login -->
-        {% if error %}
-        <p class="login-error" role="alert">
-            {{ error }}
-        </p>
-        {% endif %}
-
-        <!-- Login-Formular -->
-        <div class="login-form">
-
-            <form
-                id="login-form"
-                method="post"
-                action="/portal/login"
-            >
-
-                <!-- CSRF-Sicherheitstoken -->
-                <input
-                    type="hidden"
-                    name="csrf_token"
-                    value="{{ csrf_token }}"
-                >
-
-                <!-- E-Mail-Adresse -->
-                <label for="email">
-                    E-Mail-Adresse
-                </label>
-
-                <input
-                    type="email"
-                    id="email"
-                    name="email"
-                    placeholder="name@organisation.de"
-                    autocomplete="username"
-                    maxlength="254"
-                    required
-                >
-
-                <!-- Passwort -->
-                <label for="password">
-                    Passwort
-                </label>
-
-                <input
-                    type="password"
-                    id="password"
-                    name="password"
-                    placeholder="Passwort eingeben"
-                    autocomplete="current-password"
-                    required
-                >
-
-                <!-- Anmelden -->
-                <button
-                    type="submit"
-                    class="login-button"
-                >
-                    Anmelden
-                </button>
-
-            </form>
-
-        </div>
-
-        <!-- Sicherheitshinweis -->
-        <p class="login-information">
-            Dieser Bereich ist ausschließlich für
-            autorisierte Mitarbeiter und Partner
-            des YANA-Projekts vorgesehen.
-        </p>
-
-        <!-- Zurück zur öffentlichen Website -->
-        <a href="/" class="back-link">
-            Zurück zur Startseite
-        </a>
-
-    </div>
-
-</div>
-
+</main>
 {% endblock %}

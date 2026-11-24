@@ -1,368 +1,222 @@
 {% extends "base.html" %}
-
-{% block title %}
-YANA – Partnerverwaltung
-{% endblock %}
-
+{% block title %}YANA – Partnerverwaltung{% endblock %}
 {% block content %}
-
-<main class="section portal-facilities">
-
-    <!-- Zurück zum Dashboard -->
-
-    <a href="/portal/dashboard" class="back-link">
-        Zurück zum Dashboard
-    </a>
-
-    <h1>Partnerverwaltung</h1>
-
-    <p>
-        Hier verwaltet das YANA-Team die Partner-Accounts
-        und deren zugewiesene Hilfestellen.
-    </p>
-
-
-    <!-- ===================================== -->
-    <!-- 1. NEUEN PARTNER ERSTELLEN             -->
-    <!-- ===================================== -->
-
-    <section class="partner-management-card">
-
-        <h2>Neuen Partner erstellen</h2>
-
-        <p>
-            Gib die E-Mail-Adresse des neuen Partners ein.
-            Das System erstellt automatisch ein sicheres
-            Startpasswort, das einmalig angezeigt wird.
-        </p>
-
-        {% if error %}
-
-            <p role="alert" style="color: #a32626;">
-                {{ error }}
-            </p>
-
-        {% endif %}
-
-        <form
-            method="post"
-            action="/portal/partner/create"
-            class="partner-assign-form"
-        >
-
-            <input
-                type="hidden"
-                name="csrf_token"
-                value="{{ csrf_token }}"
-            >
-
-            <label for="partner_email">
-                E-Mail-Adresse
-            </label>
-
-            <input
-                type="email"
-                id="partner_email"
-                name="email"
-                value="{{ new_email | default('') }}"
-                maxlength="254"
-                autocomplete="off"
-                required
-            >
-
-            <button
-                type="submit"
-                class="action-button action-submit"
-            >
-                Partner erstellen
-            </button>
-
-        </form>
-
-    </section>
-
-
-    <!-- ===================================== -->
-    <!-- 2. VORHANDENE PARTNER                  -->
-    <!-- ===================================== -->
-
-    <h2>Vorhandene Partner</h2>
-
-    {% if not partners %}
-
-        <p>
-            Es sind noch keine Partner-Accounts vorhanden.
-        </p>
-
-    {% endif %}
-
-
-    {% for partner in partners %}
-
-        <section class="partner-management-card">
-
-            <!-- Partnerinformationen -->
-
-            <h3>{{ partner.email }}</h3>
-
-            <p>
-                <strong>Accountstatus:</strong>
-
-                {% if partner.is_active %}
-
-                    <span class="status-published">
-                        Aktiv
-                    </span>
-
-                {% else %}
-
-                    <span class="status-draft">
-                        Deaktiviert
-                    </span>
-
-                {% endif %}
-            </p>
-
-
-            <!-- ================================= -->
-            <!-- 3. ZUGEWIESENE HILFESTELLEN        -->
-            <!-- ================================= -->
-
-            <h3>Zugewiesene Hilfestellen</h3>
-
-            {% set assigned =
-                assignments_by_account.get(partner.account_id, [])
-            %}
-
-            {% if assigned %}
-
-                <ul class="partner-assignment-list">
-
-                    {% for assignment in assigned %}
-
-                        <li>
-
-                            <span>
-                                {{ assignment.facility_name }}
-                                (ID {{ assignment.facility_id }})
-                            </span>
-
-                            {% if partner.is_active %}
-
-                                <!-- Zuordnung entfernen -->
-
-                                <form
-                                    method="post"
-                                    action="/portal/partner/{{ partner.account_id }}/unassign"
-                                    onsubmit="return confirm('Zuordnung wirklich entfernen?');"
-                                >
-
-                                    <input
-                                        type="hidden"
-                                        name="csrf_token"
-                                        value="{{ csrf_token }}"
-                                    >
-
-                                    <input
-                                        type="hidden"
-                                        name="facility_id"
-                                        value="{{ assignment.facility_id }}"
-                                    >
-
-                                    <button
-                                        type="submit"
-                                        class="action-button action-unpublish"
-                                    >
-                                        Entfernen
-                                    </button>
-
-                                </form>
-
-                            {% endif %}
-
-                        </li>
-
-                    {% endfor %}
-
-                </ul>
-
-            {% else %}
-
-                <p>
-                    Keine Hilfestellen zugewiesen.
-                </p>
-
-            {% endif %}
-
-
-            <!-- ================================= -->
-            <!-- 4. HILFESTELLE ZUWEISEN            -->
-            <!-- ================================= -->
-
-            {% if partner.is_active %}
-
-                <h3>Weitere Hilfestelle zuweisen</h3>
-
-                <form
-                    method="post"
-                    action="/portal/partner/{{ partner.account_id }}/assign"
-                    class="partner-assign-form"
-                >
-
-                    <input
-                        type="hidden"
-                        name="csrf_token"
-                        value="{{ csrf_token }}"
-                    >
-
-                    <label
-                        for="facility-{{ partner.account_id }}"
-                    >
-                        Hilfestelle auswählen
-                    </label>
-
-                    <select
-                        id="facility-{{ partner.account_id }}"
-                        name="facility_id"
-                        required
-                    >
-
-                        <option value="">
-                            Hilfestelle auswählen
-                        </option>
-
-                        {% for facility in facilities %}
-
-                            <option
-                                value="{{ facility.facility_id }}"
-                            >
-                                {{ facility.name }}
-                                (ID {{ facility.facility_id }})
-                            </option>
-
-                        {% endfor %}
-
-                    </select>
-
-                    <button
-                        type="submit"
-                        class="action-button action-submit"
-                    >
-                        Zuweisen
-                    </button>
-
-                </form>
-
-            {% else %}
-
-                <p>
-                    <em>
-                        Dieser Partner ist deaktiviert.
-                        Neue Zuordnungen sind erst nach
-                        einer Reaktivierung möglich.
-                    </em>
-                </p>
-
-            {% endif %}
-
-
-            <!-- ================================= -->
-            <!-- 5. ACCOUN T V E R W A L T U N G   -->
-            <!-- ================================= -->
-
-            <div class="partner-account-actions">
-
-                <h3>Accountverwaltung</h3>
-
-                {% if partner.is_active %}
-
-                    <!-- Passwort zurücksetzen -->
-
-                    <form
-                        method="post"
-                        action="/portal/partner/{{ partner.account_id }}/reset-password"
-                        onsubmit="return confirm('Neues Startpasswort erstellen? Das bisherige Passwort wird ungültig und alle bestehenden Sitzungen werden beendet.');"
-                    >
-
-                        <input
-                            type="hidden"
-                            name="csrf_token"
-                            value="{{ csrf_token }}"
-                        >
-
-                        <button
-                            type="submit"
-                            class="action-button action-submit"
-                        >
-                            Passwort zurücksetzen
-                        </button>
-
-                    </form>
-
-
-                    <!-- Partner deaktivieren -->
-
-                    <form
-                        method="post"
-                        action="/portal/partner/{{ partner.account_id }}/deactivate"
-                        onsubmit="return confirm('Partner wirklich deaktivieren? Alle aktiven Sitzungen werden beendet.');"
-                    >
-
-                        <input
-                            type="hidden"
-                            name="csrf_token"
-                            value="{{ csrf_token }}"
-                        >
-
-                        <button
-                            type="submit"
-                            class="action-button action-unpublish"
-                        >
-                            Account deaktivieren
-                        </button>
-
-                    </form>
-
-                {% else %}
-
-                    <!-- Partner reaktivieren -->
-
-                    <p>
-                        Der Account ist derzeit gesperrt.
-                        Bei einer Reaktivierung wird
-                        automatisch ein neues Startpasswort
-                        generiert.
-                    </p>
-
-                    <form
-                        method="post"
-                        action="/portal/partner/{{ partner.account_id }}/reactivate"
-                        onsubmit="return confirm('Partner reaktivieren und neues Startpasswort erzeugen?');"
-                    >
-
-                        <input
-                            type="hidden"
-                            name="csrf_token"
-                            value="{{ csrf_token }}"
-                        >
-
-                        <button
-                            type="submit"
-                            class="action-button action-submit"
-                        >
-                            Account reaktivieren
-                        </button>
-
-                    </form>
-
-                {% endif %}
-
+<main class="section portal-facilities partner-page">
+    <a href="/portal/dashboard" class="back-link">Zurück zum Dashboard</a>
+
+    <div class="portal-page-heading">
+        <span class="eyebrow">ADMINISTRATION</span>
+        <h1>Partnerverwaltung</h1>
+        <p>Partner-Accounts, Zugänge und zugeordnete Hilfestellen übersichtlich verwalten.</p>
+    </div>
+
+    <!-- Neuer Partner: platzsparend und bei Validierungsfehlern geöffnet. -->
+    <details class="partner-create-panel" {% if error %}open{% endif %}>
+        <summary>
+            <span class="partner-create-summary-text">
+                <span class="partner-create-icon" aria-hidden="true">+</span>
+                <span><strong>Neuen Partner anlegen</strong><small>E-Mail-Adresse eingeben und Startpasswort erzeugen</small></span>
+            </span>
+            <span class="partner-summary-arrow" aria-hidden="true">⌄</span>
+        </summary>
+        <div class="partner-create-body">
+            <p>Das Startpasswort wird einmalig angezeigt. Der Partner muss es bei seiner ersten Anmeldung ändern.</p>
+            {% if error %}<p class="edit-error" role="alert">{{ error }}</p>{% endif %}
+            <form method="post" action="/portal/partner/create" class="partner-create-form">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+                <div class="partner-email-field">
+                    <label for="partner_email">E-Mail-Adresse</label>
+                    <input type="email" id="partner_email" name="email"
+                           value="{{ new_email | default('') }}" placeholder="partner@organisation.de"
+                           maxlength="254" autocomplete="off" required>
+                </div>
+                <button type="submit" class="action-button action-primary">Partner erstellen <span aria-hidden="true">↗</span></button>
+            </form>
+        </div>
+    </details>
+
+    <section class="partner-overview" aria-labelledby="partner-overview-title">
+        <div class="location-overview-header">
+            <div>
+                <h2 id="partner-overview-title">Vorhandene Partner</h2>
+                <p class="overview-subtitle">Accounts ansehen, Einrichtungen zuweisen und Zugänge verwalten.</p>
             </div>
+            <span class="location-result-count" id="partner-result-count" aria-live="polite">{{ partners | length }} Einträge</span>
+        </div>
 
-        </section>
+        <div class="location-toolbar">
+            <div class="location-search-field">
+                <label for="partner-search">Partner suchen</label>
+                <input type="search" id="partner-search" placeholder="E-Mail-Adresse oder Account-ID ..." autocomplete="off">
+            </div>
+            <div class="location-filter-field">
+                <label for="partner-filter">Accountstatus</label>
+                <select id="partner-filter">
+                    <option value="all">Alle Accounts</option>
+                    <option value="active">Aktiv</option>
+                    <option value="inactive">Deaktiviert</option>
+                </select>
+            </div>
+        </div>
 
-    {% endfor %}
+        {% if partners %}
+        <div class="partner-table-wrap">
+            <table class="partner-table">
+                <thead>
+                    <tr>
+                        <th scope="col">Partner-Account</th>
+                        <th scope="col">Status</th>
+                        <th scope="col">Hilfestellen</th>
+                        <th scope="col">Verwaltung</th>
+                    </tr>
+                </thead>
+                {% for partner in partners %}
+                {% set assigned = assignments_by_account.get(partner.account_id, []) %}
+                <tbody class="partner-record" data-search="{{ (partner.email ~ ' ' ~ partner.account_id) | lower }}"
+                       data-status="{{ 'active' if partner.is_active else 'inactive' }}">
+                    <tr class="partner-main-row">
+                        <td>
+                            <span class="partner-account-name">{{ partner.email }}</span>
+                            <span class="partner-account-meta">Account-ID {{ partner.account_id }}</span>
+                        </td>
+                        <td>
+                            {% if partner.is_active %}
+                            <span class="location-badge location-badge-public">Aktiv</span>
+                            {% else %}
+                            <span class="location-badge location-badge-neutral">Deaktiviert</span>
+                            {% endif %}
+                        </td>
+                        <td><span class="partner-assignment-count">{{ assigned | length }}</span></td>
+                        <td>
+                            <button type="button" class="partner-row-toggle" aria-expanded="false"
+                                    aria-controls="partner-detail-{{ partner.account_id }}"
+                                    data-target="partner-detail-{{ partner.account_id }}">
+                                Details <span aria-hidden="true">⌄</span>
+                            </button>
+                        </td>
+                    </tr>
+                    <tr class="partner-detail-row" id="partner-detail-{{ partner.account_id }}" hidden>
+                        <td colspan="4">
+                            <div class="partner-detail-panel">
+                                <div class="partner-detail-grid">
+                                    <section class="partner-detail-section" aria-label="Hilfestellenzuordnung">
+                                        <div class="partner-detail-heading">
+                                            <h3>Zugewiesene Hilfestellen</h3>
+                                            <span class="partner-count-pill">{{ assigned | length }}</span>
+                                        </div>
+                                        {% if assigned %}
+                                        <ul class="partner-assignment-list">
+                                            {% for assignment in assigned %}
+                                            <li>
+                                                <span>{{ assignment.facility_name }} <small>ID {{ assignment.facility_id }}</small></span>
+                                                {% if partner.is_active %}
+                                                <form method="post"
+                                                      action="/portal/partner/{{ partner.account_id }}/unassign"
+                                                      onsubmit="return confirm('Zuordnung wirklich entfernen?');">
+                                                    <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+                                                    <input type="hidden" name="facility_id" value="{{ assignment.facility_id }}">
+                                                    <button type="submit" class="action-button action-unpublish">Entfernen</button>
+                                                </form>
+                                                {% endif %}
+                                            </li>
+                                            {% endfor %}
+                                        </ul>
+                                        {% else %}
+                                        <p class="partner-empty-text">Noch keine Hilfestellen zugewiesen.</p>
+                                        {% endif %}
 
+                                        {% if partner.is_active %}
+                                        <form method="post" action="/portal/partner/{{ partner.account_id }}/assign"
+                                              class="partner-assign-form">
+                                            <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+                                            <label for="facility-{{ partner.account_id }}">Weitere Hilfestelle zuweisen</label>
+                                            <div class="partner-assign-controls">
+                                                <select id="facility-{{ partner.account_id }}" name="facility_id" required>
+                                                    <option value="">Hilfestelle auswählen</option>
+                                                    {% for facility in facilities %}
+                                                    <option value="{{ facility.facility_id }}">{{ facility.name }} (ID {{ facility.facility_id }})</option>
+                                                    {% endfor %}
+                                                </select>
+                                                <button type="submit" class="action-button action-primary">Zuweisen</button>
+                                            </div>
+                                        </form>
+                                        {% else %}
+                                        <p class="partner-empty-text">Bei deaktivierten Accounts sind keine neuen Zuordnungen möglich.</p>
+                                        {% endif %}
+                                    </section>
+
+                                    <section class="partner-detail-section partner-account-section" aria-label="Accountverwaltung">
+                                        <h3>Accountverwaltung</h3>
+                                        {% if partner.is_active %}
+                                            <p>Das Zurücksetzen erzeugt ein neues Startpasswort und beendet vorhandene Sitzungen.</p>
+                                            <form method="post" action="/portal/partner/{{ partner.account_id }}/reset-password"
+                                                  onsubmit="return confirm('Neues Startpasswort erstellen? Das bisherige Passwort wird ungültig und alle bestehenden Sitzungen werden beendet.');">
+                                                <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+                                                <button type="submit" class="action-button action-secondary">Passwort zurücksetzen</button>
+                                            </form>
+                                            <form method="post" action="/portal/partner/{{ partner.account_id }}/deactivate"
+                                                  onsubmit="return confirm('Partner wirklich deaktivieren? Alle aktiven Sitzungen werden beendet.');">
+                                                <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+                                                <button type="submit" class="action-button action-unpublish">Account deaktivieren</button>
+                                            </form>
+                                        {% else %}
+                                            <p>Beim Reaktivieren wird ein neues Startpasswort erzeugt. Die bisherigen Hilfestellenzuordnungen bleiben bestehen.</p>
+                                            <form method="post" action="/portal/partner/{{ partner.account_id }}/reactivate"
+                                                  onsubmit="return confirm('Partner reaktivieren und neues Startpasswort erzeugen?');">
+                                                <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+                                                <button type="submit" class="action-button action-primary">Account reaktivieren</button>
+                                            </form>
+                                        {% endif %}
+                                    </section>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+                {% endfor %}
+            </table>
+        </div>
+        <p class="location-empty-state" id="partner-no-results" hidden>Keine Partner entsprechen den Suchkriterien.</p>
+        {% else %}
+        <p class="location-empty-state">Es sind noch keine Partner-Accounts vorhanden.</p>
+        {% endif %}
+    </section>
 </main>
 
+<script>
+(function () {
+    "use strict";
+    const search = document.getElementById("partner-search");
+    const filter = document.getElementById("partner-filter");
+    const records = Array.from(document.querySelectorAll(".partner-record"));
+    const resultCount = document.getElementById("partner-result-count");
+    const noResults = document.getElementById("partner-no-results");
+
+    document.querySelectorAll(".partner-row-toggle").forEach(function (button) {
+        button.addEventListener("click", function () {
+            const detail = document.getElementById(button.dataset.target);
+            const expanded = button.getAttribute("aria-expanded") === "true";
+            detail.hidden = expanded;
+            button.setAttribute("aria-expanded", String(!expanded));
+        });
+    });
+
+    function updateFilter() {
+        const query = search.value.toLocaleLowerCase("de-DE").trim();
+        const state = filter.value;
+        let visible = 0;
+        records.forEach(function (record) {
+            const matchesQuery = (record.dataset.search || "").includes(query);
+            const matchesState = state === "all" || record.dataset.status === state;
+            record.hidden = !(matchesQuery && matchesState);
+            if (!record.hidden) visible += 1;
+        });
+        resultCount.textContent = visible + " von " + records.length + " Einträgen";
+        if (noResults) noResults.hidden = visible > 0 || records.length === 0;
+    }
+    search.addEventListener("input", updateFilter);
+    filter.addEventListener("change", updateFilter);
+    updateFilter();
+})();
+</script>
 {% endblock %}

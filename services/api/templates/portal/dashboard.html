@@ -1,128 +1,55 @@
-
 {% extends "base.html" %}
-
-{% block title %}
-YANA – Dashboard
-{% endblock %}
-
+{% block title %}YANA – Dashboard{% endblock %}
 {% block content %}
-
-<main class="section">
-
-    <h1>YANA-Verwaltungsportal</h1>
-
-    <p>
-        Willkommen, {{ account.email }}!
-    </p>
-
-    <p>
-        Deine Benutzerrolle:
-        <strong>
-            {% if account.role == "admin" %}
-                YANA-Administrator
-            {% elif account.role == "partner" %}
-                YANA-Partner
-            {% else %}
-                {{ account.role }}
-            {% endif %}
-        </strong>
-    </p>
-
-    <h2>Verwaltung</h2>
-
-    <div class="cards">
-
-        <!-- Hilfestellenverwaltung -->
-        {% if account.role in ["admin", "partner"] %}
-
-        <article class="card">
-
-            <h3>Hilfestellen</h3>
-
-            <p>
-                {% if account.role == "admin" %}
-                    Alle Hilfestellen anzeigen,
-                    bearbeiten und verwalten.
-                    Änderungen prüfen und freigeben.
-                {% else %}
-                    Eigene Hilfestellen anzeigen,
-                    bearbeiten und Änderungen
-                    zur Prüfung einreichen.
-                {% endif %}
-            </p>
-
-            <a href="/portal/hilfestellen">
-                Hilfestellen verwalten
-            </a>
-
-        </article>
-
-        {% endif %}
-
-
-        <!-- Partnerverwaltung: Nur Administratoren -->
-        {% if account.role == "admin" %}
-
-        <article class="card">
-
-            <h3>Standortfreigaben</h3>
-
-            <p>
-                Öffentliche Standortangaben prüfen,
-                freigeben und wieder sperren.
-            </p>
-
-            <a href="/portal/standorte">
-                Standorte verwalten
-            </a>
-
-        </article>
-
-        <article class="card">
-
-            <h3>Partnerverwaltung</h3>
-
-            <p>
-                YANA-Partner verwalten und
-                Hilfestellen zuweisen oder
-                bestehende Zuordnungen entfernen.
-            </p>
-
-            <a href="/portal/partner">
-                Partner verwalten
-            </a>
-
-        </article>
-
-        {% endif %}
-
+<main class="section portal-home">
+    <div class="portal-heading">
+        <span class="eyebrow">YANA TEAMPORTAL</span>
+        <h1>Verwaltungsübersicht</h1>
+        <p>Willkommen, <strong>{{ account.email }}</strong>.</p>
+        <span class="role-pill">
+            {% if account.role == "admin" %}YANA-Administrator
+            {% elif account.role == "partner" %}YANA-Partner
+            {% else %}{{ account.role }}{% endif %}
+        </span>
     </div>
 
-    <p style="margin-top: 30px;">
-    <a href="/portal/passwort-aendern">
-        Eigenes Passwort ändern
-    </a>
-    </p>
+    <div class="portal-section-heading">
+        <h2>Deine Bereiche</h2>
+        <p>Wähle die gewünschte Verwaltung aus.</p>
+    </div>
+    <div class="cards dashboard-cards">
+        {% if account.role in ["admin", "partner"] %}
+        <article class="card dashboard-card">
+            <div class="dashboard-card-icon" aria-hidden="true">⌂</div>
+            <h3>Hilfestellen</h3>
+            <p>{% if account.role == "admin" %}
+                Alle Hilfestellen verwalten und Änderungen prüfen und freigeben.
+               {% else %}
+                Eigene Hilfestellen verwalten und Änderungen zur Prüfung einreichen.
+               {% endif %}</p>
+            <a class="card-link" href="/portal/hilfestellen">Hilfestellen verwalten <span aria-hidden="true">↗</span></a>
+        </article>
+        {% endif %}
 
-    <!-- Abmelden -->
-    <form method="post" action="/portal/logout">
+        {% if account.role == "admin" %}
+        <article class="card dashboard-card">
+            <div class="dashboard-card-icon" aria-hidden="true">⌖</div>
+            <h3>Standortfreigaben</h3>
+            <p>Öffentliche Standortangaben prüfen, freigeben und wieder sperren.</p>
+            <a class="card-link" href="/portal/standorte">Standorte verwalten <span aria-hidden="true">↗</span></a>
+        </article>
+        <article class="card dashboard-card">
+            <div class="dashboard-card-icon" aria-hidden="true">♧</div>
+            <h3>Partnerverwaltung</h3>
+            <p>Partner-Accounts verwalten und Hilfestellen zuordnen.</p>
+            <a class="card-link" href="/portal/partner">Partner verwalten <span aria-hidden="true">↗</span></a>
+        </article>
+        {% endif %}
+    </div>
 
-        <input
-            type="hidden"
-            name="csrf_token"
-            value="{{ csrf_token }}"
-        >
-
-        <button
-            type="submit"
-            class="login-button"
-            style="max-width: 200px; margin-top: 30px;"
-        >
-            Abmelden
-        </button>
-
-    </form>
-
+    <div class="portal-account-foot">
+        <span>Kontoeinstellungen</span>
+        <a href="/portal/passwort-aendern">Eigenes Passwort ändern <span aria-hidden="true">↗</span></a>
+    </div>
 </main>
-
 {% endblock %}

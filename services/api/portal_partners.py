@@ -256,6 +256,7 @@ def create_partner(
             "account": account,
             "partner_email": email,
             "start_password": start_password,
+            "csrf_token": csrf_token(request),
         },
         headers={
             "Cache-Control": "no-store, private",
@@ -478,6 +479,7 @@ def show_start_password(
             "account": account,
             "partner_email": partner_email,
             "start_password": start_password,
+            "csrf_token": csrf_token(request),
             "operation": operation,
         },
         headers={
