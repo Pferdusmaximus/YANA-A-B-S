@@ -6,6 +6,7 @@ from portal_facility_changes import router as changes_router
 from portal_facilities_create import router as facilities_create_router
 from portal_partners import router as partners_router
 from portal_password import router as password_router
+from portal_locations import router as locations_router
 
 from dotenv import load_dotenv
 from starlette.middleware.sessions import SessionMiddleware
@@ -35,6 +36,7 @@ app.include_router(status_router)
 app.include_router(changes_router)
 app.include_router(partners_router)
 app.include_router(password_router)
+app.include_router(locations_router)
 
 load_dotenv()
 
@@ -99,42 +101,50 @@ def get_hilfestellen():
                 cur.execute(
                     """
                     SELECT
-                        facility_id,
-                        name,
-                        facility_type,
+                        h.facility_id,
+                        h.name,
+                        h.facility_type,
 
-                        -- Adresse nur bei Freigabe veröffentlichen
+                        -- Adresse nur veröffentlichen,
+                        -- wenn beide Freigaben vorliegen.
                         CASE
-                            WHEN is_location_public = TRUE
-                            THEN address
+                            WHEN h.is_location_public IS TRUE
+                             AND allowed.facility_type IS NOT NULL
+                            THEN h.address
                             ELSE NULL
                         END AS address,
 
-                        -- Breitengrad nur bei Freigabe
+                        -- Breitengrad schützen
                         CASE
-                            WHEN is_location_public = TRUE
-                            THEN latitude
+                            WHEN h.is_location_public IS TRUE
+                             AND allowed.facility_type IS NOT NULL
+                            THEN h.latitude
                             ELSE NULL
                         END AS latitude,
 
-                        -- Längengrad nur bei Freigabe
+                        -- Längengrad schützen
                         CASE
-                            WHEN is_location_public = TRUE
-                            THEN longitude
+                            WHEN h.is_location_public IS TRUE
+                             AND allowed.facility_type IS NOT NULL
+                            THEN h.longitude
                             ELSE NULL
                         END AS longitude,
 
-                        phone,
-                        email,
-                        opening_hours,
-                        capacity,
-                        category_id
+                        h.phone,
+                        h.email,
+                        h.opening_hours,
+                        h.capacity,
+                        h.category_id
 
-                    FROM public.hilfestelle
+                    FROM public.hilfestelle AS h
 
-                    WHERE publication_status = 'published'
+                    LEFT JOIN public.portal_public_location_type
+                        AS allowed
+                        ON allowed.facility_type = h.facility_type
 
-                    ORDER BY name ASC
+                    WHERE h.publication_status = 'published'
+
+                    ORDER BY h.name ASC
                     """
                 )
 
