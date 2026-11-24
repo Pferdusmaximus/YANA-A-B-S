@@ -1,21 +1,47 @@
 <!DOCTYPE html>
 <html lang="de">
-
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0">
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#6d28d9">
     <title>{% block title %}YANA{% endblock %}</title>
-
-    <link rel="stylesheet"
-          href="/static/css/style.css">
+    <link rel="stylesheet" href="/static/css/style.css?v=20261124-purple">
 </head>
-
 <body>
+    {# Einheitliche Navigation. Die Anmeldung bleibt serverseitig geschützt. #}
+    {% set current_path = request.url.path %}
+    {% set is_home = current_path == '/' %}
+    {% set is_login = current_path == '/portal/login' %}
+    <header class="site-header">
+        <div class="site-header-inner">
+            <a class="site-brand" href="/" aria-label="YANA – zur Startseite">
+                <span class="site-brand-mark" aria-hidden="true">Y</span>
+                <span class="site-brand-text">YANA<span class="site-brand-dot">.</span></span>
+            </a>
+            <nav class="site-navigation" aria-label="Hauptnavigation">
+                {% if is_home %}
+                    <a class="site-nav-link" href="#funktionen">Funktionen</a>
+                    <a class="site-nav-link" href="#download">App</a>
+                    <a class="site-nav-cta" href="/portal/login">Teamportal <span aria-hidden="true">↗</span></a>
+                {% elif is_login %}
+                    <a class="site-nav-link" href="/">Zur Startseite</a>
+                {% else %}
+                    {% if account is defined and account and account.must_change_password %}
+                        <span class="site-nav-caption">Passwort einrichten</span>
+                    {% else %}
+                        <a class="site-nav-link" href="/portal/dashboard">Dashboard</a>
+                    {% endif %}
+                    {% if csrf_token is defined %}
+                        <form class="site-logout-form" method="post" action="/portal/logout">
+                            <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+                            <button type="submit" class="site-logout-button">Abmelden <span aria-hidden="true">↗</span></button>
+                        </form>
+                    {% endif %}
+                {% endif %}
+            </nav>
+        </div>
+    </header>
 
-    {% block content %}
-    {% endblock %}
-
+    {% block content %}{% endblock %}
 </body>
 </html>
