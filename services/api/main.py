@@ -95,23 +95,45 @@ def get_hilfestellen():
     try:
         with get_connection() as conn:
             with conn.cursor(row_factory=dict_row) as cur:
-                
+
                 cur.execute(
                     """
                     SELECT
                         facility_id,
                         name,
                         facility_type,
-                        address,
-                        latitude,
-                        longitude,
+
+                        -- Adresse nur bei Freigabe veröffentlichen
+                        CASE
+                            WHEN is_location_public = TRUE
+                            THEN address
+                            ELSE NULL
+                        END AS address,
+
+                        -- Breitengrad nur bei Freigabe
+                        CASE
+                            WHEN is_location_public = TRUE
+                            THEN latitude
+                            ELSE NULL
+                        END AS latitude,
+
+                        -- Längengrad nur bei Freigabe
+                        CASE
+                            WHEN is_location_public = TRUE
+                            THEN longitude
+                            ELSE NULL
+                        END AS longitude,
+
                         phone,
                         email,
                         opening_hours,
                         capacity,
                         category_id
+
                     FROM public.hilfestelle
+
                     WHERE publication_status = 'published'
+
                     ORDER BY name ASC
                     """
                 )
@@ -125,7 +147,6 @@ def get_hilfestellen():
             status_code=503,
             detail="Datenbankabfrage fehlgeschlagen"
         )
-
 
 @app.get("/kategorien")
 def get_kategorien():
