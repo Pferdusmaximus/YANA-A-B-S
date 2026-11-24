@@ -1,216 +1,108 @@
 {% extends "base.html" %}
-
-{% block title %}
-YANA – Neue Hilfestelle
-{% endblock %}
-
+{% block title %}YANA – Neue Hilfestelle{% endblock %}
 {% block content %}
-
 <main class="section portal-edit">
-
-    <a href="/portal/hilfestellen" class="back-link">
-        Zurück zur Hilfestellenübersicht
-    </a>
-
+    <a href="/portal/hilfestellen" class="back-link">Zurück zur Hilfestellenübersicht</a>
     <h1>Neue Hilfestelle anlegen</h1>
-
-    <p>
-        Erfasse hier eine neue Hilfestelle
-        für die YANA-Datenbank.
-    </p>
+    <p>Erfasse eine neue Hilfestelle. Die Koordinaten werden bei geeigneten Einrichtungen automatisch ermittelt.</p>
 
     <div class="edit-container">
+        <p class="edit-warning">Entwicklungsphase: Nur fiktive YANA-Testeinträge erfassen. Keine echten Adressen vertraulicher Einrichtungen verwenden.</p>
+        {% if error %}<div class="edit-error" role="alert">{{ error }}</div>{% endif %}
 
-        <p class="edit-warning">
-            Entwicklungsphase: Bitte ausschließlich
-            fiktive Testeinrichtungen mit erfundenen
-            Kontaktdaten erfassen.
-        </p>
+        <form id="new-facility-form" method="post" action="/portal/hilfestellen/neu" class="edit-form">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+            <input type="hidden" id="geocode_token" name="geocode_token" value="">
 
-        {% if error %}
-        <div class="edit-error" role="alert">
-            {{ error }}
-        </div>
-        {% endif %}
+            <label for="name">Name der Hilfestelle *</label>
+            <input type="text" id="name" name="name" value="{{ values.get('name', '') }}"
+                   maxlength="150" placeholder="YANA Test Beratungsstelle" required>
 
-        <form method="post"
-              action="/portal/hilfestellen/neu"
-              class="edit-form">
+            <label for="facility_type">Art der Einrichtung *</label>
+            <input type="text" id="facility_type" name="facility_type"
+                   value="{{ values.get('facility_type', '') }}" maxlength="50"
+                   placeholder="Beratungsstelle" required>
 
-            <input
-                type="hidden"
-                name="csrf_token"
-                value="{{ csrf_token }}"
-            >
-
-            <label for="name">
-                Name der Hilfestelle *
-            </label>
-            <input
-                type="text"
-                id="name"
-                name="name"
-                value="{{ values.get('name', '') }}"
-                maxlength="150"
-                placeholder="YANA Test – Neue Beratungsstelle"
-                required
-            >
-
-            <label for="facility_type">
-                Art der Einrichtung *
-            </label>
-            <input
-                type="text"
-                id="facility_type"
-                name="facility_type"
-                value="{{ values.get('facility_type', '') }}"
-                maxlength="50"
-                placeholder="Beratungsstelle"
-                required
-            >
-
-            <label for="category_id">
-                Kategorie
-            </label>
-            <select
-                id="category_id"
-                name="category_id"
-            >
-                <option value="">
-                    Keine Kategorie
-                </option>
-
+            <label for="category_id">Kategorie</label>
+            <select id="category_id" name="category_id">
+                <option value="">Keine Kategorie</option>
                 {% for category in categories %}
-                <option
-                    value="{{ category.category_id }}"
-                    {% if values.get('category_id', '') == (category.category_id | string) %}
-                    selected
-                    {% endif %}
-                >
-                    {{ category.name }}
-                </option>
+                <option value="{{ category.category_id }}" {% if values.get('category_id', '') == (category.category_id | string) %}selected{% endif %}>{{ category.name }}</option>
                 {% endfor %}
             </select>
 
-            <label for="address">
-                Anschrift *
-            </label>
-            <input
-                type="text"
-                id="address"
-                name="address"
-                value="{{ values.get('address', '') }}"
-                maxlength="255"
-                placeholder="Teststraße 3, Regensburg"
-                required
-            >
-
-            <div class="edit-grid">
-
-                <div>
-                    <label for="latitude">
-                        Breitengrad *
-                    </label>
-                    <input
-                        type="number"
-                        id="latitude"
-                        name="latitude"
-                        min="-90"
-                        max="90"
-                        step="0.0000001"
-                        value="{{ values.get('latitude', '') }}"
-                        placeholder="49.0134000"
-                        required
-                    >
+            <section class="yana-address-section" aria-labelledby="address-heading">
+                <div class="yana-address-section-heading">
+                    <h2 id="address-heading">Anschrift</h2>
+                    <p>Bitte eine normale Postadresse eintragen. Breitengrad und Längengrad müssen nicht manuell ermittelt werden.</p>
                 </div>
-
-                <div>
-                    <label for="longitude">
-                        Längengrad *
-                    </label>
-                    <input
-                        type="number"
-                        id="longitude"
-                        name="longitude"
-                        min="-180"
-                        max="180"
-                        step="0.0000001"
-                        value="{{ values.get('longitude', '') }}"
-                        placeholder="12.1016000"
-                        required
-                    >
+                <div class="edit-grid yana-address-street-grid">
+                    <div>
+                        <label for="street">Straße *</label>
+                        <input id="street" name="street" type="text" maxlength="100" autocomplete="address-line1"
+                               value="{{ values.get('street', '') }}" placeholder="Musterstraße" required>
+                    </div>
+                    <div>
+                        <label for="housenumber">Hausnummer *</label>
+                        <input id="housenumber" name="housenumber" type="text" maxlength="12"
+                               value="{{ values.get('housenumber', '') }}" placeholder="12a" required>
+                    </div>
                 </div>
+                <div class="edit-grid">
+                    <div>
+                        <label for="postcode">Postleitzahl *</label>
+                        <input id="postcode" name="postcode" type="text" inputmode="numeric" pattern="[0-9]{5}"
+                               maxlength="5" autocomplete="postal-code" value="{{ values.get('postcode', '') }}"
+                               placeholder="93047" required>
+                    </div>
+                    <div>
+                        <label for="city">Ort *</label>
+                        <input id="city" name="city" type="text" maxlength="90" autocomplete="address-level2"
+                               value="{{ values.get('city', '') }}" placeholder="Regensburg" required>
+                    </div>
+                </div>
+                <label for="country_display">Land</label>
+                <input id="country_display" type="text" value="Deutschland" disabled>
 
-            </div>
+                <div class="yana-geocode-box">
+                    <h3>Automatische Standortermittlung</h3>
+                    <p>Nur für öffentlich bekannte, ausdrücklich zugelassene Einrichtungsarten. Bei Schutzunterkünften erfolgt <strong>keine</strong> externe Adressabfrage.</p>
+                    <label class="yana-check-row" for="non_confidential">
+                        <input type="checkbox" name="non_confidential" id="non_confidential" value="yes">
+                        <span>Ich bestätige, dass die eingegebene Anschrift öffentlich bekannt und keine vertrauliche Schutzadresse ist.</span>
+                    </label>
+                    <button id="geocode-button" type="button" class="button button-secondary">Standort ermitteln</button>
+                    <div id="geocode-feedback" class="yana-geocode-feedback" role="status" aria-live="polite">
+                        Noch keine Koordinaten ermittelt. Du kannst die Hilfestelle dennoch als Entwurf speichern.
+                    </div>
+                    <div id="geocode-result" class="yana-geocode-result" hidden>
+                        <strong>Ermittelter Standort</strong>
+                        <p id="geocode-formatted"></p>
+                        <p class="yana-geocode-coordinates" id="geocode-coordinates"></p>
+                        <a id="geocode-map-link" href="#" target="_blank" rel="noopener noreferrer">Standort auf OpenStreetMap prüfen ↗</a>
+                        <p class="yana-geocode-attribution">Geocoding: Geoapify · Kartendaten: © OpenStreetMap-Mitwirkende</p>
+                    </div>
+                </div>
+            </section>
 
-            <label for="capacity">
-                Kapazität *
-            </label>
-            <input
-                type="number"
-                id="capacity"
-                name="capacity"
-                min="0"
-                max="100000"
-                step="1"
-                value="{{ values.get('capacity', '') }}"
-                required
-            >
+            <label for="capacity">Kapazität *</label>
+            <input type="number" id="capacity" name="capacity" min="0" max="100000" step="1" value="{{ values.get('capacity', '') }}" required>
 
-            <label for="phone">
-                Telefonnummer
-            </label>
-            <input
-                type="tel"
-                id="phone"
-                name="phone"
-                maxlength="30"
-                value="{{ values.get('phone', '') }}"
-            >
+            <label for="phone">Telefonnummer</label>
+            <input type="tel" id="phone" name="phone" maxlength="30" value="{{ values.get('phone', '') }}">
 
-            <label for="email">
-                E-Mail-Adresse
-            </label>
-            <input
-                type="email"
-                id="email"
-                name="email"
-                maxlength="150"
-                value="{{ values.get('email', '') }}"
-            >
+            <label for="email">E-Mail-Adresse</label>
+            <input type="email" id="email" name="email" maxlength="150" value="{{ values.get('email', '') }}">
 
-            <label for="opening_hours">
-                Öffnungszeiten
-            </label>
-            <textarea
-                id="opening_hours"
-                name="opening_hours"
-                maxlength="255"
-                rows="3"
-            >{{ values.get('opening_hours', '') }}</textarea>
+            <label for="opening_hours">Öffnungszeiten</label>
+            <textarea id="opening_hours" name="opening_hours" maxlength="255" rows="3">{{ values.get('opening_hours', '') }}</textarea>
 
             <div class="edit-actions">
-
-                <button
-                    type="submit"
-                    class="login-button"
-                >
-                    Hilfestelle speichern
-                </button>
-
-                <a
-                    href="/portal/hilfestellen"
-                    class="edit-cancel"
-                >
-                    Abbrechen
-                </a>
-
+                <button type="submit" class="login-button">Hilfestelle als Entwurf speichern</button>
+                <a href="/portal/hilfestellen" class="edit-cancel">Abbrechen</a>
             </div>
-
         </form>
-
     </div>
-
 </main>
-
+<script src="/static/js/yana-geocoding.js?v=20261124-v1" defer></script>
 {% endblock %}

@@ -1,6 +1,7 @@
 /* ======================================================================
-   YANA Design System
+   YANA Design System | 24.11.2026
    Ein Designsystem für öffentliche Website und geschütztes Teamportal.
+   Brand: kräftiges Lila, weiße Flächen, dezente Lavendeltöne.
    ====================================================================== */
 
 :root {
@@ -456,3 +457,27 @@ p { margin-top: 0; }
     html { scroll-behavior: auto; }
     *, *::before, *::after { transition-duration: .01ms !important; animation-duration: .01ms !important; }
 }
+
+/* 15 | Automatische Adresseingabe – YANA-Lila */
+.yana-address-section { margin: 24px 0; padding: 22px; border: 1px solid var(--primary-border); background: #fbf9ff; border-radius: var(--radius); }
+.yana-address-section-heading h2 { font-size: 19px; margin: 0 0 6px; }
+.yana-address-section-heading p { font-size: 13px; color: var(--muted); margin: 0 0 22px; }
+.yana-address-street-grid { grid-template-columns: minmax(0, 3fr) minmax(120px, 1fr); }
+.yana-geocode-box { border: 1px solid var(--primary-border); background: #fff; border-radius: var(--radius); padding: 18px 20px; margin-top: 8px; }
+.yana-geocode-box h3 { margin: 0 0 8px; font-size: 16px; color: var(--primary-dark); }
+.yana-geocode-box > p { margin: 0 0 14px; color: var(--muted); font-size: 13px; line-height: 1.6; }
+.edit-form .yana-check-row { display: flex; align-items: flex-start; gap: 10px; margin: 14px 0; font-size: 13px; font-weight: 500; line-height: 1.5; }
+.edit-form .yana-check-row input[type="checkbox"] { width: 17px; min-height: 17px; height: 17px; flex: 0 0 17px; margin: 2px 0 0; accent-color: var(--primary); }
+.yana-geocode-box .button { width: auto; font-size: 13px; }
+.yana-geocode-box .button:disabled { opacity: .65; cursor: wait; }
+.yana-geocode-feedback { margin-top: 14px; padding: 11px 13px; border-radius: var(--radius-sm); font-size: 13px; line-height: 1.5; background: var(--primary-soft); color: var(--primary-dark); }
+.yana-geocode-feedback[data-state="error"] { background: var(--danger-soft); color: var(--danger); }
+.yana-geocode-feedback[data-state="success"] { background: var(--primary-soft); color: var(--primary-dark); }
+.yana-geocode-result { margin-top: 14px; padding: 15px; border: 1px solid var(--primary-border); border-radius: var(--radius-sm); background: #faf7ff; }
+.yana-geocode-result[hidden] { display: none; }
+.yana-geocode-result strong { color: var(--primary-dark); }
+.yana-geocode-result p { margin: 8px 0; font-size: 13px; line-height: 1.5; }
+.yana-geocode-result a { font-size: 13px; font-weight: 700; }
+.yana-geocode-coordinates, .yana-geocode-attribution { color: var(--muted); }
+.yana-geocode-attribution { font-size: 11px !important; }
+@media (max-width: 640px) { .yana-address-section { padding: 16px; } .yana-address-street-grid { grid-template-columns: 1fr; } }
