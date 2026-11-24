@@ -2,9 +2,9 @@ class HelpFacility {
   final int id;
   final String name;
   final String type;
-  final String address;
-  final double latitude;
-  final double longitude;
+  final String? address;
+  final double? latitude;
+  final double? longitude;
   final String? phone;
   final String? email;
   final String? openingHours;
@@ -25,16 +25,14 @@ class HelpFacility {
     required this.categoryId,
   });
 
-  factory HelpFacility.fromJson(
-    Map<String, dynamic> json,
-  ) {
+  factory HelpFacility.fromJson(Map<String, dynamic> json) {
     return HelpFacility(
       id: json['facility_id'] as int,
       name: json['name'] as String,
       type: json['facility_type'] as String,
-      address: json['address'] as String,
-      latitude: (json['latitude'] as num).toDouble(),
-      longitude: (json['longitude'] as num).toDouble(),
+      address: json['address'] as String?,
+      latitude: (json['latitude'] as num?)?.toDouble(),
+      longitude: (json['longitude'] as num?)?.toDouble(),
       phone: json['phone'] as String?,
       email: json['email'] as String?,
       openingHours: json['opening_hours'] as String?,
