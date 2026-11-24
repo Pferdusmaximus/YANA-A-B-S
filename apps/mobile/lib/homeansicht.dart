@@ -11,47 +11,35 @@ class HomeView extends StatelessWidget {
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 24),
+        padding: const EdgeInsets.symmetric(horizontal: 42, vertical: 24),
         child: Column(
           children: [
             SizedBox(
-              width: 110,
-              height: 110,
+              width: 250,
+              height: 250,
               child: FilledButton(
                 style: FilledButton.styleFrom(
-                  backgroundColor: Colors.grey.shade600,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8),
+                  backgroundColor: const Color.fromARGB(255, 198, 8, 8),
+                  shape: CircleBorder(
+                    side: BorderSide(
+                      color: const Color.fromARGB(255, 146, 0, 0),
+                      width: 4,
+                    ),
+                  
                   ),
                 ),
                 onPressed: () => _showEmergencyDialog(context),
                 child: const Text('Notfall'),
               ),
             ),
-            const SizedBox(height: 32),
+            const SizedBox(height: 80),
             _WideButton(
               label: 'Hilfsnummern',
               onPressed: () =>
                   Navigator.pushNamed(context, StartMenu.hilfenummern.$2),
             ),
-            const SizedBox(height: 12),
-            _WideButton(
-              label: 'Frauenhäuser',
-              onPressed: () => Navigator.pushNamed(context, '/frauenhaeuser'),
-            ),
-            const SizedBox(height: 12),
-            _WideButton(
-              label: 'Psychische Unterstützung',
-              onPressed: () =>
-                  Navigator.pushNamed(context, '/psychische-unterstuetzung'),
-            ),
-            const SizedBox(height: 12),
-            _WideButton(
-              label: 'Rechtliche Hilfe',
-              onPressed: () =>
-                  Navigator.pushNamed(context, '/rechtliche-hilfe'),
-            ),
-            const SizedBox(height: 12),
+
+            const SizedBox(height: 15),
             _WideButton(
               label: 'Anonyme Hilfestellen',
               onPressed: () => Navigator.pushNamed(
