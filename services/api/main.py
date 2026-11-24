@@ -6,6 +6,7 @@ from portal_facility_changes import router as changes_router
 from portal_facilities_create import router as facilities_create_router
 from portal_partners import router as partners_router
 from portal_password import router as password_router
+from portal_locations import router as locations_router
 
 from dotenv import load_dotenv
 from starlette.middleware.sessions import SessionMiddleware
@@ -35,6 +36,7 @@ app.include_router(status_router)
 app.include_router(changes_router)
 app.include_router(partners_router)
 app.include_router(password_router)
+app.include_router(locations_router)
 
 load_dotenv()
 

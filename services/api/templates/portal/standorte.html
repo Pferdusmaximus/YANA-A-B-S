@@ -1,0 +1,171 @@
+{% extends "base.html" %}
+
+{% block title %}
+YANA – Standortfreigaben
+{% endblock %}
+
+{% block content %}
+
+<main class="section portal-facilities">
+
+    <a href="/portal/dashboard" class="back-link">
+        Zurück zum Dashboard
+    </a>
+
+    <h1>Standortfreigaben</h1>
+
+    <p>
+        Hier entscheidet das YANA-Team, ob Adressen
+        und GPS-Koordinaten öffentlich angezeigt werden dürfen.
+    </p>
+
+    <p>
+        <strong>Datenschutz:</strong>
+        Standorte sind grundsätzlich vertraulich.
+        Eine Freigabe ist nur bei zugelassenen
+        Einrichtungsarten möglich.
+    </p>
+
+    {% if not facilities %}
+
+        <p>
+            Es sind noch keine Hilfestellen vorhanden.
+        </p>
+
+    {% endif %}
+
+
+    {% for facility in facilities %}
+
+        <section class="partner-management-card">
+
+            <h2>{{ facility.name }}</h2>
+
+            <p>
+                <strong>ID:</strong>
+                {{ facility.facility_id }}
+            </p>
+
+            <p>
+                <strong>Einrichtungsart:</strong>
+                {{ facility.facility_type }}
+            </p>
+
+            <p>
+                <strong>Veröffentlichungsstatus:</strong>
+                {{ facility.publication_status }}
+            </p>
+
+            <p>
+                <strong>Hinterlegte Adresse:</strong>
+                {{ facility.address or "Nicht hinterlegt" }}
+            </p>
+
+            <p>
+                <strong>Koordinaten:</strong>
+
+                {% if facility.latitude is not none
+                      and facility.longitude is not none %}
+
+                    {{ facility.latitude }},
+                    {{ facility.longitude }}
+
+                {% else %}
+
+                    Nicht vollständig hinterlegt
+
+                {% endif %}
+            </p>
+
+            <h3>Öffentliche Standortfreigabe</h3>
+
+            {% if facility.is_location_public %}
+
+                <p>
+                    <span class="status-published">
+                        Freigabe gespeichert
+                    </span>
+                </p>
+
+                <form
+                    method="post"
+                    action="/portal/standorte/{{ facility.facility_id }}/sperren"
+                    onsubmit="return confirm('Öffentliche Standortfreigabe zurücknehmen?');"
+                >
+
+                    <input
+                        type="hidden"
+                        name="csrf_token"
+                        value="{{ csrf_token }}"
+                    >
+
+                    <button
+                        type="submit"
+                        class="action-button action-unpublish"
+                    >
+                        Standortfreigabe zurücknehmen
+                    </button>
+
+                </form>
+
+            {% elif not facility.type_allowed %}
+
+                <p>
+                    <strong>
+                        Gesperrt:
+                    </strong>
+                    Für diese Einrichtungsart ist
+                    keine öffentliche Standortfreigabe erlaubt.
+                </p>
+
+            {% elif facility.publication_status != "published" %}
+
+                <p>
+                    Die Hilfestelle muss zuerst
+                    veröffentlicht werden.
+                </p>
+
+            {% elif not facility.has_location %}
+
+                <p>
+                    Es sind keine vollständigen
+                    Standortangaben vorhanden.
+                </p>
+
+            {% else %}
+
+                <p>
+                    Der Standort ist aktuell
+                    nicht öffentlich freigegeben.
+                </p>
+
+                <form
+                    method="post"
+                    action="/portal/standorte/{{ facility.facility_id }}/freigeben"
+                    onsubmit="return confirm('Wurde geprüft, dass die Adresse dieser Hilfestelle öffentlich bekannt gegeben werden darf?');"
+                >
+
+                    <input
+                        type="hidden"
+                        name="csrf_token"
+                        value="{{ csrf_token }}"
+                    >
+
+                    <button
+                        type="submit"
+                        class="action-button action-submit"
+                    >
+                        Standort öffentlich freigeben
+                    </button>
+
+                </form>
+
+            {% endif %}
+
+        </section>
+
+    {% endfor %}
+
+</main>
+
+{% endblock %}
