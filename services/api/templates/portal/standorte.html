@@ -6,166 +6,542 @@ YANA – Standortfreigaben
 
 {% block content %}
 
-<main class="section portal-facilities">
+<main class="section portal-facilities location-page">
+
+    <!-- Navigation -->
 
     <a href="/portal/dashboard" class="back-link">
         Zurück zum Dashboard
     </a>
 
-    <h1>Standortfreigaben</h1>
+    <!-- Überschrift -->
 
-    <p>
-        Hier entscheidet das YANA-Team, ob Adressen
-        und GPS-Koordinaten öffentlich angezeigt werden dürfen.
-    </p>
+    <div class="location-page-header">
 
-    <p>
-        <strong>Datenschutz:</strong>
-        Standorte sind grundsätzlich vertraulich.
-        Eine Freigabe ist nur bei zugelassenen
-        Einrichtungsarten möglich.
-    </p>
-
-    {% if not facilities %}
+        <h1>Standortfreigaben</h1>
 
         <p>
-            Es sind noch keine Hilfestellen vorhanden.
+            Verwalte die öffentliche Sichtbarkeit
+            von Adressen und GPS-Koordinaten
+            der registrierten Hilfestellen.
         </p>
 
-    {% endif %}
+    </div>
 
+    <!-- Datenschutzhinweis -->
 
-    {% for facility in facilities %}
+    <div class="location-privacy-notice">
 
-        <section class="partner-management-card">
+        <strong>Datenschutzhinweis</strong>
 
-            <h2>{{ facility.name }}</h2>
+        <p>
+            Standortdaten sind standardmäßig vertraulich.
+            Eine Veröffentlichung ist nur bei
+            zugelassenen Einrichtungsarten und
+            nach individueller Prüfung möglich.
+        </p>
 
-            <p>
-                <strong>ID:</strong>
-                {{ facility.facility_id }}
-            </p>
+    </div>
 
-            <p>
-                <strong>Einrichtungsart:</strong>
-                {{ facility.facility_type }}
-            </p>
+    <!-- Filter und Suche -->
 
-            <p>
-                <strong>Veröffentlichungsstatus:</strong>
-                {{ facility.publication_status }}
-            </p>
+    <section class="location-overview">
 
-            <p>
-                <strong>Hinterlegte Adresse:</strong>
-                {{ facility.address or "Nicht hinterlegt" }}
-            </p>
+        <div class="location-overview-header">
 
-            <p>
-                <strong>Koordinaten:</strong>
+            <h2>Übersicht der Hilfestellen</h2>
 
-                {% if facility.latitude is not none
-                      and facility.longitude is not none %}
+            <span
+                class="location-result-count"
+                id="location-result-count"
+                aria-live="polite"
+            >
+                {{ facilities | length }} Einträge
+            </span>
 
-                    {{ facility.latitude }},
-                    {{ facility.longitude }}
+        </div>
 
-                {% else %}
+        <div class="location-toolbar">
 
-                    Nicht vollständig hinterlegt
+            <div class="location-search-field">
 
-                {% endif %}
-            </p>
+                <label for="location-search">
+                    Hilfestelle suchen
+                </label>
 
-            <h3>Öffentliche Standortfreigabe</h3>
-
-            {% if facility.is_location_public %}
-
-                <p>
-                    <span class="status-published">
-                        Freigabe gespeichert
-                    </span>
-                </p>
-
-                <form
-                    method="post"
-                    action="/portal/standorte/{{ facility.facility_id }}/sperren"
-                    onsubmit="return confirm('Öffentliche Standortfreigabe zurücknehmen?');"
+                <input
+                    type="search"
+                    id="location-search"
+                    placeholder="Name, Art oder ID suchen ..."
+                    autocomplete="off"
                 >
 
-                    <input
-                        type="hidden"
-                        name="csrf_token"
-                        value="{{ csrf_token }}"
-                    >
+            </div>
 
-                    <button
-                        type="submit"
-                        class="action-button action-unpublish"
-                    >
-                        Standortfreigabe zurücknehmen
-                    </button>
+            <div class="location-filter-field">
 
-                </form>
+                <label for="location-status-filter">
+                    Standortstatus
+                </label>
 
-            {% elif not facility.type_allowed %}
+                <select id="location-status-filter">
 
-                <p>
-                    <strong>
-                        Gesperrt:
-                    </strong>
-                    Für diese Einrichtungsart ist
-                    keine öffentliche Standortfreigabe erlaubt.
-                </p>
+                    <option value="all">
+                        Alle Status
+                    </option>
 
-            {% elif facility.publication_status != "published" %}
+                    <option value="public">
+                        Öffentlich
+                    </option>
 
-                <p>
-                    Die Hilfestelle muss zuerst
-                    veröffentlicht werden.
-                </p>
+                    <option value="pending">
+                        Nicht freigegeben
+                    </option>
 
-            {% elif not facility.has_location %}
+                    <option value="blocked">
+                        Gesperrt
+                    </option>
 
-                <p>
-                    Es sind keine vollständigen
-                    Standortangaben vorhanden.
-                </p>
+                    <option value="unpublished">
+                        Nicht veröffentlicht
+                    </option>
 
-            {% else %}
+                    <option value="missing">
+                        Standort fehlt
+                    </option>
 
-                <p>
-                    Der Standort ist aktuell
-                    nicht öffentlich freigegeben.
-                </p>
+                </select>
 
-                <form
-                    method="post"
-                    action="/portal/standorte/{{ facility.facility_id }}/freigeben"
-                    onsubmit="return confirm('Wurde geprüft, dass die Adresse dieser Hilfestelle öffentlich bekannt gegeben werden darf?');"
-                >
+            </div>
 
-                    <input
-                        type="hidden"
-                        name="csrf_token"
-                        value="{{ csrf_token }}"
-                    >
+        </div>
 
-                    <button
-                        type="submit"
-                        class="action-button action-submit"
-                    >
-                        Standort öffentlich freigeben
-                    </button>
+        <!-- Tabelle -->
 
-                </form>
+        <div class="location-table-wrap">
 
-            {% endif %}
+            <table class="location-table">
 
-        </section>
+                <thead>
+                    <tr>
+                        <th scope="col">Hilfestelle</th>
+                        <th scope="col">Veröffentlichung</th>
+                        <th scope="col">Standortstatus</th>
+                        <th scope="col">Verwaltung</th>
+                    </tr>
+                </thead>
 
-    {% endfor %}
+                <tbody>
+
+                    {% for facility in facilities %}
+
+                        <!-- Tatsächlichen öffentlichen
+                             Standortstatus bestimmen -->
+
+                        {% set is_public =
+                            facility.is_location_public
+                            and facility.type_allowed
+                            and facility.publication_status == "published"
+                        %}
+
+                        {% if is_public %}
+
+                            {% set location_state = "public" %}
+
+                        {% elif not facility.type_allowed %}
+
+                            {% set location_state = "blocked" %}
+
+                        {% elif facility.publication_status != "published" %}
+
+                            {% set location_state = "unpublished" %}
+
+                        {% elif not facility.has_location %}
+
+                            {% set location_state = "missing" %}
+
+                        {% else %}
+
+                            {% set location_state = "pending" %}
+
+                        {% endif %}
+
+
+                        <tr
+                            class="location-row"
+                            data-search="{{ (facility.name ~ ' ' ~ facility.facility_type ~ ' ' ~ facility.facility_id) | lower }}"
+                            data-status="{{ location_state }}"
+                        >
+
+                            <!-- Name und Art -->
+
+                            <td>
+
+                                <div class="location-facility-name">
+                                    {{ facility.name }}
+                                </div>
+
+                                <div class="location-facility-meta">
+
+                                    {{ facility.facility_type }}
+
+                                    <span aria-hidden="true">·</span>
+
+                                    ID {{ facility.facility_id }}
+
+                                </div>
+
+                            </td>
+
+
+                            <!-- Veröffentlichungsstatus -->
+
+                            <td>
+
+                                {% if facility.publication_status == "published" %}
+
+                                    <span class="location-badge location-badge-published">
+                                        Veröffentlicht
+                                    </span>
+
+                                {% elif facility.publication_status == "draft" %}
+
+                                    <span class="location-badge location-badge-neutral">
+                                        Entwurf
+                                    </span>
+
+                                {% elif facility.publication_status == "pending_review" %}
+
+                                    <span class="location-badge location-badge-neutral">
+                                        In Prüfung
+                                    </span>
+
+                                {% else %}
+
+                                    <span class="location-badge location-badge-neutral">
+                                        {{ facility.publication_status }}
+                                    </span>
+
+                                {% endif %}
+
+                            </td>
+
+
+                            <!-- Standortstatus -->
+
+                            <td>
+
+                                {% if location_state == "public" %}
+
+                                    <span class="location-badge location-badge-public">
+                                        Öffentlich
+                                    </span>
+
+                                {% elif location_state == "blocked" %}
+
+                                    <span class="location-badge location-badge-blocked">
+                                        Gesperrt
+                                    </span>
+
+                                {% elif location_state == "unpublished" %}
+
+                                    <span class="location-badge location-badge-neutral">
+                                        Nicht veröffentlicht
+                                    </span>
+
+                                {% elif location_state == "missing" %}
+
+                                    <span class="location-badge location-badge-neutral">
+                                        Standort fehlt
+                                    </span>
+
+                                {% else %}
+
+                                    <span class="location-badge location-badge-pending">
+                                        Nicht freigegeben
+                                    </span>
+
+                                {% endif %}
+
+                            </td>
+
+
+                            <!-- Details und Aktionen -->
+
+                            <td class="location-action-cell">
+
+                                <details class="location-details">
+
+                                    <summary>
+                                        Details
+                                    </summary>
+
+                                    <div class="location-detail-content">
+
+                                        <h3>
+                                            Standortinformationen
+                                        </h3>
+
+                                        <div class="location-detail-item">
+
+                                            <strong>Adresse</strong>
+
+                                            <span>
+                                                {{ facility.address or "Nicht hinterlegt" }}
+                                            </span>
+
+                                        </div>
+
+                                        <div class="location-detail-item">
+
+                                            <strong>Koordinaten</strong>
+
+                                            <span>
+
+                                                {% if facility.latitude is not none
+                                                      and facility.longitude is not none %}
+
+                                                    {{ facility.latitude }},
+                                                    {{ facility.longitude }}
+
+                                                {% else %}
+
+                                                    Nicht vollständig hinterlegt
+
+                                                {% endif %}
+
+                                            </span>
+
+                                        </div>
+
+                                        <div class="location-detail-item">
+
+                                            <strong>Einrichtungsart zulässig</strong>
+
+                                            <span>
+
+                                                {% if facility.type_allowed %}
+                                                    Ja
+                                                {% else %}
+                                                    Nein
+                                                {% endif %}
+
+                                            </span>
+
+                                        </div>
+
+                                        <div class="location-detail-item">
+
+                                            <strong>Freigabe gespeichert</strong>
+
+                                            <span>
+
+                                                {% if facility.is_location_public %}
+                                                    Ja
+                                                {% else %}
+                                                    Nein
+                                                {% endif %}
+
+                                            </span>
+
+                                        </div>
+
+
+                                        <!-- Verwaltungsaktionen -->
+
+                                        <div class="location-detail-actions">
+
+                                            {% if facility.is_location_public %}
+
+                                                <form
+                                                    method="post"
+                                                    action="/portal/standorte/{{ facility.facility_id }}/sperren"
+                                                    onsubmit="return confirm('Öffentliche Standortfreigabe wirklich zurücknehmen?');"
+                                                >
+
+                                                    <input
+                                                        type="hidden"
+                                                        name="csrf_token"
+                                                        value="{{ csrf_token }}"
+                                                    >
+
+                                                    <button
+                                                        type="submit"
+                                                        class="location-button location-button-danger"
+                                                    >
+                                                        Freigabe zurücknehmen
+                                                    </button>
+
+                                                </form>
+
+                                            {% elif facility.can_approve %}
+
+                                                <form
+                                                    method="post"
+                                                    action="/portal/standorte/{{ facility.facility_id }}/freigeben"
+                                                    onsubmit="return confirm('Wurde geprüft, dass der Standort dieser Einrichtung öffentlich angezeigt werden darf?');"
+                                                >
+
+                                                    <input
+                                                        type="hidden"
+                                                        name="csrf_token"
+                                                        value="{{ csrf_token }}"
+                                                    >
+
+                                                    <button
+                                                        type="submit"
+                                                        class="location-button location-button-primary"
+                                                    >
+                                                        Standort freigeben
+                                                    </button>
+
+                                                </form>
+
+                                            {% elif not facility.type_allowed %}
+
+                                                <p class="location-action-hint">
+                                                    Für diese Einrichtungsart
+                                                    ist keine öffentliche
+                                                    Standortfreigabe erlaubt.
+                                                </p>
+
+                                            {% elif facility.publication_status != "published" %}
+
+                                                <p class="location-action-hint">
+                                                    Die Hilfestelle muss
+                                                    zuerst veröffentlicht werden.
+                                                </p>
+
+                                            {% else %}
+
+                                                <p class="location-action-hint">
+                                                    Bitte zuerst vollständige
+                                                    Standortdaten hinterlegen.
+                                                </p>
+
+                                            {% endif %}
+
+                                        </div>
+
+                                    </div>
+
+                                </details>
+
+                            </td>
+
+                        </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+        <!-- Keine Suchergebnisse -->
+
+        <p
+            id="location-no-results"
+            class="location-empty-state"
+            hidden
+        >
+            Keine Hilfestellen entsprechen den Suchkriterien.
+        </p>
+
+        {% if not facilities %}
+
+            <p class="location-empty-state">
+                Es sind noch keine Hilfestellen vorhanden.
+            </p>
+
+        {% endif %}
+
+    </section>
 
 </main>
+
+
+<!-- Suche und Filterung im Browser -->
+
+<script>
+(function () {
+    "use strict";
+
+    const searchInput = document.getElementById(
+        "location-search"
+    );
+
+    const statusFilter = document.getElementById(
+        "location-status-filter"
+    );
+
+    const rows = Array.from(
+        document.querySelectorAll(".location-row")
+    );
+
+    const resultCount = document.getElementById(
+        "location-result-count"
+    );
+
+    const noResults = document.getElementById(
+        "location-no-results"
+    );
+
+    function updateTable() {
+
+        const searchValue = searchInput.value
+            .toLocaleLowerCase("de-DE")
+            .trim();
+
+        const statusValue = statusFilter.value;
+
+        let visibleCount = 0;
+
+        rows.forEach(function (row) {
+
+            const searchText = row.dataset.search || "";
+            const status = row.dataset.status || "";
+
+            const matchesSearch =
+                searchText.includes(searchValue);
+
+            const matchesStatus =
+                statusValue === "all"
+                || status === statusValue;
+
+            const visible =
+                matchesSearch && matchesStatus;
+
+            row.hidden = !visible;
+
+            if (visible) {
+                visibleCount += 1;
+            }
+
+        });
+
+        resultCount.textContent =
+            visibleCount + " von "
+            + rows.length + " Einträgen";
+
+        noResults.hidden =
+            visibleCount > 0 || rows.length === 0;
+    }
+
+    searchInput.addEventListener(
+        "input",
+        updateTable
+    );
+
+    statusFilter.addEventListener(
+        "change",
+        updateTable
+    );
+
+    updateTable();
+
+})();
+</script>
 
 {% endblock %}
