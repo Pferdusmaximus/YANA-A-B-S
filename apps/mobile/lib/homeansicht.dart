@@ -11,14 +11,15 @@ class HomeView extends StatelessWidget {
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 42, vertical: 24),
+        padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 24),
         child: Column(
           children: [
             SizedBox(
-              width: 250,
-              height: 250,
+              width: 220,
+              height: 220,
               child: FilledButton(
                 style: FilledButton.styleFrom(
+                  textStyle: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
                   backgroundColor: const Color.fromARGB(255, 198, 8, 8),
                   shape: CircleBorder(
                     side: BorderSide(
